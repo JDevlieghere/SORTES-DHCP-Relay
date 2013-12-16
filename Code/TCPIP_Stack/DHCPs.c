@@ -65,6 +65,8 @@
 
 #include "../Include/TCPIP_Stack/TCPIP.h"
 
+#include "Include/MainDemo.h"
+
 // Duration of our DHCP Lease in seconds.  This is extrememly short so
 // the client won't use our IP for long if we inadvertantly
 // provide a lease on a network that has a more authoratative DHCP server.

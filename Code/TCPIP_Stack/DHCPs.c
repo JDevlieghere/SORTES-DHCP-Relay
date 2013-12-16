@@ -2,8 +2,8 @@
  *
  *  Dynamic Host Configuration Protocol (DHCP) Server
  *  Module for Microchip TCP/IP Stack
- *	 -Provides automatic IP address, subnet mask, gateway address, 
- *	  DNS server address, and other configuration parameters on DHCP 
+ *	 -Provides automatic IP address, subnet mask, gateway address,
+ *	  DNS server address, and other configuration parameters on DHCP
  *	  enabled networks.
  *	 -Reference: RFC 2131, 2132
  *
@@ -65,8 +65,8 @@
 
 #include "../Include/TCPIP_Stack/TCPIP.h"
 
-// Duration of our DHCP Lease in seconds.  This is extrememly short so 
-// the client won't use our IP for long if we inadvertantly 
+// Duration of our DHCP Lease in seconds.  This is extrememly short so
+// the client won't use our IP for long if we inadvertantly
 // provide a lease on a network that has a more authoratative DHCP server.
 #define DHCP_LEASE_DURATION				60ul
 /// Ignore: #define DHCP_MAX_LEASES					2		// Not implemented
@@ -76,7 +76,7 @@ typedef struct _DHCP_CONTROL_BLOCK
 {
 	TICK 		LeaseExpires;	// Expiration time for this lease
 	MAC_ADDR	ClientMAC;		// Client's MAC address.  Multicase bit is used to determine if a lease is given out or not
-	enum 
+	enum
 	{
 		LEASE_UNUSED = 0,
 		LEASE_REQUESTED,
@@ -101,7 +101,7 @@ static void DHCPReplyToRequest(BOOTP_HEADER *Header, BOOL bAccept);
 	Performs periodic DHCP server tasks.
 
   Description:
-	This function performs any periodic tasks requied by the DHCP server 
+	This function performs any periodic tasks requied by the DHCP server
 	module, such as processing DHCP requests and distributing IP addresses.
 
   Precondition:
@@ -145,7 +145,7 @@ void DHCPServerTask(void)
 
 
 			// Decide which address to lease out
-			// Note that this needs to be changed if we are to 
+			// Note that this needs to be changed if we are to
 			// support more than one lease
 			DHCPNextLease.Val = (AppConfig.MyIPAddr.Val & AppConfig.MyMask.Val) + 0x02000000;
 			if(DHCPNextLease.v[3] == 255u)
@@ -194,7 +194,7 @@ void DHCPServerTask(void)
 
 				// Get option length
 				UDPGet(&Len);
-	
+
 				// Process option
 				switch(Option)
 				{
@@ -237,7 +237,7 @@ void DHCPServerTask(void)
 				{
 					UDPGet(&i);
 				}
-			}			
+			}
 
 			UDPDiscard();
 			break;
@@ -253,7 +253,7 @@ void DHCPServerTask(void)
 	Replies to a DHCP Discover message.
 
   Description:
-	This function replies to a DHCP Discover message by sending out a 
+	This function replies to a DHCP Discover message by sending out a
 	DHCP Offer message.
 
   Precondition:
@@ -267,9 +267,10 @@ void DHCPServerTask(void)
   ***************************************************************************/
 static void DHCPReplyToDiscovery(BOOTP_HEADER *Header)
 {
+	DisplayString(0,"DHCPReplyToDiscovery");
 	BYTE i;
 
-	// Set the correct socket to active and ensure that 
+	// Set the correct socket to active and ensure that
 	// enough space is available to generate the DHCP response
 	if(UDPIsPutReady(MySocket) < 300u)
 		return;
@@ -301,9 +302,9 @@ static void DHCPReplyToDiscovery(BOOTP_HEADER *Header)
 	UDPPut(0x82);				// Magic Cookie: 0x63538263
 	UDPPut(0x53);				// Magic Cookie: 0x63538263
 	UDPPut(0x63);				// Magic Cookie: 0x63538263
-	
+
 	// Options: DHCP Offer
-	UDPPut(DHCP_MESSAGE_TYPE);	
+	UDPPut(DHCP_MESSAGE_TYPE);
 	UDPPut(1);
 	UDPPut(DHCP_OFFER_MESSAGE);
 
@@ -321,12 +322,12 @@ static void DHCPReplyToDiscovery(BOOTP_HEADER *Header)
 	UDPPut((DHCP_LEASE_DURATION) & 0xFF);
 
 	// Option: Server identifier
-	UDPPut(DHCP_SERVER_IDENTIFIER);	
+	UDPPut(DHCP_SERVER_IDENTIFIER);
 	UDPPut(sizeof(IP_ADDR));
 	UDPPutArray((BYTE*)&AppConfig.MyIPAddr, sizeof(IP_ADDR));
 
 	// Option: Router/Gateway address
-	UDPPut(DHCP_ROUTER);		
+	UDPPut(DHCP_ROUTER);
 	UDPPut(sizeof(IP_ADDR));
 	UDPPutArray((BYTE*)&AppConfig.MyIPAddr, sizeof(IP_ADDR));
 
@@ -335,7 +336,7 @@ static void DHCPReplyToDiscovery(BOOTP_HEADER *Header)
 
 	// Add zero padding to ensure compatibility with old BOOTP relays that discard small packets (<300 UDP octets)
 	while(UDPTxCount < 300u)
-		UDPPut(0); 
+		UDPPut(0);
 
 	// Transmit the packet
 	UDPFlush();
@@ -350,7 +351,7 @@ static void DHCPReplyToDiscovery(BOOTP_HEADER *Header)
 	Replies to a DHCP Request message.
 
   Description:
-	This function replies to a DHCP Request message by sending out a 
+	This function replies to a DHCP Request message by sending out a
 	DHCP Acknowledge message.
 
   Precondition:
@@ -362,15 +363,16 @@ static void DHCPReplyToDiscovery(BOOTP_HEADER *Header)
 
   Returns:
   	None
-  
+
   Internal:
 	Needs to support more than one simultaneous lease in the future.
   ***************************************************************************/
 static void DHCPReplyToRequest(BOOTP_HEADER *Header, BOOL bAccept)
 {
+	DisplayString(0,"DHCPReplyToRequest");
 	BYTE i;
 
-	// Set the correct socket to active and ensure that 
+	// Set the correct socket to active and ensure that
 	// enough space is available to generate the DHCP response
 	if(UDPIsPutReady(MySocket) < 300u)
 		return;
@@ -409,7 +411,7 @@ static void DHCPReplyToRequest(BOOTP_HEADER *Header, BOOL bAccept)
 		{
 			UDPGet(&i);
 		}
-	}			
+	}
 
 	// Begin putting the BOOTP Header and DHCP options
 	UDPPut(BOOT_REPLY);			// Message Type: 2 (BOOTP Reply)
@@ -435,17 +437,17 @@ static void DHCPReplyToRequest(BOOTP_HEADER *Header, BOOL bAccept)
 	UDPPut(0x82);				// Magic Cookie: 0x63538263
 	UDPPut(0x53);				// Magic Cookie: 0x63538263
 	UDPPut(0x63);				// Magic Cookie: 0x63538263
-	
+
 	// Options: DHCP lease ACKnowledge
 	if(bAccept)
 	{
-		UDPPut(DHCP_OPTION_ACK_MESSAGE);	
+		UDPPut(DHCP_OPTION_ACK_MESSAGE);
 		UDPPut(1);
 		UDPPut(DHCP_ACK_MESSAGE);
 	}
 	else	// Send a NACK
 	{
-		UDPPut(DHCP_OPTION_ACK_MESSAGE);	
+		UDPPut(DHCP_OPTION_ACK_MESSAGE);
 		UDPPut(1);
 		UDPPut(DHCP_NAK_MESSAGE);
 	}
@@ -459,7 +461,7 @@ static void DHCPReplyToRequest(BOOTP_HEADER *Header, BOOL bAccept)
 	UDPPut((DHCP_LEASE_DURATION) & 0xFF);
 
 	// Option: Server identifier
-	UDPPut(DHCP_SERVER_IDENTIFIER);	
+	UDPPut(DHCP_SERVER_IDENTIFIER);
 	UDPPut(sizeof(IP_ADDR));
 	UDPPutArray((BYTE*)&AppConfig.MyIPAddr, sizeof(IP_ADDR));
 
@@ -469,7 +471,7 @@ static void DHCPReplyToRequest(BOOTP_HEADER *Header, BOOL bAccept)
 	UDPPutArray((BYTE*)&AppConfig.MyMask, sizeof(IP_ADDR));
 
 	// Option: Router/Gateway address
-	UDPPut(DHCP_ROUTER);		
+	UDPPut(DHCP_ROUTER);
 	UDPPut(sizeof(IP_ADDR));
 	UDPPutArray((BYTE*)&AppConfig.MyIPAddr, sizeof(IP_ADDR));
 
@@ -478,7 +480,7 @@ static void DHCPReplyToRequest(BOOTP_HEADER *Header, BOOL bAccept)
 
 	// Add zero padding to ensure compatibility with old BOOTP relays that discard small packets (<300 UDP octets)
 	while(UDPTxCount < 300u)
-		UDPPut(0); 
+		UDPPut(0);
 
 	// Transmit the packet
 	UDPFlush();

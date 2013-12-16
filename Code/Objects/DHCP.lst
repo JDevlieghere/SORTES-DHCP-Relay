@@ -1,0 +1,4056 @@
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00001 ;--------------------------------------------------------
+               00002 ; File Created by SDCC : free open source ANSI-C Compiler
+               00003 ; Version 2.9.4 #5595 (Dec 17 2009) (UNIX)
+               00004 ; This file was generated Mon Mar 15 11:43:29 2010
+               00005 ;--------------------------------------------------------
+               00006 ; PIC16 port for the Microchip 16-bit core micros
+               00007 ;--------------------------------------------------------
+               00008         list    p=18f97j60
+               00009 
+               00010         radix dec
+               00011 
+               00012 ;--------------------------------------------------------
+               00013 ; public variables in this module
+               00014 ;--------------------------------------------------------
+               00015         global _DHCPInit
+               00016         global _DHCPDisable
+               00017         global _DHCPEnable
+               00018         global _DHCPIsEnabled
+               00019         global _DHCPIsBound
+               00020         global _DHCPStateChanged
+               00021         global _DHCPIsServerDetected
+               00022         global _DHCPTask
+               00023         global _DHCPClientInitializedOnce
+               00024 
+               00025 ;--------------------------------------------------------
+               00026 ; extern variables in this module
+               00027 ;--------------------------------------------------------
+               00028         extern _EBSTCONbits
+               00029         extern _MISTATbits
+               00030         extern _EFLOCONbits
+               00031         extern _MACON1bits
+               00032         extern _MACON2bits
+               00033         extern _MACON3bits
+               00034         extern _MACON4bits
+               00035         extern _MACLCON1bits
+               00036         extern _MACLCON2bits
+               00037         extern _MICONbits
+               00038         extern _MICMDbits
+               00039         extern _EWOLIEbits
+               00040         extern _EWOLIRbits
+               00041         extern _ERXFCONbits
+               00042         extern _EIEbits
+               00043         extern _ESTATbits
+               00044         extern _ECON2bits
+               00045         extern _EIRbits
+               00046         extern _EDATAbits
+               00047         extern _SSP2CON2bits
+               00048         extern _SSP2CON1bits
+               00049         extern _SSP2STATbits
+               00050         extern _ECCP2DELbits
+               00051         extern _ECCP2ASbits
+               00052         extern _ECCP3DELbits
+               00053         extern _ECCP3ASbits
+               00054         extern _RCSTA2bits
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00055         extern _TXSTA2bits
+               00056         extern _CCP5CONbits
+               00057         extern _CCP4CONbits
+               00058         extern _T4CONbits
+               00059         extern _ECCP1DELbits
+               00060         extern _BAUDCON2bits
+               00061         extern _BAUDCTL2bits
+               00062         extern _BAUDCONbits
+               00063         extern _BAUDCON1bits
+               00064         extern _BAUDCTLbits
+               00065         extern _BAUDCTL1bits
+               00066         extern _PORTAbits
+               00067         extern _PORTBbits
+               00068         extern _PORTCbits
+               00069         extern _PORTDbits
+               00070         extern _PORTEbits
+               00071         extern _PORTFbits
+               00072         extern _PORTGbits
+               00073         extern _PORTHbits
+               00074         extern _PORTJbits
+               00075         extern _LATAbits
+               00076         extern _LATBbits
+               00077         extern _LATCbits
+               00078         extern _LATDbits
+               00079         extern _LATEbits
+               00080         extern _LATFbits
+               00081         extern _LATGbits
+               00082         extern _LATHbits
+               00083         extern _LATJbits
+               00084         extern _DDRAbits
+               00085         extern _TRISAbits
+               00086         extern _DDRBbits
+               00087         extern _TRISBbits
+               00088         extern _DDRCbits
+               00089         extern _TRISCbits
+               00090         extern _DDRDbits
+               00091         extern _TRISDbits
+               00092         extern _DDREbits
+               00093         extern _TRISEbits
+               00094         extern _DDRFbits
+               00095         extern _TRISFbits
+               00096         extern _DDRGbits
+               00097         extern _TRISGbits
+               00098         extern _DDRHbits
+               00099         extern _TRISHbits
+               00100         extern _DDRJbits
+               00101         extern _TRISJbits
+               00102         extern _OSCTUNEbits
+               00103         extern _MEMCONbits
+               00104         extern _PIE1bits
+               00105         extern _PIR1bits
+               00106         extern _IPR1bits
+               00107         extern _PIE2bits
+               00108         extern _PIR2bits
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00109         extern _IPR2bits
+               00110         extern _PIE3bits
+               00111         extern _PIR3bits
+               00112         extern _IPR3bits
+               00113         extern _EECON1bits
+               00114         extern _RCSTAbits
+               00115         extern _RCSTA1bits
+               00116         extern _TXSTAbits
+               00117         extern _TXSTA1bits
+               00118         extern _PSPCONbits
+               00119         extern _T3CONbits
+               00120         extern _CMCONbits
+               00121         extern _CVRCONbits
+               00122         extern _ECCP1ASbits
+               00123         extern _CCP3CONbits
+               00124         extern _ECCP3CONbits
+               00125         extern _CCP2CONbits
+               00126         extern _ECCP2CONbits
+               00127         extern _CCP1CONbits
+               00128         extern _ECCP1CONbits
+               00129         extern _ADCON2bits
+               00130         extern _ADCON1bits
+               00131         extern _ADCON0bits
+               00132         extern _SSP1CON2bits
+               00133         extern _SSPCON2bits
+               00134         extern _SSP1CON1bits
+               00135         extern _SSPCON1bits
+               00136         extern _SSP1STATbits
+               00137         extern _SSPSTATbits
+               00138         extern _T2CONbits
+               00139         extern _T1CONbits
+               00140         extern _RCONbits
+               00141         extern _WDTCONbits
+               00142         extern _ECON1bits
+               00143         extern _OSCCONbits
+               00144         extern _T0CONbits
+               00145         extern _STATUSbits
+               00146         extern _INTCON3bits
+               00147         extern _INTCON2bits
+               00148         extern _INTCONbits
+               00149         extern _STKPTRbits
+               00150         extern _stdin
+               00151         extern _stdout
+               00152         extern _AN0String
+               00153         extern _AppConfig
+               00154         extern _activeUDPSocket
+               00155         extern _UDPSocketInfo
+               00156         extern _UDPTxCount
+               00157         extern _UDPRxCount
+               00158         extern _LCDText
+               00159         extern _MAADR5
+               00160         extern _MAADR6
+               00161         extern _MAADR3
+               00162         extern _MAADR4
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00163         extern _MAADR1
+               00164         extern _MAADR2
+               00165         extern _EBSTSD
+               00166         extern _EBSTCON
+               00167         extern _EBSTCS
+               00168         extern _EBSTCSL
+               00169         extern _EBSTCSH
+               00170         extern _MISTAT
+               00171         extern _EFLOCON
+               00172         extern _EPAUS
+               00173         extern _EPAUSL
+               00174         extern _EPAUSH
+               00175         extern _MACON1
+               00176         extern _MACON2
+               00177         extern _MACON3
+               00178         extern _MACON4
+               00179         extern _MABBIPG
+               00180         extern _MAIPG
+               00181         extern _MAIPGL
+               00182         extern _MAIPGH
+               00183         extern _MACLCON1
+               00184         extern _MACLCON2
+               00185         extern _MAMXFL
+               00186         extern _MAMXFLL
+               00187         extern _MAMXFLH
+               00188         extern _MICON
+               00189         extern _MICMD
+               00190         extern _MIREGADR
+               00191         extern _MIWR
+               00192         extern _MIWRL
+               00193         extern _MIWRH
+               00194         extern _MIRD
+               00195         extern _MIRDL
+               00196         extern _MIRDH
+               00197         extern _EHT0
+               00198         extern _EHT1
+               00199         extern _EHT2
+               00200         extern _EHT3
+               00201         extern _EHT4
+               00202         extern _EHT5
+               00203         extern _EHT6
+               00204         extern _EHT7
+               00205         extern _EPMM0
+               00206         extern _EPMM1
+               00207         extern _EPMM2
+               00208         extern _EPMM3
+               00209         extern _EPMM4
+               00210         extern _EPMM5
+               00211         extern _EPMM6
+               00212         extern _EPMM7
+               00213         extern _EPMCS
+               00214         extern _EPMCSL
+               00215         extern _EPMCSH
+               00216         extern _EPMO
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00217         extern _EPMOL
+               00218         extern _EPMOH
+               00219         extern _EWOLIE
+               00220         extern _EWOLIR
+               00221         extern _ERXFCON
+               00222         extern _EPKTCNT
+               00223         extern _EWRPT
+               00224         extern _EWRPTL
+               00225         extern _EWRPTH
+               00226         extern _ETXST
+               00227         extern _ETXSTL
+               00228         extern _ETXSTH
+               00229         extern _ETXND
+               00230         extern _ETXNDL
+               00231         extern _ETXNDH
+               00232         extern _ERXST
+               00233         extern _ERXSTL
+               00234         extern _ERXSTH
+               00235         extern _ERXND
+               00236         extern _ERXNDL
+               00237         extern _ERXNDH
+               00238         extern _ERXRDPT
+               00239         extern _ERXRDPTL
+               00240         extern _ERXRDPTH
+               00241         extern _ERXWRPT
+               00242         extern _ERXWRPTL
+               00243         extern _ERXWRPTH
+               00244         extern _EDMAST
+               00245         extern _EDMASTL
+               00246         extern _EDMASTH
+               00247         extern _EDMAND
+               00248         extern _EDMANDL
+               00249         extern _EDMANDH
+               00250         extern _EDMADST
+               00251         extern _EDMADSTL
+               00252         extern _EDMADSTH
+               00253         extern _EDMACS
+               00254         extern _EDMACSL
+               00255         extern _EDMACSH
+               00256         extern _EIE
+               00257         extern _ESTAT
+               00258         extern _ECON2
+               00259         extern _EIR
+               00260         extern _EDATA
+               00261         extern _SSP2CON2
+               00262         extern _SSP2CON1
+               00263         extern _SSP2STAT
+               00264         extern _SSP2ADD
+               00265         extern _SSP2BUF
+               00266         extern _ECCP2DEL
+               00267         extern _ECCP2AS
+               00268         extern _ECCP3DEL
+               00269         extern _ECCP3AS
+               00270         extern _RCSTA2
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00271         extern _TXSTA2
+               00272         extern _TXREG2
+               00273         extern _RCREG2
+               00274         extern _SPBRG2
+               00275         extern _CCP5CON
+               00276         extern _CCPR5
+               00277         extern _CCPR5L
+               00278         extern _CCPR5H
+               00279         extern _CCP4CON
+               00280         extern _CCPR4
+               00281         extern _CCPR4L
+               00282         extern _CCPR4H
+               00283         extern _T4CON
+               00284         extern _PR4
+               00285         extern _TMR4
+               00286         extern _ECCP1DEL
+               00287         extern _ERDPT
+               00288         extern _ERDPTL
+               00289         extern _ERDPTH
+               00290         extern _BAUDCON2
+               00291         extern _BAUDCTL2
+               00292         extern _SPBRGH2
+               00293         extern _BAUDCON
+               00294         extern _BAUDCON1
+               00295         extern _BAUDCTL
+               00296         extern _BAUDCTL1
+               00297         extern _SPBRGH
+               00298         extern _SPBRGH1
+               00299         extern _PORTA
+               00300         extern _PORTB
+               00301         extern _PORTC
+               00302         extern _PORTD
+               00303         extern _PORTE
+               00304         extern _PORTF
+               00305         extern _PORTG
+               00306         extern _PORTH
+               00307         extern _PORTJ
+               00308         extern _LATA
+               00309         extern _LATB
+               00310         extern _LATC
+               00311         extern _LATD
+               00312         extern _LATE
+               00313         extern _LATF
+               00314         extern _LATG
+               00315         extern _LATH
+               00316         extern _LATJ
+               00317         extern _DDRA
+               00318         extern _TRISA
+               00319         extern _DDRB
+               00320         extern _TRISB
+               00321         extern _DDRC
+               00322         extern _TRISC
+               00323         extern _DDRD
+               00324         extern _TRISD
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00325         extern _DDRE
+               00326         extern _TRISE
+               00327         extern _DDRF
+               00328         extern _TRISF
+               00329         extern _DDRG
+               00330         extern _TRISG
+               00331         extern _DDRH
+               00332         extern _TRISH
+               00333         extern _DDRJ
+               00334         extern _TRISJ
+               00335         extern _OSCTUNE
+               00336         extern _MEMCON
+               00337         extern _PIE1
+               00338         extern _PIR1
+               00339         extern _IPR1
+               00340         extern _PIE2
+               00341         extern _PIR2
+               00342         extern _IPR2
+               00343         extern _PIE3
+               00344         extern _PIR3
+               00345         extern _IPR3
+               00346         extern _EECON1
+               00347         extern _EECON2
+               00348         extern _RCSTA
+               00349         extern _RCSTA1
+               00350         extern _TXSTA
+               00351         extern _TXSTA1
+               00352         extern _TXREG
+               00353         extern _TXREG1
+               00354         extern _RCREG
+               00355         extern _RCREG1
+               00356         extern _SPBRG
+               00357         extern _SPBRG1
+               00358         extern _PSPCON
+               00359         extern _T3CON
+               00360         extern _TMR3L
+               00361         extern _TMR3H
+               00362         extern _CMCON
+               00363         extern _CVRCON
+               00364         extern _ECCP1AS
+               00365         extern _CCP3CON
+               00366         extern _ECCP3CON
+               00367         extern _CCPR3
+               00368         extern _CCPR3L
+               00369         extern _CCPR3H
+               00370         extern _CCP2CON
+               00371         extern _ECCP2CON
+               00372         extern _CCPR2
+               00373         extern _CCPR2L
+               00374         extern _CCPR2H
+               00375         extern _CCP1CON
+               00376         extern _ECCP1CON
+               00377         extern _CCPR1
+               00378         extern _CCPR1L
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00379         extern _CCPR1H
+               00380         extern _ADCON2
+               00381         extern _ADCON1
+               00382         extern _ADCON0
+               00383         extern _ADRES
+               00384         extern _ADRESL
+               00385         extern _ADRESH
+               00386         extern _SSP1CON2
+               00387         extern _SSPCON2
+               00388         extern _SSP1CON1
+               00389         extern _SSPCON1
+               00390         extern _SSP1STAT
+               00391         extern _SSPSTAT
+               00392         extern _SSP1ADD
+               00393         extern _SSPADD
+               00394         extern _SSP1BUF
+               00395         extern _SSPBUF
+               00396         extern _T2CON
+               00397         extern _PR2
+               00398         extern _TMR2
+               00399         extern _T1CON
+               00400         extern _TMR1L
+               00401         extern _TMR1H
+               00402         extern _RCON
+               00403         extern _WDTCON
+               00404         extern _ECON1
+               00405         extern _OSCCON
+               00406         extern _T0CON
+               00407         extern _TMR0L
+               00408         extern _TMR0H
+               00409         extern _STATUS
+               00410         extern _FSR2L
+               00411         extern _FSR2H
+               00412         extern _PLUSW2
+               00413         extern _PREINC2
+               00414         extern _POSTDEC2
+               00415         extern _POSTINC2
+               00416         extern _INDF2
+               00417         extern _BSR
+               00418         extern _FSR1L
+               00419         extern _FSR1H
+               00420         extern _PLUSW1
+               00421         extern _PREINC1
+               00422         extern _POSTDEC1
+               00423         extern _POSTINC1
+               00424         extern _INDF1
+               00425         extern _WREG
+               00426         extern _FSR0L
+               00427         extern _FSR0H
+               00428         extern _PLUSW0
+               00429         extern _PREINC0
+               00430         extern _POSTDEC0
+               00431         extern _POSTINC0
+               00432         extern _INDF0
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE  9
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00433         extern _INTCON3
+               00434         extern _INTCON2
+               00435         extern _INTCON
+               00436         extern _PROD
+               00437         extern _PRODL
+               00438         extern _PRODH
+               00439         extern _TABLAT
+               00440         extern _TBLPTR
+               00441         extern _TBLPTRL
+               00442         extern _TBLPTRH
+               00443         extern _TBLPTRU
+               00444         extern _PC
+               00445         extern _PCL
+               00446         extern _PCLATH
+               00447         extern _PCLATU
+               00448         extern _STKPTR
+               00449         extern _TOS
+               00450         extern _TOSL
+               00451         extern _TOSH
+               00452         extern _TOSU
+               00453         extern _memset
+               00454         extern _TickGet
+               00455         extern _MACIsLinked
+               00456         extern _UDPOpen
+               00457         extern _UDPClose
+               00458         extern _UDPIsPutReady
+               00459         extern _UDPPut
+               00460         extern _UDPPutArray
+               00461         extern _UDPFlush
+               00462         extern _UDPIsGetReady
+               00463         extern _UDPGet
+               00464         extern _UDPGetArray
+               00465         extern _UDPDiscard
+               00466 ;--------------------------------------------------------
+               00467 ;       Equates to used internal registers
+               00468 ;--------------------------------------------------------
+  00000FD8     00469 STATUS  equ     0xfd8
+  00000FF9     00470 PCL     equ     0xff9
+  00000FFA     00471 PCLATH  equ     0xffa
+  00000FFB     00472 PCLATU  equ     0xffb
+  00000FE8     00473 WREG    equ     0xfe8
+  00000FE9     00474 FSR0L   equ     0xfe9
+  00000FEA     00475 FSR0H   equ     0xfea
+  00000FE1     00476 FSR1L   equ     0xfe1
+  00000FD9     00477 FSR2L   equ     0xfd9
+  00000FEF     00478 INDF0   equ     0xfef
+  00000FE5     00479 POSTDEC1        equ     0xfe5
+  00000FE4     00480 PREINC1 equ     0xfe4
+  00000FDB     00481 PLUSW2  equ     0xfdb
+  00000FF3     00482 PRODL   equ     0xff3
+  00000FF4     00483 PRODH   equ     0xff4
+               00484 
+               00485 
+               00486         idata
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 10
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00487 _DHCPClientInitializedOnce      db      0x00
+               00488 
+               00489 
+               00490 ; Internal registers
+               00491 .registers      udata_ovr       0x0000
+               00492 r0x00   res     1
+               00493 r0x01   res     1
+               00494 r0x02   res     1
+               00495 r0x03   res     1
+               00496 r0x04   res     1
+               00497 r0x05   res     1
+               00498 r0x06   res     1
+               00499 r0x07   res     1
+               00500 r0x08   res     1
+               00501 r0x09   res     1
+               00502 r0x0a   res     1
+               00503 
+               00504 udata_DHCP_0    udata
+               00505 _DHCPClient     res     28
+               00506 
+               00507 udata_DHCP_1    udata
+               00508 __DHCPReceive_type_1_1  res     1
+               00509 
+               00510 udata_DHCP_2    udata
+               00511 __DHCPReceive_j_1_1     res     1
+               00512 
+               00513 udata_DHCP_3    udata
+               00514 __DHCPReceive_v_1_1     res     1
+               00515 
+               00516 udata_DHCP_4    udata
+               00517 __DHCPReceive_tempServerID_1_1  res     4
+               00518 
+               00519 udata_DHCP_5    udata
+               00520 __DHCPSend_MyIP_1_1     res     4
+               00521 
+               00522 ;--------------------------------------------------------
+               00523 ; global & static initialisations
+               00524 ;--------------------------------------------------------
+               00525 ; I code from now on!
+               00526 ; ; Starting pCode block
+               00527 S_DHCP___DHCPSend       code
+0000 00528 __DHCPSend:
+               00529 ;       .line   1039; TCPIP_Stack/DHCP.c        static void _DHCPSend(BYTE messageType, BOOL bRenewing)
+0000 CFD9 FFE5 00530         MOVFF   FSR2L, POSTDEC1
+0004 CFE1 FFD9 00531         MOVFF   FSR1L, FSR2L
+0008 C000 FFE5 00532         MOVFF   r0x00, POSTDEC1
+000C C000 FFE5 00533         MOVFF   r0x01, POSTDEC1
+0010 C000 FFE5 00534         MOVFF   r0x02, POSTDEC1
+0014 C000 FFE5 00535         MOVFF   r0x03, POSTDEC1
+0018 C000 FFE5 00536         MOVFF   r0x04, POSTDEC1
+001C C000 FFE5 00537         MOVFF   r0x05, POSTDEC1
+0020 C000 FFE5 00538         MOVFF   r0x06, POSTDEC1
+0024 C000 FFE5 00539         MOVFF   r0x07, POSTDEC1
+0028 C000 FFE5 00540         MOVFF   r0x08, POSTDEC1
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 11
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+002C 0E02      00541         MOVLW   0x02
+002E CFDB F000 00542         MOVFF   PLUSW2, r0x00
+0032 0E03      00543         MOVLW   0x03
+0034 CFDB F000 00544         MOVFF   PLUSW2, r0x01
+               00545 ;       .line   1045; TCPIP_Stack/DHCP.c        UDPPut(BOOT_REQUEST);                       // op
+0038 0E01      00546         MOVLW   0x01
+003A 6EE5      00547         MOVWF   POSTDEC1
+003C EC00 F000 00548         CALL    _UDPPut
+0040 2AE1      00549         INCF    FSR1L, F
+               00550 ;       .line   1046; TCPIP_Stack/DHCP.c        UDPPut(BOOT_HW_TYPE);                       // htype
+0042 0E01      00551         MOVLW   0x01
+0044 6EE5      00552         MOVWF   POSTDEC1
+0046 EC00 F000 00553         CALL    _UDPPut
+004A 2AE1      00554         INCF    FSR1L, F
+               00555 ;       .line   1047; TCPIP_Stack/DHCP.c        UDPPut(BOOT_LEN_OF_HW_TYPE);                // hlen
+004C 0E06      00556         MOVLW   0x06
+004E 6EE5      00557         MOVWF   POSTDEC1
+0050 EC00 F000 00558         CALL    _UDPPut
+0054 2AE1      00559         INCF    FSR1L, F
+               00560 ;       .line   1048; TCPIP_Stack/DHCP.c        UDPPut(0);                                  // hops
+0056 0E00      00561         MOVLW   0x00
+0058 6EE5      00562         MOVWF   POSTDEC1
+005A EC00 F000 00563         CALL    _UDPPut
+005E 2AE1      00564         INCF    FSR1L, F
+               00565 ;       .line   1049; TCPIP_Stack/DHCP.c        UDPPut(0x12);                               // xid[0]
+0060 0E12      00566         MOVLW   0x12
+0062 6EE5      00567         MOVWF   POSTDEC1
+0064 EC00 F000 00568         CALL    _UDPPut
+0068 2AE1      00569         INCF    FSR1L, F
+               00570 ;       .line   1050; TCPIP_Stack/DHCP.c        UDPPut(0x23);                               // xid[1]
+006A 0E23      00571         MOVLW   0x23
+006C 6EE5      00572         MOVWF   POSTDEC1
+006E EC00 F000 00573         CALL    _UDPPut
+0072 2AE1      00574         INCF    FSR1L, F
+               00575 ;       .line   1051; TCPIP_Stack/DHCP.c        UDPPut(0x34);                               // xid[2]
+0074 0E34      00576         MOVLW   0x34
+0076 6EE5      00577         MOVWF   POSTDEC1
+0078 EC00 F000 00578         CALL    _UDPPut
+007C 2AE1      00579         INCF    FSR1L, F
+               00580 ;       .line   1052; TCPIP_Stack/DHCP.c        UDPPut(0x56);                               // xid[3]
+007E 0E56      00581         MOVLW   0x56
+0080 6EE5      00582         MOVWF   POSTDEC1
+0082 EC00 F000 00583         CALL    _UDPPut
+0086 2AE1      00584         INCF    FSR1L, F
+               00585 ;       .line   1053; TCPIP_Stack/DHCP.c        UDPPut(0);                                  // secs[0]
+0088 0E00      00586         MOVLW   0x00
+008A 6EE5      00587         MOVWF   POSTDEC1
+008C EC00 F000 00588         CALL    _UDPPut
+0090 2AE1      00589         INCF    FSR1L, F
+               00590 ;       .line   1054; TCPIP_Stack/DHCP.c        UDPPut(0);                                  // secs[1]
+0092 0E00      00591         MOVLW   0x00
+0094 6EE5      00592         MOVWF   POSTDEC1
+0096 EC00 F000 00593         CALL    _UDPPut
+009A 2AE1      00594         INCF    FSR1L, F
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 12
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+009C 0000      00595         BANKSEL (_DHCPClient + 2)
+               00596 ;       .line   1055; TCPIP_Stack/DHCP.c        UDPPut(DHCPClient.flags.bits.bUseUnicastMode ? 0x00: 0x80);
+009E A900      00597         BTFSS   (_DHCPClient + 2), 4, B
+00A0 D000      00598         BRA     _00489_DS_
+00A2 6A00      00599         CLRF    r0x02
+00A4 D000      00600         BRA     _00490_DS_
+00A6 00601 _00489_DS_:
+00A6 0E80      00602         MOVLW   0x80
+00A8 6E00      00603         MOVWF   r0x02
+00AA 00604 _00490_DS_:
+00AA 5000      00605         MOVF    r0x02, W
+00AC 6EE5      00606         MOVWF   POSTDEC1
+00AE EC00 F000 00607         CALL    _UDPPut
+00B2 2AE1      00608         INCF    FSR1L, F
+               00609 ;       .line   1057; TCPIP_Stack/DHCP.c        UDPPut(0);                                  // flags[1]
+00B4 0E00      00610         MOVLW   0x00
+00B6 6EE5      00611         MOVWF   POSTDEC1
+00B8 EC00 F000 00612         CALL    _UDPPut
+00BC 2AE1      00613         INCF    FSR1L, F
+               00614 ;       .line   1060; TCPIP_Stack/DHCP.c        if((messageType == DHCP_REQUEST_MESSAGE) && bRenewing)
+00BE C000 F000 00615         MOVFF   r0x00, r0x02
+00C2 6A00      00616         CLRF    r0x03
+00C4 6A00      00617         CLRF    r0x04
+00C6 5000      00618         MOVF    r0x02, W
+00C8 0A03      00619         XORLW   0x03
+00CA E100      00620         BNZ     _00507_DS_
+00CC 5000      00621         MOVF    r0x03, W
+00CE E100      00622         BNZ     _00507_DS_
+00D0 2A00      00623         INCF    r0x04, F
+00D2 00624 _00507_DS_:
+00D2 5000      00625         MOVF    r0x04, W
+00D4 E000      00626         BZ      _00463_DS_
+00D6 5000      00627         MOVF    r0x01, W
+00D8 E000      00628         BZ      _00463_DS_
+               00629 ;       .line   1062; TCPIP_Stack/DHCP.c        UDPPutArray((BYTE*)&DHCPClient.tempIPAddress, 
+00DA 0E00      00630         MOVLW   HIGH(_DHCPClient + 15)
+00DC 6E00      00631         MOVWF   r0x06
+00DE 0E00      00632         MOVLW   LOW(_DHCPClient + 15)
+00E0 6E00      00633         MOVWF   r0x05
+00E2 0E80      00634         MOVLW   0x80
+00E4 6E00      00635         MOVWF   r0x07
+               00636 ;       .line   1063; TCPIP_Stack/DHCP.c        sizeof(DHCPClient.tempIPAddress));
+00E6 0E00      00637         MOVLW   0x00
+00E8 6EE5      00638         MOVWF   POSTDEC1
+00EA 0E04      00639         MOVLW   0x04
+00EC 6EE5      00640         MOVWF   POSTDEC1
+00EE 5000      00641         MOVF    r0x07, W
+00F0 6EE5      00642         MOVWF   POSTDEC1
+00F2 5000      00643         MOVF    r0x06, W
+00F4 6EE5      00644         MOVWF   POSTDEC1
+00F6 5000      00645         MOVF    r0x05, W
+00F8 6EE5      00646         MOVWF   POSTDEC1
+00FA EC00 F000 00647         CALL    _UDPPutArray
+00FE 0E05      00648         MOVLW   0x05
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 13
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0100 26E1      00649         ADDWF   FSR1L, F
+0102 D000      00650         BRA     _00464_DS_
+0104 00651 _00463_DS_:
+               00652 ;       .line   1067; TCPIP_Stack/DHCP.c        UDPPut(0x00);
+0104 0E00      00653         MOVLW   0x00
+0106 6EE5      00654         MOVWF   POSTDEC1
+0108 EC00 F000 00655         CALL    _UDPPut
+010C 2AE1      00656         INCF    FSR1L, F
+               00657 ;       .line   1068; TCPIP_Stack/DHCP.c        UDPPut(0x00);
+010E 0E00      00658         MOVLW   0x00
+0110 6EE5      00659         MOVWF   POSTDEC1
+0112 EC00 F000 00660         CALL    _UDPPut
+0116 2AE1      00661         INCF    FSR1L, F
+               00662 ;       .line   1069; TCPIP_Stack/DHCP.c        UDPPut(0x00);
+0118 0E00      00663         MOVLW   0x00
+011A 6EE5      00664         MOVWF   POSTDEC1
+011C EC00 F000 00665         CALL    _UDPPut
+0120 2AE1      00666         INCF    FSR1L, F
+               00667 ;       .line   1070; TCPIP_Stack/DHCP.c        UDPPut(0x00);
+0122 0E00      00668         MOVLW   0x00
+0124 6EE5      00669         MOVWF   POSTDEC1
+0126 EC00 F000 00670         CALL    _UDPPut
+012A 2AE1      00671         INCF    FSR1L, F
+012C 00672 _00464_DS_:
+               00673 ;       .line   1074; TCPIP_Stack/DHCP.c        for ( i = 0; i < 12u; i++ )     UDPPut(0x00);
+012C 0E0C      00674         MOVLW   0x0c
+012E 6E00      00675         MOVWF   r0x05
+0130 00676 _00483_DS_:
+0130 0E00      00677         MOVLW   0x00
+0132 6EE5      00678         MOVWF   POSTDEC1
+0134 EC00 F000 00679         CALL    _UDPPut
+0138 2AE1      00680         INCF    FSR1L, F
+013A 0600      00681         DECF    r0x05, F
+013C 5000      00682         MOVF    r0x05, W
+013E E100      00683         BNZ     _00483_DS_
+               00684 ;       .line   1077; TCPIP_Stack/DHCP.c        UDPPutArray((BYTE*)&AppConfig.MyMACAddr, sizeof(AppConfig.MyMACAddr));
+0140 0E00      00685         MOVLW   HIGH(_AppConfig + 45)
+0142 6E00      00686         MOVWF   r0x07
+0144 0E00      00687         MOVLW   LOW(_AppConfig + 45)
+0146 6E00      00688         MOVWF   r0x06
+0148 0E80      00689         MOVLW   0x80
+014A 6E00      00690         MOVWF   r0x08
+014C 0E00      00691         MOVLW   0x00
+014E 6EE5      00692         MOVWF   POSTDEC1
+0150 0E06      00693         MOVLW   0x06
+0152 6EE5      00694         MOVWF   POSTDEC1
+0154 5000      00695         MOVF    r0x08, W
+0156 6EE5      00696         MOVWF   POSTDEC1
+0158 5000      00697         MOVF    r0x07, W
+015A 6EE5      00698         MOVWF   POSTDEC1
+015C 5000      00699         MOVF    r0x06, W
+015E 6EE5      00700         MOVWF   POSTDEC1
+0160 EC00 F000 00701         CALL    _UDPPutArray
+0164 0E05      00702         MOVLW   0x05
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 14
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0166 26E1      00703         ADDWF   FSR1L, F
+               00704 ;       .line   1080; TCPIP_Stack/DHCP.c        for ( i = 0; i < 202u; i++ ) UDPPut(0);
+0168 0ECA      00705         MOVLW   0xca
+016A 6E00      00706         MOVWF   r0x05
+016C 00707 _00486_DS_:
+016C 0E00      00708         MOVLW   0x00
+016E 6EE5      00709         MOVWF   POSTDEC1
+0170 EC00 F000 00710         CALL    _UDPPut
+0174 2AE1      00711         INCF    FSR1L, F
+0176 2E00      00712         DECFSZ  r0x05, F
+0178 D000      00713         BRA     _00486_DS_
+               00714 ;       .line   1083; TCPIP_Stack/DHCP.c        UDPPut(99);
+017A 0E63      00715         MOVLW   0x63
+017C 6EE5      00716         MOVWF   POSTDEC1
+017E EC00 F000 00717         CALL    _UDPPut
+0182 2AE1      00718         INCF    FSR1L, F
+               00719 ;       .line   1084; TCPIP_Stack/DHCP.c        UDPPut(130);
+0184 0E82      00720         MOVLW   0x82
+0186 6EE5      00721         MOVWF   POSTDEC1
+0188 EC00 F000 00722         CALL    _UDPPut
+018C 2AE1      00723         INCF    FSR1L, F
+               00724 ;       .line   1085; TCPIP_Stack/DHCP.c        UDPPut(83);
+018E 0E53      00725         MOVLW   0x53
+0190 6EE5      00726         MOVWF   POSTDEC1
+0192 EC00 F000 00727         CALL    _UDPPut
+0196 2AE1      00728         INCF    FSR1L, F
+               00729 ;       .line   1086; TCPIP_Stack/DHCP.c        UDPPut(99);
+0198 0E63      00730         MOVLW   0x63
+019A 6EE5      00731         MOVWF   POSTDEC1
+019C EC00 F000 00732         CALL    _UDPPut
+01A0 2AE1      00733         INCF    FSR1L, F
+               00734 ;       .line   1089; TCPIP_Stack/DHCP.c        UDPPut(DHCP_MESSAGE_TYPE);
+01A2 0E35      00735         MOVLW   0x35
+01A4 6EE5      00736         MOVWF   POSTDEC1
+01A6 EC00 F000 00737         CALL    _UDPPut
+01AA 2AE1      00738         INCF    FSR1L, F
+               00739 ;       .line   1090; TCPIP_Stack/DHCP.c        UDPPut(DHCP_MESSAGE_TYPE_LEN);
+01AC 0E01      00740         MOVLW   0x01
+01AE 6EE5      00741         MOVWF   POSTDEC1
+01B0 EC00 F000 00742         CALL    _UDPPut
+01B4 2AE1      00743         INCF    FSR1L, F
+               00744 ;       .line   1091; TCPIP_Stack/DHCP.c        UDPPut(messageType);
+01B6 5000      00745         MOVF    r0x00, W
+01B8 6EE5      00746         MOVWF   POSTDEC1
+01BA EC00 F000 00747         CALL    _UDPPut
+01BE 2AE1      00748         INCF    FSR1L, F
+               00749 ;       .line   1093; TCPIP_Stack/DHCP.c        if(messageType == DHCP_DISCOVER_MESSAGE)
+01C0 6A00      00750         CLRF    r0x00
+01C2 5000      00751         MOVF    r0x02, W
+01C4 0A01      00752         XORLW   0x01
+01C6 E100      00753         BNZ     _00511_DS_
+01C8 5000      00754         MOVF    r0x03, W
+01CA E100      00755         BNZ     _00511_DS_
+01CC 2A00      00756         INCF    r0x00, F
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 15
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+01CE 00757 _00511_DS_:
+01CE 5000      00758         MOVF    r0x00, W
+01D0 E000      00759         BZ      _00467_DS_
+01D2 0000      00760         BANKSEL (_DHCPClient + 2)
+               00761 ;       .line   1096; TCPIP_Stack/DHCP.c        DHCPClient.flags.bits.bOfferReceived = FALSE;
+01D4 9500      00762         BCF     (_DHCPClient + 2), 2, B
+01D6 00763 _00467_DS_:
+               00764 ;       .line   1100; TCPIP_Stack/DHCP.c        if((messageType == DHCP_REQUEST_MESSAGE) && !bRenewing)
+01D6 5000      00765         MOVF    r0x04, W
+01D8 E000      00766         BZ      _00469_DS_
+01DA 5000      00767         MOVF    r0x01, W
+01DC E100      00768         BNZ     _00469_DS_
+               00769 ;       .line   1108; TCPIP_Stack/DHCP.c        UDPPut(DHCP_SERVER_IDENTIFIER);
+01DE 0E36      00770         MOVLW   0x36
+01E0 6EE5      00771         MOVWF   POSTDEC1
+01E2 EC00 F000 00772         CALL    _UDPPut
+01E6 2AE1      00773         INCF    FSR1L, F
+               00774 ;       .line   1109; TCPIP_Stack/DHCP.c        UDPPut(DHCP_SERVER_IDENTIFIER_LEN);
+01E8 0E04      00775         MOVLW   0x04
+01EA 6EE5      00776         MOVWF   POSTDEC1
+01EC EC00 F000 00777         CALL    _UDPPut
+01F0 2AE1      00778         INCF    FSR1L, F
+01F2 0000      00779         BANKSEL (_DHCPClient + 14)
+               00780 ;       .line   1110; TCPIP_Stack/DHCP.c        UDPPut(((BYTE*)(&DHCPClient.dwServerID))[3]);
+01F4 5100      00781         MOVF    (_DHCPClient + 14), W, B
+01F6 6EE5      00782         MOVWF   POSTDEC1
+01F8 EC00 F000 00783         CALL    _UDPPut
+01FC 2AE1      00784         INCF    FSR1L, F
+01FE 0000      00785         BANKSEL (_DHCPClient + 13)
+               00786 ;       .line   1111; TCPIP_Stack/DHCP.c        UDPPut(((BYTE*)(&DHCPClient.dwServerID))[2]);
+0200 5100      00787         MOVF    (_DHCPClient + 13), W, B
+0202 6EE5      00788         MOVWF   POSTDEC1
+0204 EC00 F000 00789         CALL    _UDPPut
+0208 2AE1      00790         INCF    FSR1L, F
+020A 0000      00791         BANKSEL (_DHCPClient + 12)
+               00792 ;       .line   1112; TCPIP_Stack/DHCP.c        UDPPut(((BYTE*)(&DHCPClient.dwServerID))[1]);
+020C 5100      00793         MOVF    (_DHCPClient + 12), W, B
+020E 6EE5      00794         MOVWF   POSTDEC1
+0210 EC00 F000 00795         CALL    _UDPPut
+0214 2AE1      00796         INCF    FSR1L, F
+0216 0000      00797         BANKSEL (_DHCPClient + 11)
+               00798 ;       .line   1113; TCPIP_Stack/DHCP.c        UDPPut(((BYTE*)(&DHCPClient.dwServerID))[0]);
+0218 5100      00799         MOVF    (_DHCPClient + 11), W, B
+021A 6EE5      00800         MOVWF   POSTDEC1
+021C EC00 F000 00801         CALL    _UDPPut
+0220 2AE1      00802         INCF    FSR1L, F
+0222 00803 _00469_DS_:
+               00804 ;       .line   1119; TCPIP_Stack/DHCP.c        UDPPut(DHCP_PARAM_REQUEST_LIST);
+0222 0E37      00805         MOVLW   0x37
+0224 6EE5      00806         MOVWF   POSTDEC1
+0226 EC00 F000 00807         CALL    _UDPPut
+022A 2AE1      00808         INCF    FSR1L, F
+               00809 ;       .line   1120; TCPIP_Stack/DHCP.c        UDPPut(DHCP_PARAM_REQUEST_LIST_LEN);
+022C 0E04      00810         MOVLW   0x04
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 16
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+022E 6EE5      00811         MOVWF   POSTDEC1
+0230 EC00 F000 00812         CALL    _UDPPut
+0234 2AE1      00813         INCF    FSR1L, F
+               00814 ;       .line   1121; TCPIP_Stack/DHCP.c        UDPPut(DHCP_SUBNET_MASK);
+0236 0E01      00815         MOVLW   0x01
+0238 6EE5      00816         MOVWF   POSTDEC1
+023A EC00 F000 00817         CALL    _UDPPut
+023E 2AE1      00818         INCF    FSR1L, F
+               00819 ;       .line   1122; TCPIP_Stack/DHCP.c        UDPPut(DHCP_ROUTER);
+0240 0E03      00820         MOVLW   0x03
+0242 6EE5      00821         MOVWF   POSTDEC1
+0244 EC00 F000 00822         CALL    _UDPPut
+0248 2AE1      00823         INCF    FSR1L, F
+               00824 ;       .line   1123; TCPIP_Stack/DHCP.c        UDPPut(DHCP_DNS);
+024A 0E06      00825         MOVLW   0x06
+024C 6EE5      00826         MOVWF   POSTDEC1
+024E EC00 F000 00827         CALL    _UDPPut
+0252 2AE1      00828         INCF    FSR1L, F
+               00829 ;       .line   1124; TCPIP_Stack/DHCP.c        UDPPut(DHCP_HOST_NAME);
+0254 0E0C      00830         MOVLW   0x0c
+0256 6EE5      00831         MOVWF   POSTDEC1
+0258 EC00 F000 00832         CALL    _UDPPut
+025C 2AE1      00833         INCF    FSR1L, F
+               00834 ;       .line   1127; TCPIP_Stack/DHCP.c        if( ((messageType == DHCP_REQUEST_MESSAGE) && !bRenewing) || 
+025E 5000      00835         MOVF    r0x04, W
+0260 E000      00836         BZ      _00475_DS_
+0262 5000      00837         MOVF    r0x01, W
+0264 E000      00838         BZ      _00471_DS_
+0266 00839 _00475_DS_:
+               00840 ;       .line   1128; TCPIP_Stack/DHCP.c        ((messageType == DHCP_DISCOVER_MESSAGE) && 
+0266 5000      00841         MOVF    r0x00, W
+0268 E000      00842         BZ      _00472_DS_
+026A 0000      00843         BANKSEL (_DHCPClient + 15)
+               00844 ;       .line   1129; TCPIP_Stack/DHCP.c        DHCPClient.tempIPAddress.Val))
+026C 5100      00845         MOVF    (_DHCPClient + 15), W, B
+026E 0000      00846         BANKSEL (_DHCPClient + 16)
+0270 1100      00847         IORWF   (_DHCPClient + 16), W, B
+0272 0000      00848         BANKSEL (_DHCPClient + 17)
+0274 1100      00849         IORWF   (_DHCPClient + 17), W, B
+0276 0000      00850         BANKSEL (_DHCPClient + 18)
+0278 1100      00851         IORWF   (_DHCPClient + 18), W, B
+027A E000      00852         BZ      _00472_DS_
+027C 00853 _00471_DS_:
+               00854 ;       .line   1131; TCPIP_Stack/DHCP.c        UDPPut(DHCP_PARAM_REQUEST_IP_ADDRESS);
+027C 0E32      00855         MOVLW   0x32
+027E 6EE5      00856         MOVWF   POSTDEC1
+0280 EC00 F000 00857         CALL    _UDPPut
+0284 2AE1      00858         INCF    FSR1L, F
+               00859 ;       .line   1132; TCPIP_Stack/DHCP.c        UDPPut(DHCP_PARAM_REQUEST_IP_ADDRESS_LEN);
+0286 0E04      00860         MOVLW   0x04
+0288 6EE5      00861         MOVWF   POSTDEC1
+028A EC00 F000 00862         CALL    _UDPPut
+028E 2AE1      00863         INCF    FSR1L, F
+               00864 ;       .line   1133; TCPIP_Stack/DHCP.c        UDPPutArray((BYTE*)&DHCPClient.tempIPAddress, 
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 17
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0290 0E00      00865         MOVLW   HIGH(_DHCPClient + 15)
+0292 6E00      00866         MOVWF   r0x02
+0294 0E00      00867         MOVLW   LOW(_DHCPClient + 15)
+0296 6E00      00868         MOVWF   r0x00
+0298 0E80      00869         MOVLW   0x80
+029A 6E00      00870         MOVWF   r0x03
+               00871 ;       .line   1134; TCPIP_Stack/DHCP.c        DHCP_PARAM_REQUEST_IP_ADDRESS_LEN);
+029C 0E00      00872         MOVLW   0x00
+029E 6EE5      00873         MOVWF   POSTDEC1
+02A0 0E04      00874         MOVLW   0x04
+02A2 6EE5      00875         MOVWF   POSTDEC1
+02A4 5000      00876         MOVF    r0x03, W
+02A6 6EE5      00877         MOVWF   POSTDEC1
+02A8 5000      00878         MOVF    r0x02, W
+02AA 6EE5      00879         MOVWF   POSTDEC1
+02AC 5000      00880         MOVF    r0x00, W
+02AE 6EE5      00881         MOVWF   POSTDEC1
+02B0 EC00 F000 00882         CALL    _UDPPutArray
+02B4 0E05      00883         MOVLW   0x05
+02B6 26E1      00884         ADDWF   FSR1L, F
+02B8 00885 _00472_DS_:
+               00886 ;       .line   1140; TCPIP_Stack/DHCP.c        UDPPut(DHCP_END_OPTION);
+02B8 0EFF      00887         MOVLW   0xff
+02BA 6EE5      00888         MOVWF   POSTDEC1
+02BC EC00 F000 00889         CALL    _UDPPut
+02C0 2AE1      00890         INCF    FSR1L, F
+02C2 00891 _00476_DS_:
+               00892 ;       .line   1144; TCPIP_Stack/DHCP.c        while(UDPTxCount < 300u) UDPPut(0); 
+02C2 0E01      00893         MOVLW   0x01
+02C4 0000      00894         BANKSEL (_UDPTxCount + 1)
+02C6 5D00      00895         SUBWF   (_UDPTxCount + 1), W, B
+02C8 E100      00896         BNZ     _00512_DS_
+02CA 0E2C      00897         MOVLW   0x2c
+02CC 0000      00898         BANKSEL _UDPTxCount
+02CE 5D00      00899         SUBWF   _UDPTxCount, W, B
+02D0 00900 _00512_DS_:
+02D0 E200      00901         BC      _00478_DS_
+02D2 0E00      00902         MOVLW   0x00
+02D4 6EE5      00903         MOVWF   POSTDEC1
+02D6 EC00 F000 00904         CALL    _UDPPut
+02DA 2AE1      00905         INCF    FSR1L, F
+02DC D000      00906         BRA     _00476_DS_
+02DE 00907 _00478_DS_:
+02DE 0000      00908         BANKSEL _AppConfig
+               00909 ;       .line   1149; TCPIP_Stack/DHCP.c        MyIP.Val = AppConfig.MyIPAddr.Val;
+02E0 5100      00910         MOVF    _AppConfig, W, B
+02E2 0000      00911         BANKSEL __DHCPSend_MyIP_1_1
+02E4 6F00      00912         MOVWF   __DHCPSend_MyIP_1_1, B
+02E6 0000      00913         BANKSEL (_AppConfig + 1)
+02E8 5100      00914         MOVF    (_AppConfig + 1), W, B
+02EA 0000      00915         BANKSEL (__DHCPSend_MyIP_1_1 + 1)
+02EC 6F00      00916         MOVWF   (__DHCPSend_MyIP_1_1 + 1), B
+02EE 0000      00917         BANKSEL (_AppConfig + 2)
+02F0 5100      00918         MOVF    (_AppConfig + 2), W, B
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 18
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+02F2 0000      00919         BANKSEL (__DHCPSend_MyIP_1_1 + 2)
+02F4 6F00      00920         MOVWF   (__DHCPSend_MyIP_1_1 + 2), B
+02F6 0000      00921         BANKSEL (_AppConfig + 3)
+02F8 5100      00922         MOVF    (_AppConfig + 3), W, B
+02FA 0000      00923         BANKSEL (__DHCPSend_MyIP_1_1 + 3)
+02FC 6F00      00924         MOVWF   (__DHCPSend_MyIP_1_1 + 3), B
+               00925 ;       .line   1150; TCPIP_Stack/DHCP.c        if(!bRenewing) AppConfig.MyIPAddr.Val = 0x00000000;
+02FE 5000      00926         MOVF    r0x01, W
+0300 E100      00927         BNZ     _00480_DS_
+0302 0000      00928         BANKSEL _AppConfig
+0304 6B00      00929         CLRF    _AppConfig, B
+0306 0000      00930         BANKSEL (_AppConfig + 1)
+0308 6B00      00931         CLRF    (_AppConfig + 1), B
+030A 0000      00932         BANKSEL (_AppConfig + 2)
+030C 6B00      00933         CLRF    (_AppConfig + 2), B
+030E 0000      00934         BANKSEL (_AppConfig + 3)
+0310 6B00      00935         CLRF    (_AppConfig + 3), B
+0312 00936 _00480_DS_:
+               00937 ;       .line   1151; TCPIP_Stack/DHCP.c        UDPFlush();
+0312 EC00 F000 00938         CALL    _UDPFlush
+0316 0000      00939         BANKSEL __DHCPSend_MyIP_1_1
+               00940 ;       .line   1152; TCPIP_Stack/DHCP.c        AppConfig.MyIPAddr.Val = MyIP.Val;
+0318 5100      00941         MOVF    __DHCPSend_MyIP_1_1, W, B
+031A 0000      00942         BANKSEL _AppConfig
+031C 6F00      00943         MOVWF   _AppConfig, B
+031E 0000      00944         BANKSEL (__DHCPSend_MyIP_1_1 + 1)
+0320 5100      00945         MOVF    (__DHCPSend_MyIP_1_1 + 1), W, B
+0322 0000      00946         BANKSEL (_AppConfig + 1)
+0324 6F00      00947         MOVWF   (_AppConfig + 1), B
+0326 0000      00948         BANKSEL (__DHCPSend_MyIP_1_1 + 2)
+0328 5100      00949         MOVF    (__DHCPSend_MyIP_1_1 + 2), W, B
+032A 0000      00950         BANKSEL (_AppConfig + 2)
+032C 6F00      00951         MOVWF   (_AppConfig + 2), B
+032E 0000      00952         BANKSEL (__DHCPSend_MyIP_1_1 + 3)
+0330 5100      00953         MOVF    (__DHCPSend_MyIP_1_1 + 3), W, B
+0332 0000      00954         BANKSEL (_AppConfig + 3)
+0334 6F00      00955         MOVWF   (_AppConfig + 3), B
+0336 CFE4 F000 00956         MOVFF   PREINC1, r0x08
+033A CFE4 F000 00957         MOVFF   PREINC1, r0x07
+033E CFE4 F000 00958         MOVFF   PREINC1, r0x06
+0342 CFE4 F000 00959         MOVFF   PREINC1, r0x05
+0346 CFE4 F000 00960         MOVFF   PREINC1, r0x04
+034A CFE4 F000 00961         MOVFF   PREINC1, r0x03
+034E CFE4 F000 00962         MOVFF   PREINC1, r0x02
+0352 CFE4 F000 00963         MOVFF   PREINC1, r0x01
+0356 CFE4 F000 00964         MOVFF   PREINC1, r0x00
+035A CFE4 FFD9 00965         MOVFF   PREINC1, FSR2L
+035E 0012      00966         RETURN  
+               00967 
+               00968 ; ; Starting pCode block
+               00969 S_DHCP___DHCPReceive    code
+0000 00970 __DHCPReceive:
+               00971 ;       .line   720; TCPIP_Stack/DHCP.c static BYTE _DHCPReceive(void)
+0000 CFD9 FFE5 00972         MOVFF   FSR2L, POSTDEC1
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 19
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0004 CFE1 FFD9 00973         MOVFF   FSR1L, FSR2L
+0008 C000 FFE5 00974         MOVFF   r0x00, POSTDEC1
+000C C000 FFE5 00975         MOVFF   r0x01, POSTDEC1
+0010 C000 FFE5 00976         MOVFF   r0x02, POSTDEC1
+0014 C000 FFE5 00977         MOVFF   r0x03, POSTDEC1
+0018 C000 FFE5 00978         MOVFF   r0x04, POSTDEC1
+001C C000 FFE5 00979         MOVFF   r0x05, POSTDEC1
+0020 0000      00980         BANKSEL __DHCPReceive_type_1_1
+               00981 ;       .line   766; TCPIP_Stack/DHCP.c type = DHCP_UNKNOWN_MESSAGE;
+0022 6B00      00982         CLRF    __DHCPReceive_type_1_1, B
+               00983 ;       .line   768; TCPIP_Stack/DHCP.c UDPGet(&v);                             // op
+0024 0E00      00984         MOVLW   HIGH(__DHCPReceive_v_1_1)
+0026 6E00      00985         MOVWF   r0x01
+0028 0E00      00986         MOVLW   LOW(__DHCPReceive_v_1_1)
+002A 6E00      00987         MOVWF   r0x00
+002C 0E80      00988         MOVLW   0x80
+002E 6E00      00989         MOVWF   r0x02
+0030 5000      00990         MOVF    r0x02, W
+0032 6EE5      00991         MOVWF   POSTDEC1
+0034 5000      00992         MOVF    r0x01, W
+0036 6EE5      00993         MOVWF   POSTDEC1
+0038 5000      00994         MOVF    r0x00, W
+003A 6EE5      00995         MOVWF   POSTDEC1
+003C EC00 F000 00996         CALL    _UDPGet
+0040 0E03      00997         MOVLW   0x03
+0042 26E1      00998         ADDWF   FSR1L, F
+               00999 ;       .line   771; TCPIP_Stack/DHCP.c if ( v == BOOT_REPLY )
+0044 C000 F000 01000         MOVFF   __DHCPReceive_v_1_1, r0x00
+0048 6A00      01001         CLRF    r0x01
+004A 5000      01002         MOVF    r0x00, W
+004C 0A02      01003         XORLW   0x02
+004E E100      01004         BNZ     _00424_DS_
+0050 5000      01005         MOVF    r0x01, W
+0052 E000      01006         BZ      _00425_DS_
+0054 01007 _00424_DS_:
+0054 EF00 F000 01008         GOTO    _00345_DS_
+0058 01009 _00425_DS_:
+               01010 ;       .line   774; TCPIP_Stack/DHCP.c for ( i = 0; i < 15u; i++ ) UDPGet(&v);
+0058 0E0F      01011         MOVLW   0x0f
+005A 6E00      01012         MOVWF   r0x00
+005C 01013 _00354_DS_:
+005C 0E00      01014         MOVLW   HIGH(__DHCPReceive_v_1_1)
+005E 6E00      01015         MOVWF   r0x02
+0060 0E00      01016         MOVLW   LOW(__DHCPReceive_v_1_1)
+0062 6E00      01017         MOVWF   r0x01
+0064 0E80      01018         MOVLW   0x80
+0066 6E00      01019         MOVWF   r0x03
+0068 5000      01020         MOVF    r0x03, W
+006A 6EE5      01021         MOVWF   POSTDEC1
+006C 5000      01022         MOVF    r0x02, W
+006E 6EE5      01023         MOVWF   POSTDEC1
+0070 5000      01024         MOVF    r0x01, W
+0072 6EE5      01025         MOVWF   POSTDEC1
+0074 EC00 F000 01026         CALL    _UDPGet
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 20
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0078 0E03      01027         MOVLW   0x03
+007A 26E1      01028         ADDWF   FSR1L, F
+007C 0600      01029         DECF    r0x00, F
+007E 5000      01030         MOVF    r0x00, W
+0080 E100      01031         BNZ     _00354_DS_
+0082 0000      01032         BANKSEL (_DHCPClient + 2)
+               01033 ;       .line   777; TCPIP_Stack/DHCP.c if(DHCPClient.flags.bits.bOfferReceived)
+0084 A500      01034         BTFSS   (_DHCPClient + 2), 2, B
+0086 D000      01035         BRA     _00294_DS_
+               01036 ;       .line   780; TCPIP_Stack/DHCP.c for ( i = 0; i < 4u; i++ ) UDPGet(&v);
+0088 0E04      01037         MOVLW   0x04
+008A 6E00      01038         MOVWF   r0x00
+008C 01039 _00357_DS_:
+008C 0E00      01040         MOVLW   HIGH(__DHCPReceive_v_1_1)
+008E 6E00      01041         MOVWF   r0x02
+0090 0E00      01042         MOVLW   LOW(__DHCPReceive_v_1_1)
+0092 6E00      01043         MOVWF   r0x01
+0094 0E80      01044         MOVLW   0x80
+0096 6E00      01045         MOVWF   r0x03
+0098 5000      01046         MOVF    r0x03, W
+009A 6EE5      01047         MOVWF   POSTDEC1
+009C 5000      01048         MOVF    r0x02, W
+009E 6EE5      01049         MOVWF   POSTDEC1
+00A0 5000      01050         MOVF    r0x01, W
+00A2 6EE5      01051         MOVWF   POSTDEC1
+00A4 EC00 F000 01052         CALL    _UDPGet
+00A8 0E03      01053         MOVLW   0x03
+00AA 26E1      01054         ADDWF   FSR1L, F
+00AC 0600      01055         DECF    r0x00, F
+00AE 5000      01056         MOVF    r0x00, W
+00B0 E100      01057         BNZ     _00357_DS_
+00B2 D000      01058         BRA     _00295_DS_
+00B4 01059 _00294_DS_:
+               01060 ;       .line   785; TCPIP_Stack/DHCP.c UDPGetArray((BYTE*)&DHCPClient.tempIPAddress, 
+00B4 0E00      01061         MOVLW   HIGH(_DHCPClient + 15)
+00B6 6E00      01062         MOVWF   r0x02
+00B8 0E00      01063         MOVLW   LOW(_DHCPClient + 15)
+00BA 6E00      01064         MOVWF   r0x01
+00BC 0E80      01065         MOVLW   0x80
+00BE 6E00      01066         MOVWF   r0x03
+               01067 ;       .line   786; TCPIP_Stack/DHCP.c sizeof(DHCPClient.tempIPAddress));
+00C0 0E00      01068         MOVLW   0x00
+00C2 6EE5      01069         MOVWF   POSTDEC1
+00C4 0E04      01070         MOVLW   0x04
+00C6 6EE5      01071         MOVWF   POSTDEC1
+00C8 5000      01072         MOVF    r0x03, W
+00CA 6EE5      01073         MOVWF   POSTDEC1
+00CC 5000      01074         MOVF    r0x02, W
+00CE 6EE5      01075         MOVWF   POSTDEC1
+00D0 5000      01076         MOVF    r0x01, W
+00D2 6EE5      01077         MOVWF   POSTDEC1
+00D4 EC00 F000 01078         CALL    _UDPGetArray
+00D8 0E05      01079         MOVLW   0x05
+00DA 26E1      01080         ADDWF   FSR1L, F
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 21
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+00DC 0000      01081         BANKSEL (_DHCPClient + 27)
+               01082 ;       .line   787; TCPIP_Stack/DHCP.c DHCPClient.validValues.bits.IPAddress = 1;
+00DE 8100      01083         BSF     (_DHCPClient + 27), 0, B
+00E0 01084 _00295_DS_:
+               01085 ;       .line   791; TCPIP_Stack/DHCP.c for ( i = 0; i < 8u; i++ ) UDPGet(&v);
+00E0 0E08      01086         MOVLW   0x08
+00E2 6E00      01087         MOVWF   r0x00
+00E4 01088 _00360_DS_:
+00E4 0E00      01089         MOVLW   HIGH(__DHCPReceive_v_1_1)
+00E6 6E00      01090         MOVWF   r0x02
+00E8 0E00      01091         MOVLW   LOW(__DHCPReceive_v_1_1)
+00EA 6E00      01092         MOVWF   r0x01
+00EC 0E80      01093         MOVLW   0x80
+00EE 6E00      01094         MOVWF   r0x03
+00F0 5000      01095         MOVF    r0x03, W
+00F2 6EE5      01096         MOVWF   POSTDEC1
+00F4 5000      01097         MOVF    r0x02, W
+00F6 6EE5      01098         MOVWF   POSTDEC1
+00F8 5000      01099         MOVF    r0x01, W
+00FA 6EE5      01100         MOVWF   POSTDEC1
+00FC EC00 F000 01101         CALL    _UDPGet
+0100 0E03      01102         MOVLW   0x03
+0102 26E1      01103         ADDWF   FSR1L, F
+0104 0600      01104         DECF    r0x00, F
+0106 5000      01105         MOVF    r0x00, W
+0108 E100      01106         BNZ     _00360_DS_
+               01107 ;       .line   794; TCPIP_Stack/DHCP.c for ( i = 0; i < 6u; i++ )
+010A 6A00      01108         CLRF    r0x01
+010C 01109 _00361_DS_:
+010C C000 F000 01110         MOVFF   r0x01, r0x02
+0110 6A00      01111         CLRF    r0x03
+0112 0E00      01112         MOVLW   0x00
+0114 5C00      01113         SUBWF   r0x03, W
+0116 E100      01114         BNZ     _00426_DS_
+0118 0E06      01115         MOVLW   0x06
+011A 5C00      01116         SUBWF   r0x02, W
+011C 01117 _00426_DS_:
+011C E200      01118         BC      _00364_DS_
+               01119 ;       .line   796; TCPIP_Stack/DHCP.c UDPGet(&v);
+011E 0E00      01120         MOVLW   HIGH(__DHCPReceive_v_1_1)
+0120 6E00      01121         MOVWF   r0x03
+0122 0E00      01122         MOVLW   LOW(__DHCPReceive_v_1_1)
+0124 6E00      01123         MOVWF   r0x02
+0126 0E80      01124         MOVLW   0x80
+0128 6E00      01125         MOVWF   r0x04
+012A 5000      01126         MOVF    r0x04, W
+012C 6EE5      01127         MOVWF   POSTDEC1
+012E 5000      01128         MOVF    r0x03, W
+0130 6EE5      01129         MOVWF   POSTDEC1
+0132 5000      01130         MOVF    r0x02, W
+0134 6EE5      01131         MOVWF   POSTDEC1
+0136 EC00 F000 01132         CALL    _UDPGet
+013A 0E03      01133         MOVLW   0x03
+013C 26E1      01134         ADDWF   FSR1L, F
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 22
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               01135 ;       .line   797; TCPIP_Stack/DHCP.c if ( v != AppConfig.MyMACAddr.v[i])     goto UDPInvalid;
+013E 0E00      01136         MOVLW   LOW(_AppConfig + 45)
+0140 2400      01137         ADDWF   r0x01, W
+0142 6E00      01138         MOVWF   r0x02
+0144 6A00      01139         CLRF    r0x03
+0146 0E00      01140         MOVLW   HIGH(_AppConfig + 45)
+0148 2200      01141         ADDWFC  r0x03, F
+014A C000 FFE9 01142         MOVFF   r0x02, FSR0L
+014E C000 FFEA 01143         MOVFF   r0x03, FSR0H
+0152 CFEF F000 01144         MOVFF   INDF0, r0x02
+0156 0000      01145         BANKSEL __DHCPReceive_v_1_1
+0158 5100      01146         MOVF    __DHCPReceive_v_1_1, W, B
+015A 1800      01147         XORWF   r0x02, W
+015C E000      01148         BZ      _00428_DS_
+015E EF00 F000 01149         GOTO    _00351_DS_
+0162 01150 _00428_DS_:
+               01151 ;       .line   794; TCPIP_Stack/DHCP.c for ( i = 0; i < 6u; i++ )
+0162 2A00      01152         INCF    r0x01, F
+0164 D000      01153         BRA     _00361_DS_
+0166 01154 _00364_DS_:
+               01155 ;       .line   802; TCPIP_Stack/DHCP.c for ( i = 0; i < 206u; i++ ) UDPGet(&v);
+0166 0ECE      01156         MOVLW   0xce
+0168 6E00      01157         MOVWF   r0x00
+016A 01158 _00367_DS_:
+016A 0E00      01159         MOVLW   HIGH(__DHCPReceive_v_1_1)
+016C 6E00      01160         MOVWF   r0x02
+016E 0E00      01161         MOVLW   LOW(__DHCPReceive_v_1_1)
+0170 6E00      01162         MOVWF   r0x01
+0172 0E80      01163         MOVLW   0x80
+0174 6E00      01164         MOVWF   r0x03
+0176 5000      01165         MOVF    r0x03, W
+0178 6EE5      01166         MOVWF   POSTDEC1
+017A 5000      01167         MOVF    r0x02, W
+017C 6EE5      01168         MOVWF   POSTDEC1
+017E 5000      01169         MOVF    r0x01, W
+0180 6EE5      01170         MOVWF   POSTDEC1
+0182 EC00 F000 01171         CALL    _UDPGet
+0186 0E03      01172         MOVLW   0x03
+0188 26E1      01173         ADDWF   FSR1L, F
+018A 0600      01174         DECF    r0x00, F
+018C 5000      01175         MOVF    r0x00, W
+018E E100      01176         BNZ     _00367_DS_
+               01177 ;       .line   804; TCPIP_Stack/DHCP.c lbDone = FALSE;
+0190 6A00      01178         CLRF    r0x01
+0192 01179 _00341_DS_:
+               01180 ;       .line   810; TCPIP_Stack/DHCP.c if(!UDPGet(&v))
+0192 0E00      01181         MOVLW   HIGH(__DHCPReceive_v_1_1)
+0194 6E00      01182         MOVWF   r0x03
+0196 0E00      01183         MOVLW   LOW(__DHCPReceive_v_1_1)
+0198 6E00      01184         MOVWF   r0x02
+019A 0E80      01185         MOVLW   0x80
+019C 6E00      01186         MOVWF   r0x04
+019E 5000      01187         MOVF    r0x04, W
+01A0 6EE5      01188         MOVWF   POSTDEC1
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 23
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+01A2 5000      01189         MOVF    r0x03, W
+01A4 6EE5      01190         MOVWF   POSTDEC1
+01A6 5000      01191         MOVF    r0x02, W
+01A8 6EE5      01192         MOVWF   POSTDEC1
+01AA EC00 F000 01193         CALL    _UDPGet
+01AE 6E00      01194         MOVWF   r0x02
+01B0 0E03      01195         MOVLW   0x03
+01B2 26E1      01196         ADDWF   FSR1L, F
+01B4 5000      01197         MOVF    r0x02, W
+01B6 B4D8      01198         BTFSC   STATUS, 2
+01B8 EF00 F000 01199         GOTO    _00345_DS_
+               01200 ;       .line   816; TCPIP_Stack/DHCP.c switch(v)
+01BC C000 F000 01201         MOVFF   __DHCPReceive_v_1_1, r0x02
+01C0 6A00      01202         CLRF    r0x03
+01C2 5000      01203         MOVF    r0x02, W
+01C4 0A01      01204         XORLW   0x01
+01C6 E100      01205         BNZ     _00430_DS_
+01C8 5000      01206         MOVF    r0x03, W
+01CA E100      01207         BNZ     _00430_DS_
+01CC D000      01208         BRA     _00307_DS_
+01CE 01209 _00430_DS_:
+01CE 5000      01210         MOVF    r0x02, W
+01D0 0A03      01211         XORLW   0x03
+01D2 E100      01212         BNZ     _00432_DS_
+01D4 5000      01213         MOVF    r0x03, W
+01D6 E100      01214         BNZ     _00432_DS_
+01D8 D000      01215         BRA     _00314_DS_
+01DA 01216 _00432_DS_:
+01DA 5000      01217         MOVF    r0x02, W
+01DC 0A33      01218         XORLW   0x33
+01DE E100      01219         BNZ     _00434_DS_
+01E0 5000      01220         MOVF    r0x03, W
+01E2 E100      01221         BNZ     _00434_DS_
+01E4 D000      01222         BRA     _00329_DS_
+01E6 01223 _00434_DS_:
+01E6 5000      01224         MOVF    r0x02, W
+01E8 0A35      01225         XORLW   0x35
+01EA E100      01226         BNZ     _00436_DS_
+01EC 5000      01227         MOVF    r0x03, W
+01EE E000      01228         BZ      _00300_DS_
+01F0 01229 _00436_DS_:
+01F0 5000      01230         MOVF    r0x02, W
+01F2 0A36      01231         XORLW   0x36
+01F4 E100      01232         BNZ     _00438_DS_
+01F6 5000      01233         MOVF    r0x03, W
+01F8 E100      01234         BNZ     _00438_DS_
+01FA D000      01235         BRA     _00324_DS_
+01FC 01236 _00438_DS_:
+01FC 5000      01237         MOVF    r0x02, W
+01FE 0AFF      01238         XORLW   0xff
+0200 E100      01239         BNZ     _00440_DS_
+0202 5000      01240         MOVF    r0x03, W
+0204 E100      01241         BNZ     _00440_DS_
+0206 D000      01242         BRA     _00328_DS_
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 24
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0208 01243 _00440_DS_:
+0208 EF00 F000 01244         GOTO    _00336_DS_
+020C 01245 _00300_DS_:
+               01246 ;       .line   819; TCPIP_Stack/DHCP.c UDPGet(&v);     // Skip len
+020C 0E00      01247         MOVLW   HIGH(__DHCPReceive_v_1_1)
+020E 6E00      01248         MOVWF   r0x03
+0210 0E00      01249         MOVLW   LOW(__DHCPReceive_v_1_1)
+0212 6E00      01250         MOVWF   r0x02
+0214 0E80      01251         MOVLW   0x80
+0216 6E00      01252         MOVWF   r0x04
+0218 5000      01253         MOVF    r0x04, W
+021A 6EE5      01254         MOVWF   POSTDEC1
+021C 5000      01255         MOVF    r0x03, W
+021E 6EE5      01256         MOVWF   POSTDEC1
+0220 5000      01257         MOVF    r0x02, W
+0222 6EE5      01258         MOVWF   POSTDEC1
+0224 EC00 F000 01259         CALL    _UDPGet
+0228 0E03      01260         MOVLW   0x03
+022A 26E1      01261         ADDWF   FSR1L, F
+               01262 ;       .line   821; TCPIP_Stack/DHCP.c if ( v == 1u )
+022C C000 F000 01263         MOVFF   __DHCPReceive_v_1_1, r0x02
+0230 6A00      01264         CLRF    r0x03
+0232 5000      01265         MOVF    r0x02, W
+0234 0A01      01266         XORLW   0x01
+0236 E100      01267         BNZ     _00441_DS_
+0238 5000      01268         MOVF    r0x03, W
+023A E000      01269         BZ      _00442_DS_
+023C 01270 _00441_DS_:
+023C EF00 F000 01271         GOTO    _00351_DS_
+0240 01272 _00442_DS_:
+               01273 ;       .line   823; TCPIP_Stack/DHCP.c UDPGet(&type);                  // Get type
+0240 0E00      01274         MOVLW   HIGH(__DHCPReceive_type_1_1)
+0242 6E00      01275         MOVWF   r0x03
+0244 0E00      01276         MOVLW   LOW(__DHCPReceive_type_1_1)
+0246 6E00      01277         MOVWF   r0x02
+0248 0E80      01278         MOVLW   0x80
+024A 6E00      01279         MOVWF   r0x04
+024C 5000      01280         MOVF    r0x04, W
+024E 6EE5      01281         MOVWF   POSTDEC1
+0250 5000      01282         MOVF    r0x03, W
+0252 6EE5      01283         MOVWF   POSTDEC1
+0254 5000      01284         MOVF    r0x02, W
+0256 6EE5      01285         MOVWF   POSTDEC1
+0258 EC00 F000 01286         CALL    _UDPGet
+025C 0E03      01287         MOVLW   0x03
+025E 26E1      01288         ADDWF   FSR1L, F
+0260 0000      01289         BANKSEL (_DHCPClient + 2)
+               01290 ;       .line   827; TCPIP_Stack/DHCP.c if(DHCPClient.flags.bits.bOfferReceived && 
+0262 A500      01291         BTFSS   (_DHCPClient + 2), 2, B
+0264 EF00 F000 01292         GOTO    _00342_DS_
+               01293 ;       .line   828; TCPIP_Stack/DHCP.c (type == DHCP_OFFER_MESSAGE))
+0268 C000 F000 01294         MOVFF   __DHCPReceive_type_1_1, r0x02
+026C 6A00      01295         CLRF    r0x03
+026E 5000      01296         MOVF    r0x02, W
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 25
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0270 0A02      01297         XORLW   0x02
+0272 E100      01298         BNZ     _00444_DS_
+0274 5000      01299         MOVF    r0x03, W
+0276 E100      01300         BNZ     _00444_DS_
+0278 EF00 F000 01301         GOTO    _00351_DS_
+027C 01302 _00444_DS_:
+               01303 ;       .line   835; TCPIP_Stack/DHCP.c break;
+027C D000      01304         BRA     _00342_DS_
+027E 01305 _00307_DS_:
+               01306 ;       .line   838; TCPIP_Stack/DHCP.c UDPGet(&v);     // Skip len
+027E 0E00      01307         MOVLW   HIGH(__DHCPReceive_v_1_1)
+0280 6E00      01308         MOVWF   r0x03
+0282 0E00      01309         MOVLW   LOW(__DHCPReceive_v_1_1)
+0284 6E00      01310         MOVWF   r0x02
+0286 0E80      01311         MOVLW   0x80
+0288 6E00      01312         MOVWF   r0x04
+028A 5000      01313         MOVF    r0x04, W
+028C 6EE5      01314         MOVWF   POSTDEC1
+028E 5000      01315         MOVF    r0x03, W
+0290 6EE5      01316         MOVWF   POSTDEC1
+0292 5000      01317         MOVF    r0x02, W
+0294 6EE5      01318         MOVWF   POSTDEC1
+0296 EC00 F000 01319         CALL    _UDPGet
+029A 0E03      01320         MOVLW   0x03
+029C 26E1      01321         ADDWF   FSR1L, F
+               01322 ;       .line   840; TCPIP_Stack/DHCP.c if ( v == 4u )
+029E C000 F000 01323         MOVFF   __DHCPReceive_v_1_1, r0x02
+02A2 6A00      01324         CLRF    r0x03
+02A4 5000      01325         MOVF    r0x02, W
+02A6 0A04      01326         XORLW   0x04
+02A8 E100      01327         BNZ     _00445_DS_
+02AA 5000      01328         MOVF    r0x03, W
+02AC E000      01329         BZ      _00446_DS_
+02AE 01330 _00445_DS_:
+02AE EF00 F000 01331         GOTO    _00351_DS_
+02B2 01332 _00446_DS_:
+02B2 0000      01333         BANKSEL (_DHCPClient + 2)
+               01334 ;       .line   843; TCPIP_Stack/DHCP.c if(DHCPClient.flags.bits.bOfferReceived)
+02B4 A500      01335         BTFSS   (_DHCPClient + 2), 2, B
+02B6 D000      01336         BRA     _00309_DS_
+               01337 ;       .line   847; TCPIP_Stack/DHCP.c for ( i = 0; i < 4u; i++ ) UDPGet(&v);
+02B8 0E04      01338         MOVLW   0x04
+02BA 6E00      01339         MOVWF   r0x00
+02BC 01340 _00370_DS_:
+02BC 0E00      01341         MOVLW   HIGH(__DHCPReceive_v_1_1)
+02BE 6E00      01342         MOVWF   r0x03
+02C0 0E00      01343         MOVLW   LOW(__DHCPReceive_v_1_1)
+02C2 6E00      01344         MOVWF   r0x02
+02C4 0E80      01345         MOVLW   0x80
+02C6 6E00      01346         MOVWF   r0x04
+02C8 5000      01347         MOVF    r0x04, W
+02CA 6EE5      01348         MOVWF   POSTDEC1
+02CC 5000      01349         MOVF    r0x03, W
+02CE 6EE5      01350         MOVWF   POSTDEC1
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 26
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+02D0 5000      01351         MOVF    r0x02, W
+02D2 6EE5      01352         MOVWF   POSTDEC1
+02D4 EC00 F000 01353         CALL    _UDPGet
+02D8 0E03      01354         MOVLW   0x03
+02DA 26E1      01355         ADDWF   FSR1L, F
+02DC 0600      01356         DECF    r0x00, F
+02DE 5000      01357         MOVF    r0x00, W
+02E0 E100      01358         BNZ     _00370_DS_
+02E2 D000      01359         BRA     _00342_DS_
+02E4 01360 _00309_DS_:
+               01361 ;       .line   851; TCPIP_Stack/DHCP.c UDPGetArray((BYTE*)&DHCPClient.tempMask, 
+02E4 0E00      01362         MOVLW   HIGH(_DHCPClient + 23)
+02E6 6E00      01363         MOVWF   r0x03
+02E8 0E00      01364         MOVLW   LOW(_DHCPClient + 23)
+02EA 6E00      01365         MOVWF   r0x02
+02EC 0E80      01366         MOVLW   0x80
+02EE 6E00      01367         MOVWF   r0x04
+               01368 ;       .line   852; TCPIP_Stack/DHCP.c sizeof(DHCPClient.tempMask));
+02F0 0E00      01369         MOVLW   0x00
+02F2 6EE5      01370         MOVWF   POSTDEC1
+02F4 0E04      01371         MOVLW   0x04
+02F6 6EE5      01372         MOVWF   POSTDEC1
+02F8 5000      01373         MOVF    r0x04, W
+02FA 6EE5      01374         MOVWF   POSTDEC1
+02FC 5000      01375         MOVF    r0x03, W
+02FE 6EE5      01376         MOVWF   POSTDEC1
+0300 5000      01377         MOVF    r0x02, W
+0302 6EE5      01378         MOVWF   POSTDEC1
+0304 EC00 F000 01379         CALL    _UDPGetArray
+0308 0E05      01380         MOVLW   0x05
+030A 26E1      01381         ADDWF   FSR1L, F
+030C 0000      01382         BANKSEL (_DHCPClient + 27)
+               01383 ;       .line   853; TCPIP_Stack/DHCP.c DHCPClient.validValues.bits.Mask = 1;
+030E 8500      01384         BSF     (_DHCPClient + 27), 2, B
+0310 D000      01385         BRA     _00342_DS_
+0312 01386 _00314_DS_:
+               01387 ;       .line   861; TCPIP_Stack/DHCP.c UDPGet(&j);
+0312 0E00      01388         MOVLW   HIGH(__DHCPReceive_j_1_1)
+0314 6E00      01389         MOVWF   r0x03
+0316 0E00      01390         MOVLW   LOW(__DHCPReceive_j_1_1)
+0318 6E00      01391         MOVWF   r0x02
+031A 0E80      01392         MOVLW   0x80
+031C 6E00      01393         MOVWF   r0x04
+031E 5000      01394         MOVF    r0x04, W
+0320 6EE5      01395         MOVWF   POSTDEC1
+0322 5000      01396         MOVF    r0x03, W
+0324 6EE5      01397         MOVWF   POSTDEC1
+0326 5000      01398         MOVF    r0x02, W
+0328 6EE5      01399         MOVWF   POSTDEC1
+032A EC00 F000 01400         CALL    _UDPGet
+032E 0E03      01401         MOVLW   0x03
+0330 26E1      01402         ADDWF   FSR1L, F
+               01403 ;       .line   863; TCPIP_Stack/DHCP.c if ( j >= 4u )
+0332 C000 F000 01404         MOVFF   __DHCPReceive_j_1_1, r0x02
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 27
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0336 6A00      01405         CLRF    r0x03
+0338 0E00      01406         MOVLW   0x00
+033A 5C00      01407         SUBWF   r0x03, W
+033C E100      01408         BNZ     _00447_DS_
+033E 0E04      01409         MOVLW   0x04
+0340 5C00      01410         SUBWF   r0x02, W
+0342 01411 _00447_DS_:
+0342 A0D8      01412         BTFSS   STATUS, 0
+0344 D000      01413         BRA     _00351_DS_
+0346 0000      01414         BANKSEL (_DHCPClient + 2)
+               01415 ;       .line   866; TCPIP_Stack/DHCP.c if(DHCPClient.flags.bits.bOfferReceived)
+0348 A500      01416         BTFSS   (_DHCPClient + 2), 2, B
+034A D000      01417         BRA     _00316_DS_
+               01418 ;       .line   870; TCPIP_Stack/DHCP.c for ( i = 0; i < 4u; i++ ) UDPGet(&v);
+034C 0E04      01419         MOVLW   0x04
+034E 6E00      01420         MOVWF   r0x00
+0350 01421 _00373_DS_:
+0350 0E00      01422         MOVLW   HIGH(__DHCPReceive_v_1_1)
+0352 6E00      01423         MOVWF   r0x03
+0354 0E00      01424         MOVLW   LOW(__DHCPReceive_v_1_1)
+0356 6E00      01425         MOVWF   r0x02
+0358 0E80      01426         MOVLW   0x80
+035A 6E00      01427         MOVWF   r0x04
+035C 5000      01428         MOVF    r0x04, W
+035E 6EE5      01429         MOVWF   POSTDEC1
+0360 5000      01430         MOVF    r0x03, W
+0362 6EE5      01431         MOVWF   POSTDEC1
+0364 5000      01432         MOVF    r0x02, W
+0366 6EE5      01433         MOVWF   POSTDEC1
+0368 EC00 F000 01434         CALL    _UDPGet
+036C 0E03      01435         MOVLW   0x03
+036E 26E1      01436         ADDWF   FSR1L, F
+0370 0600      01437         DECF    r0x00, F
+0372 5000      01438         MOVF    r0x00, W
+0374 E100      01439         BNZ     _00373_DS_
+0376 D000      01440         BRA     _00320_DS_
+0378 01441 _00316_DS_:
+               01442 ;       .line   874; TCPIP_Stack/DHCP.c UDPGetArray((BYTE*)&DHCPClient.tempGateway, 
+0378 0E00      01443         MOVLW   HIGH(_DHCPClient + 19)
+037A 6E00      01444         MOVWF   r0x03
+037C 0E00      01445         MOVLW   LOW(_DHCPClient + 19)
+037E 6E00      01446         MOVWF   r0x02
+0380 0E80      01447         MOVLW   0x80
+0382 6E00      01448         MOVWF   r0x04
+               01449 ;       .line   875; TCPIP_Stack/DHCP.c sizeof(DHCPClient.tempGateway));
+0384 0E00      01450         MOVLW   0x00
+0386 6EE5      01451         MOVWF   POSTDEC1
+0388 0E04      01452         MOVLW   0x04
+038A 6EE5      01453         MOVWF   POSTDEC1
+038C 5000      01454         MOVF    r0x04, W
+038E 6EE5      01455         MOVWF   POSTDEC1
+0390 5000      01456         MOVF    r0x03, W
+0392 6EE5      01457         MOVWF   POSTDEC1
+0394 5000      01458         MOVF    r0x02, W
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 28
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0396 6EE5      01459         MOVWF   POSTDEC1
+0398 EC00 F000 01460         CALL    _UDPGetArray
+039C 0E05      01461         MOVLW   0x05
+039E 26E1      01462         ADDWF   FSR1L, F
+03A0 0000      01463         BANKSEL (_DHCPClient + 27)
+               01464 ;       .line   876; TCPIP_Stack/DHCP.c DHCPClient.validValues.bits.Gateway = 1;
+03A2 8300      01465         BSF     (_DHCPClient + 27), 1, B
+03A4 01466 _00320_DS_:
+               01467 ;       .line   882; TCPIP_Stack/DHCP.c j -= 4;
+03A4 0EFC      01468         MOVLW   0xfc
+03A6 0000      01469         BANKSEL __DHCPReceive_j_1_1
+03A8 2700      01470         ADDWF   __DHCPReceive_j_1_1, F, B
+               01471 ;       .line   883; TCPIP_Stack/DHCP.c while(j--) UDPGet(&v);
+03AA C000 F000 01472         MOVFF   __DHCPReceive_j_1_1, r0x02
+03AE 01473 _00321_DS_:
+03AE C000 F000 01474         MOVFF   r0x02, r0x03
+03B2 0600      01475         DECF    r0x02, F
+03B4 C000 F000 01476         MOVFF   r0x02, __DHCPReceive_j_1_1
+03B8 5000      01477         MOVF    r0x03, W
+03BA B4D8      01478         BTFSC   STATUS, 2
+03BC D000      01479         BRA     _00422_DS_
+03BE 0E00      01480         MOVLW   HIGH(__DHCPReceive_v_1_1)
+03C0 6E00      01481         MOVWF   r0x04
+03C2 0E00      01482         MOVLW   LOW(__DHCPReceive_v_1_1)
+03C4 6E00      01483         MOVWF   r0x03
+03C6 0E80      01484         MOVLW   0x80
+03C8 6E00      01485         MOVWF   r0x05
+03CA 5000      01486         MOVF    r0x05, W
+03CC 6EE5      01487         MOVWF   POSTDEC1
+03CE 5000      01488         MOVF    r0x04, W
+03D0 6EE5      01489         MOVWF   POSTDEC1
+03D2 5000      01490         MOVF    r0x03, W
+03D4 6EE5      01491         MOVWF   POSTDEC1
+03D6 EC00 F000 01492         CALL    _UDPGet
+03DA 0E03      01493         MOVLW   0x03
+03DC 26E1      01494         ADDWF   FSR1L, F
+03DE D000      01495         BRA     _00321_DS_
+03E0 01496 _00324_DS_:
+               01497 ;       .line   945; TCPIP_Stack/DHCP.c UDPGet(&v);    // Get len
+03E0 0E00      01498         MOVLW   HIGH(__DHCPReceive_v_1_1)
+03E2 6E00      01499         MOVWF   r0x04
+03E4 0E00      01500         MOVLW   LOW(__DHCPReceive_v_1_1)
+03E6 6E00      01501         MOVWF   r0x03
+03E8 0E80      01502         MOVLW   0x80
+03EA 6E00      01503         MOVWF   r0x05
+03EC 5000      01504         MOVF    r0x05, W
+03EE 6EE5      01505         MOVWF   POSTDEC1
+03F0 5000      01506         MOVF    r0x04, W
+03F2 6EE5      01507         MOVWF   POSTDEC1
+03F4 5000      01508         MOVF    r0x03, W
+03F6 6EE5      01509         MOVWF   POSTDEC1
+03F8 EC00 F000 01510         CALL    _UDPGet
+03FC 0E03      01511         MOVLW   0x03
+03FE 26E1      01512         ADDWF   FSR1L, F
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 29
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               01513 ;       .line   947; TCPIP_Stack/DHCP.c if ( v == 4u )
+0400 C000 F000 01514         MOVFF   __DHCPReceive_v_1_1, r0x03
+0404 6A00      01515         CLRF    r0x04
+0406 5000      01516         MOVF    r0x03, W
+0408 0A04      01517         XORLW   0x04
+040A E100      01518         BNZ     _00448_DS_
+040C 5000      01519         MOVF    r0x04, W
+040E E000      01520         BZ      _00449_DS_
+0410 01521 _00448_DS_:
+0410 D000      01522         BRA     _00351_DS_
+0412 01523 _00449_DS_:
+               01524 ;       .line   949; TCPIP_Stack/DHCP.c UDPGet(&tempServerID.v[3]);   // Get the id
+0412 0E00      01525         MOVLW   HIGH(__DHCPReceive_tempServerID_1_1 + 3)
+0414 6E00      01526         MOVWF   r0x04
+0416 0E00      01527         MOVLW   LOW(__DHCPReceive_tempServerID_1_1 + 3)
+0418 6E00      01528         MOVWF   r0x03
+041A 0E80      01529         MOVLW   0x80
+041C 6E00      01530         MOVWF   r0x05
+041E 5000      01531         MOVF    r0x05, W
+0420 6EE5      01532         MOVWF   POSTDEC1
+0422 5000      01533         MOVF    r0x04, W
+0424 6EE5      01534         MOVWF   POSTDEC1
+0426 5000      01535         MOVF    r0x03, W
+0428 6EE5      01536         MOVWF   POSTDEC1
+042A EC00 F000 01537         CALL    _UDPGet
+042E 0E03      01538         MOVLW   0x03
+0430 26E1      01539         ADDWF   FSR1L, F
+               01540 ;       .line   950; TCPIP_Stack/DHCP.c UDPGet(&tempServerID.v[2]);
+0432 0E00      01541         MOVLW   HIGH(__DHCPReceive_tempServerID_1_1 + 2)
+0434 6E00      01542         MOVWF   r0x04
+0436 0E00      01543         MOVLW   LOW(__DHCPReceive_tempServerID_1_1 + 2)
+0438 6E00      01544         MOVWF   r0x03
+043A 0E80      01545         MOVLW   0x80
+043C 6E00      01546         MOVWF   r0x05
+043E 5000      01547         MOVF    r0x05, W
+0440 6EE5      01548         MOVWF   POSTDEC1
+0442 5000      01549         MOVF    r0x04, W
+0444 6EE5      01550         MOVWF   POSTDEC1
+0446 5000      01551         MOVF    r0x03, W
+0448 6EE5      01552         MOVWF   POSTDEC1
+044A EC00 F000 01553         CALL    _UDPGet
+044E 0E03      01554         MOVLW   0x03
+0450 26E1      01555         ADDWF   FSR1L, F
+               01556 ;       .line   951; TCPIP_Stack/DHCP.c UDPGet(&tempServerID.v[1]);
+0452 0E00      01557         MOVLW   HIGH(__DHCPReceive_tempServerID_1_1 + 1)
+0454 6E00      01558         MOVWF   r0x04
+0456 0E00      01559         MOVLW   LOW(__DHCPReceive_tempServerID_1_1 + 1)
+0458 6E00      01560         MOVWF   r0x03
+045A 0E80      01561         MOVLW   0x80
+045C 6E00      01562         MOVWF   r0x05
+045E 5000      01563         MOVF    r0x05, W
+0460 6EE5      01564         MOVWF   POSTDEC1
+0462 5000      01565         MOVF    r0x04, W
+0464 6EE5      01566         MOVWF   POSTDEC1
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 30
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0466 5000      01567         MOVF    r0x03, W
+0468 6EE5      01568         MOVWF   POSTDEC1
+046A EC00 F000 01569         CALL    _UDPGet
+046E 0E03      01570         MOVLW   0x03
+0470 26E1      01571         ADDWF   FSR1L, F
+               01572 ;       .line   952; TCPIP_Stack/DHCP.c UDPGet(&tempServerID.v[0]);
+0472 0E00      01573         MOVLW   HIGH(__DHCPReceive_tempServerID_1_1)
+0474 6E00      01574         MOVWF   r0x04
+0476 0E00      01575         MOVLW   LOW(__DHCPReceive_tempServerID_1_1)
+0478 6E00      01576         MOVWF   r0x03
+047A 0E80      01577         MOVLW   0x80
+047C 6E00      01578         MOVWF   r0x05
+047E 5000      01579         MOVF    r0x05, W
+0480 6EE5      01580         MOVWF   POSTDEC1
+0482 5000      01581         MOVF    r0x04, W
+0484 6EE5      01582         MOVWF   POSTDEC1
+0486 5000      01583         MOVF    r0x03, W
+0488 6EE5      01584         MOVWF   POSTDEC1
+048A EC00 F000 01585         CALL    _UDPGet
+048E 0E03      01586         MOVLW   0x03
+0490 26E1      01587         ADDWF   FSR1L, F
+0492 D000      01588         BRA     _00342_DS_
+0494 01589 _00328_DS_:
+               01590 ;       .line   958; TCPIP_Stack/DHCP.c lbDone = TRUE;
+0494 0E01      01591         MOVLW   0x01
+0496 6E00      01592         MOVWF   r0x01
+               01593 ;       .line   959; TCPIP_Stack/DHCP.c break;
+0498 D000      01594         BRA     _00342_DS_
+049A 01595 _00329_DS_:
+               01596 ;       .line   962; TCPIP_Stack/DHCP.c UDPGet(&v);            // Get len
+049A 0E00      01597         MOVLW   HIGH(__DHCPReceive_v_1_1)
+049C 6E00      01598         MOVWF   r0x04
+049E 0E00      01599         MOVLW   LOW(__DHCPReceive_v_1_1)
+04A0 6E00      01600         MOVWF   r0x03
+04A2 0E80      01601         MOVLW   0x80
+04A4 6E00      01602         MOVWF   r0x05
+04A6 5000      01603         MOVF    r0x05, W
+04A8 6EE5      01604         MOVWF   POSTDEC1
+04AA 5000      01605         MOVF    r0x04, W
+04AC 6EE5      01606         MOVWF   POSTDEC1
+04AE 5000      01607         MOVF    r0x03, W
+04B0 6EE5      01608         MOVWF   POSTDEC1
+04B2 EC00 F000 01609         CALL    _UDPGet
+04B6 0E03      01610         MOVLW   0x03
+04B8 26E1      01611         ADDWF   FSR1L, F
+               01612 ;       .line   964; TCPIP_Stack/DHCP.c if ( v == 4u )
+04BA C000 F000 01613         MOVFF   __DHCPReceive_v_1_1, r0x03
+04BE 6A00      01614         CLRF    r0x04
+04C0 5000      01615         MOVF    r0x03, W
+04C2 0A04      01616         XORLW   0x04
+04C4 E100      01617         BNZ     _00450_DS_
+04C6 5000      01618         MOVF    r0x04, W
+04C8 E000      01619         BZ      _00451_DS_
+04CA 01620 _00450_DS_:
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 31
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+04CA D000      01621         BRA     _00351_DS_
+04CC 01622 _00451_DS_:
+04CC 0000      01623         BANKSEL (_DHCPClient + 2)
+               01624 ;       .line   967; TCPIP_Stack/DHCP.c if(DHCPClient.flags.bits.bOfferReceived)
+04CE A500      01625         BTFSS   (_DHCPClient + 2), 2, B
+04D0 D000      01626         BRA     _00331_DS_
+               01627 ;       .line   970; TCPIP_Stack/DHCP.c for ( i = 0; i < 4u; i++ ) UDPGet(&v);
+04D2 0E04      01628         MOVLW   0x04
+04D4 6E00      01629         MOVWF   r0x00
+04D6 01630 _00376_DS_:
+04D6 0E00      01631         MOVLW   HIGH(__DHCPReceive_v_1_1)
+04D8 6E00      01632         MOVWF   r0x04
+04DA 0E00      01633         MOVLW   LOW(__DHCPReceive_v_1_1)
+04DC 6E00      01634         MOVWF   r0x03
+04DE 0E80      01635         MOVLW   0x80
+04E0 6E00      01636         MOVWF   r0x05
+04E2 5000      01637         MOVF    r0x05, W
+04E4 6EE5      01638         MOVWF   POSTDEC1
+04E6 5000      01639         MOVF    r0x04, W
+04E8 6EE5      01640         MOVWF   POSTDEC1
+04EA 5000      01641         MOVF    r0x03, W
+04EC 6EE5      01642         MOVWF   POSTDEC1
+04EE EC00 F000 01643         CALL    _UDPGet
+04F2 0E03      01644         MOVLW   0x03
+04F4 26E1      01645         ADDWF   FSR1L, F
+04F6 2E00      01646         DECFSZ  r0x00, F
+04F8 D000      01647         BRA     _00376_DS_
+04FA D000      01648         BRA     _00342_DS_
+04FC 01649 _00331_DS_:
+               01650 ;       .line   974; TCPIP_Stack/DHCP.c UDPGet(&(((BYTE*)(&DHCPClient.dwLeaseTime))[3]));
+04FC 0E00      01651         MOVLW   HIGH(_DHCPClient + 10)
+04FE 6E00      01652         MOVWF   r0x03
+0500 0E00      01653         MOVLW   LOW(_DHCPClient + 10)
+0502 6E00      01654         MOVWF   r0x00
+0504 0E80      01655         MOVLW   0x80
+0506 6E00      01656         MOVWF   r0x04
+0508 5000      01657         MOVF    r0x04, W
+050A 6EE5      01658         MOVWF   POSTDEC1
+050C 5000      01659         MOVF    r0x03, W
+050E 6EE5      01660         MOVWF   POSTDEC1
+0510 5000      01661         MOVF    r0x00, W
+0512 6EE5      01662         MOVWF   POSTDEC1
+0514 EC00 F000 01663         CALL    _UDPGet
+0518 0E03      01664         MOVLW   0x03
+051A 26E1      01665         ADDWF   FSR1L, F
+               01666 ;       .line   975; TCPIP_Stack/DHCP.c UDPGet(&(((BYTE*)(&DHCPClient.dwLeaseTime))[2]));
+051C 0E00      01667         MOVLW   HIGH(_DHCPClient + 9)
+051E 6E00      01668         MOVWF   r0x03
+0520 0E00      01669         MOVLW   LOW(_DHCPClient + 9)
+0522 6E00      01670         MOVWF   r0x00
+0524 0E80      01671         MOVLW   0x80
+0526 6E00      01672         MOVWF   r0x04
+0528 5000      01673         MOVF    r0x04, W
+052A 6EE5      01674         MOVWF   POSTDEC1
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 32
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+052C 5000      01675         MOVF    r0x03, W
+052E 6EE5      01676         MOVWF   POSTDEC1
+0530 5000      01677         MOVF    r0x00, W
+0532 6EE5      01678         MOVWF   POSTDEC1
+0534 EC00 F000 01679         CALL    _UDPGet
+0538 0E03      01680         MOVLW   0x03
+053A 26E1      01681         ADDWF   FSR1L, F
+               01682 ;       .line   976; TCPIP_Stack/DHCP.c UDPGet(&(((BYTE*)(&DHCPClient.dwLeaseTime))[1]));
+053C 0E00      01683         MOVLW   HIGH(_DHCPClient + 8)
+053E 6E00      01684         MOVWF   r0x03
+0540 0E00      01685         MOVLW   LOW(_DHCPClient + 8)
+0542 6E00      01686         MOVWF   r0x00
+0544 0E80      01687         MOVLW   0x80
+0546 6E00      01688         MOVWF   r0x04
+0548 5000      01689         MOVF    r0x04, W
+054A 6EE5      01690         MOVWF   POSTDEC1
+054C 5000      01691         MOVF    r0x03, W
+054E 6EE5      01692         MOVWF   POSTDEC1
+0550 5000      01693         MOVF    r0x00, W
+0552 6EE5      01694         MOVWF   POSTDEC1
+0554 EC00 F000 01695         CALL    _UDPGet
+0558 0E03      01696         MOVLW   0x03
+055A 26E1      01697         ADDWF   FSR1L, F
+               01698 ;       .line   977; TCPIP_Stack/DHCP.c UDPGet(&(((BYTE*)(&DHCPClient.dwLeaseTime))[0]));
+055C 0E00      01699         MOVLW   HIGH(_DHCPClient + 7)
+055E 6E00      01700         MOVWF   r0x03
+0560 0E00      01701         MOVLW   LOW(_DHCPClient + 7)
+0562 6E00      01702         MOVWF   r0x00
+0564 0E80      01703         MOVLW   0x80
+0566 6E00      01704         MOVWF   r0x04
+0568 5000      01705         MOVF    r0x04, W
+056A 6EE5      01706         MOVWF   POSTDEC1
+056C 5000      01707         MOVF    r0x03, W
+056E 6EE5      01708         MOVWF   POSTDEC1
+0570 5000      01709         MOVF    r0x00, W
+0572 6EE5      01710         MOVWF   POSTDEC1
+0574 EC00 F000 01711         CALL    _UDPGet
+0578 0E03      01712         MOVLW   0x03
+057A 26E1      01713         ADDWF   FSR1L, F
+057C 0000      01714         BANKSEL (_DHCPClient + 7)
+               01715 ;       .line   981; TCPIP_Stack/DHCP.c DHCPClient.dwLeaseTime -= DHCPClient.dwLeaseTime>>5;
+057E 3900      01716         SWAPF   (_DHCPClient + 7), W, B
+0580 0B0F      01717         ANDLW   0x0f
+0582 6E00      01718         MOVWF   r0x00
+0584 0000      01719         BANKSEL (_DHCPClient + 8)
+0586 3900      01720         SWAPF   (_DHCPClient + 8), W, B
+0588 6E00      01721         MOVWF   r0x03
+058A 0BF0      01722         ANDLW   0xf0
+058C 1A00      01723         XORWF   r0x03, F
+058E 2600      01724         ADDWF   r0x00, F
+0590 3200      01725         RRCF    r0x03, F
+0592 3200      01726         RRCF    r0x00, F
+0594 0000      01727         BANKSEL (_DHCPClient + 9)
+0596 5100      01728         MOVF    (_DHCPClient + 9), W, B
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 33
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0598 38E8      01729         SWAPF   WREG, W
+059A 40E8      01730         RRNCF   WREG, W
+059C 0BF8      01731         ANDLW   0xf8
+059E 1200      01732         IORWF   r0x03, F
+05A0 0000      01733         BANKSEL (_DHCPClient + 9)
+05A2 3900      01734         SWAPF   (_DHCPClient + 9), W, B
+05A4 0B0F      01735         ANDLW   0x0f
+05A6 6E00      01736         MOVWF   r0x04
+05A8 0000      01737         BANKSEL (_DHCPClient + 10)
+05AA 3900      01738         SWAPF   (_DHCPClient + 10), W, B
+05AC 6E00      01739         MOVWF   r0x05
+05AE 0BF0      01740         ANDLW   0xf0
+05B0 1A00      01741         XORWF   r0x05, F
+05B2 2600      01742         ADDWF   r0x04, F
+05B4 3200      01743         RRCF    r0x05, F
+05B6 3200      01744         RRCF    r0x04, F
+05B8 5000      01745         MOVF    r0x00, W
+05BA 0000      01746         BANKSEL (_DHCPClient + 7)
+05BC 5D00      01747         SUBWF   (_DHCPClient + 7), W, B
+05BE 6E00      01748         MOVWF   r0x00
+05C0 5000      01749         MOVF    r0x03, W
+05C2 0000      01750         BANKSEL (_DHCPClient + 8)
+05C4 5900      01751         SUBWFB  (_DHCPClient + 8), W, B
+05C6 6E00      01752         MOVWF   r0x03
+05C8 5000      01753         MOVF    r0x04, W
+05CA 0000      01754         BANKSEL (_DHCPClient + 9)
+05CC 5900      01755         SUBWFB  (_DHCPClient + 9), W, B
+05CE 6E00      01756         MOVWF   r0x04
+05D0 5000      01757         MOVF    r0x05, W
+05D2 0000      01758         BANKSEL (_DHCPClient + 10)
+05D4 5900      01759         SUBWFB  (_DHCPClient + 10), W, B
+05D6 6E00      01760         MOVWF   r0x05
+05D8 5000      01761         MOVF    r0x00, W
+05DA 0000      01762         BANKSEL (_DHCPClient + 7)
+05DC 6F00      01763         MOVWF   (_DHCPClient + 7), B
+05DE 5000      01764         MOVF    r0x03, W
+05E0 0000      01765         BANKSEL (_DHCPClient + 8)
+05E2 6F00      01766         MOVWF   (_DHCPClient + 8), B
+05E4 5000      01767         MOVF    r0x04, W
+05E6 0000      01768         BANKSEL (_DHCPClient + 9)
+05E8 6F00      01769         MOVWF   (_DHCPClient + 9), B
+05EA 5000      01770         MOVF    r0x05, W
+05EC 0000      01771         BANKSEL (_DHCPClient + 10)
+05EE 6F00      01772         MOVWF   (_DHCPClient + 10), B
+05F0 D000      01773         BRA     _00342_DS_
+05F2 01774 _00336_DS_:
+               01775 ;       .line   989; TCPIP_Stack/DHCP.c UDPGet(&j);       // Get option len
+05F2 0E00      01776         MOVLW   HIGH(__DHCPReceive_j_1_1)
+05F4 6E00      01777         MOVWF   r0x03
+05F6 0E00      01778         MOVLW   LOW(__DHCPReceive_j_1_1)
+05F8 6E00      01779         MOVWF   r0x00
+05FA 0E80      01780         MOVLW   0x80
+05FC 6E00      01781         MOVWF   r0x04
+05FE 5000      01782         MOVF    r0x04, W
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 34
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0600 6EE5      01783         MOVWF   POSTDEC1
+0602 5000      01784         MOVF    r0x03, W
+0604 6EE5      01785         MOVWF   POSTDEC1
+0606 5000      01786         MOVF    r0x00, W
+0608 6EE5      01787         MOVWF   POSTDEC1
+060A EC00 F000 01788         CALL    _UDPGet
+060E 0E03      01789         MOVLW   0x03
+0610 26E1      01790         ADDWF   FSR1L, F
+               01791 ;       .line   990; TCPIP_Stack/DHCP.c while( j-- )      // Ignore option values
+0612 C000 F000 01792         MOVFF   __DHCPReceive_j_1_1, r0x00
+0616 01793 _00337_DS_:
+0616 C000 F000 01794         MOVFF   r0x00, r0x03
+061A 0600      01795         DECF    r0x00, F
+061C C000 F000 01796         MOVFF   r0x00, __DHCPReceive_j_1_1
+0620 5000      01797         MOVF    r0x03, W
+0622 E000      01798         BZ      _00423_DS_
+               01799 ;       .line   991; TCPIP_Stack/DHCP.c UDPGet(&v);
+0624 0E00      01800         MOVLW   HIGH(__DHCPReceive_v_1_1)
+0626 6E00      01801         MOVWF   r0x04
+0628 0E00      01802         MOVLW   LOW(__DHCPReceive_v_1_1)
+062A 6E00      01803         MOVWF   r0x03
+062C 0E80      01804         MOVLW   0x80
+062E 6E00      01805         MOVWF   r0x05
+0630 5000      01806         MOVF    r0x05, W
+0632 6EE5      01807         MOVWF   POSTDEC1
+0634 5000      01808         MOVF    r0x04, W
+0636 6EE5      01809         MOVWF   POSTDEC1
+0638 5000      01810         MOVF    r0x03, W
+063A 6EE5      01811         MOVWF   POSTDEC1
+063C EC00 F000 01812         CALL    _UDPGet
+0640 0E03      01813         MOVLW   0x03
+0642 26E1      01814         ADDWF   FSR1L, F
+0644 D000      01815         BRA     _00337_DS_
+0646 01816 _00422_DS_:
+               01817 ;       .line   992; TCPIP_Stack/DHCP.c }
+0646 C000 F000 01818         MOVFF   r0x02, __DHCPReceive_j_1_1
+               01819 ;       .line   1015; TCPIP_Stack/DHCP.c        return DHCP_UNKNOWN_MESSAGE;
+064A D000      01820         BRA     _00342_DS_
+064C 01821 _00423_DS_:
+               01822 ;       .line   992; TCPIP_Stack/DHCP.c }
+064C C000 F000 01823         MOVFF   r0x00, __DHCPReceive_j_1_1
+0650 01824 _00342_DS_:
+               01825 ;       .line   993; TCPIP_Stack/DHCP.c } while( !lbDone );
+0650 5000      01826         MOVF    r0x01, W
+0652 B4D8      01827         BTFSC   STATUS, 2
+0654 EF00 F000 01828         GOTO    _00341_DS_
+0658 01829 _00345_DS_:
+               01830 ;       .line   997; TCPIP_Stack/DHCP.c if ( type == DHCP_OFFER_MESSAGE )
+0658 C000 F000 01831         MOVFF   __DHCPReceive_type_1_1, r0x00
+065C 6A00      01832         CLRF    r0x01
+065E 5000      01833         MOVF    r0x00, W
+0660 0A02      01834         XORLW   0x02
+0662 E100      01835         BNZ     _00349_DS_
+0664 5000      01836         MOVF    r0x01, W
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 35
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0666 E000      01837         BZ      _00455_DS_
+0668 01838 _00454_DS_:
+0668 D000      01839         BRA     _00349_DS_
+066A 01840 _00455_DS_:
+066A 0000      01841         BANKSEL __DHCPReceive_tempServerID_1_1
+               01842 ;       .line   999; TCPIP_Stack/DHCP.c DHCPClient.dwServerID = tempServerID.Val;
+066C 5100      01843         MOVF    __DHCPReceive_tempServerID_1_1, W, B
+066E 0000      01844         BANKSEL (_DHCPClient + 11)
+0670 6F00      01845         MOVWF   (_DHCPClient + 11), B
+0672 0000      01846         BANKSEL (__DHCPReceive_tempServerID_1_1 + 1)
+0674 5100      01847         MOVF    (__DHCPReceive_tempServerID_1_1 + 1), W, B
+0676 0000      01848         BANKSEL (_DHCPClient + 12)
+0678 6F00      01849         MOVWF   (_DHCPClient + 12), B
+067A 0000      01850         BANKSEL (__DHCPReceive_tempServerID_1_1 + 2)
+067C 5100      01851         MOVF    (__DHCPReceive_tempServerID_1_1 + 2), W, B
+067E 0000      01852         BANKSEL (_DHCPClient + 13)
+0680 6F00      01853         MOVWF   (_DHCPClient + 13), B
+0682 0000      01854         BANKSEL (__DHCPReceive_tempServerID_1_1 + 3)
+0684 5100      01855         MOVF    (__DHCPReceive_tempServerID_1_1 + 3), W, B
+0686 0000      01856         BANKSEL (_DHCPClient + 14)
+0688 6F00      01857         MOVWF   (_DHCPClient + 14), B
+068A 0000      01858         BANKSEL (_DHCPClient + 2)
+               01859 ;       .line   1000; TCPIP_Stack/DHCP.c        DHCPClient.flags.bits.bOfferReceived = TRUE;
+068C 8500      01860         BSF     (_DHCPClient + 2), 2, B
+068E D000      01861         BRA     _00350_DS_
+0690 01862 _00349_DS_:
+0690 0000      01863         BANKSEL (_DHCPClient + 11)
+               01864 ;       .line   1006; TCPIP_Stack/DHCP.c        if ( DHCPClient.dwServerID != tempServerID.Val )
+0692 5100      01865         MOVF    (_DHCPClient + 11), W, B
+0694 0000      01866         BANKSEL __DHCPReceive_tempServerID_1_1
+0696 1900      01867         XORWF   __DHCPReceive_tempServerID_1_1, W, B
+0698 E100      01868         BNZ     _00457_DS_
+069A 0000      01869         BANKSEL (_DHCPClient + 12)
+069C 5100      01870         MOVF    (_DHCPClient + 12), W, B
+069E 0000      01871         BANKSEL (__DHCPReceive_tempServerID_1_1 + 1)
+06A0 1900      01872         XORWF   (__DHCPReceive_tempServerID_1_1 + 1), W, B
+06A2 E100      01873         BNZ     _00457_DS_
+06A4 0000      01874         BANKSEL (_DHCPClient + 13)
+06A6 5100      01875         MOVF    (_DHCPClient + 13), W, B
+06A8 0000      01876         BANKSEL (__DHCPReceive_tempServerID_1_1 + 2)
+06AA 1900      01877         XORWF   (__DHCPReceive_tempServerID_1_1 + 2), W, B
+06AC E100      01878         BNZ     _00457_DS_
+06AE 0000      01879         BANKSEL (_DHCPClient + 14)
+06B0 5100      01880         MOVF    (_DHCPClient + 14), W, B
+06B2 0000      01881         BANKSEL (__DHCPReceive_tempServerID_1_1 + 3)
+06B4 1900      01882         XORWF   (__DHCPReceive_tempServerID_1_1 + 3), W, B
+06B6 E000      01883         BZ      _00350_DS_
+06B8 01884 _00457_DS_:
+06B8 0000      01885         BANKSEL __DHCPReceive_type_1_1
+               01886 ;       .line   1007; TCPIP_Stack/DHCP.c        type = DHCP_UNKNOWN_MESSAGE;
+06BA 6B00      01887         CLRF    __DHCPReceive_type_1_1, B
+06BC 01888 _00350_DS_:
+               01889 ;       .line   1010; TCPIP_Stack/DHCP.c        UDPDiscard();  // We are done with this packet
+06BC EC00 F000 01890         CALL    _UDPDiscard
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 36
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+06C0 0000      01891         BANKSEL __DHCPReceive_type_1_1
+               01892 ;       .line   1011; TCPIP_Stack/DHCP.c        return type;
+06C2 5100      01893         MOVF    __DHCPReceive_type_1_1, W, B
+06C4 D000      01894         BRA     _00377_DS_
+06C6 01895 _00351_DS_:
+               01896 ;       .line   1014; TCPIP_Stack/DHCP.c        UDPDiscard();
+06C6 EC00 F000 01897         CALL    _UDPDiscard
+               01898 ;       .line   1015; TCPIP_Stack/DHCP.c        return DHCP_UNKNOWN_MESSAGE;
+06CA 6AE8      01899         CLRF    WREG
+06CC 01900 _00377_DS_:
+06CC CFE4 F000 01901         MOVFF   PREINC1, r0x05
+06D0 CFE4 F000 01902         MOVFF   PREINC1, r0x04
+06D4 CFE4 F000 01903         MOVFF   PREINC1, r0x03
+06D8 CFE4 F000 01904         MOVFF   PREINC1, r0x02
+06DC CFE4 F000 01905         MOVFF   PREINC1, r0x01
+06E0 CFE4 F000 01906         MOVFF   PREINC1, r0x00
+06E4 CFE4 FFD9 01907         MOVFF   PREINC1, FSR2L
+06E8 0012      01908         RETURN  
+               01909 
+               01910 ; ; Starting pCode block
+               01911 S_DHCP__DHCPTask        code
+0000 01912 _DHCPTask:
+               01913 ;       .line   485; TCPIP_Stack/DHCP.c void DHCPTask(void)
+0000 CFD9 FFE5 01914         MOVFF   FSR2L, POSTDEC1
+0004 CFE1 FFD9 01915         MOVFF   FSR1L, FSR2L
+0008 C000 FFE5 01916         MOVFF   r0x00, POSTDEC1
+000C C000 FFE5 01917         MOVFF   r0x01, POSTDEC1
+0010 C000 FFE5 01918         MOVFF   r0x02, POSTDEC1
+0014 C000 FFE5 01919         MOVFF   r0x03, POSTDEC1
+0018 C000 FFE5 01920         MOVFF   r0x04, POSTDEC1
+001C C000 FFE5 01921         MOVFF   r0x05, POSTDEC1
+0020 C000 FFE5 01922         MOVFF   r0x06, POSTDEC1
+0024 C000 FFE5 01923         MOVFF   r0x07, POSTDEC1
+0028 C000 FFE5 01924         MOVFF   r0x08, POSTDEC1
+               01925 ;       .line   489; TCPIP_Stack/DHCP.c for(i = 0; i < NETWORK_INTERFACES; i++)
+002C 6A00      01926         CLRF    r0x00
+002E 01927 _00227_DS_:
+002E C000 F000 01928         MOVFF   r0x00, r0x01
+0032 6A00      01929         CLRF    r0x02
+0034 0E00      01930         MOVLW   0x00
+0036 5C00      01931         SUBWF   r0x02, W
+0038 E100      01932         BNZ     _00259_DS_
+003A 0E01      01933         MOVLW   0x01
+003C 5C00      01934         SUBWF   r0x01, W
+003E 01935 _00259_DS_:
+003E B0D8      01936         BTFSC   STATUS, 0
+0040 EF00 F000 01937         GOTO    _00231_DS_
+               01938 ;       .line   491; TCPIP_Stack/DHCP.c LoadState(i);
+0044 6A00      01939         CLRF    r0x00
+               01940 ;       .line   492; TCPIP_Stack/DHCP.c switch(DHCPClient.smState)
+0046 C000 F000 01941         MOVFF   (_DHCPClient + 1), r0x01
+004A 0E0D      01942         MOVLW   0x0d
+004C 5C00      01943         SUBWF   r0x01, W
+004E B0D8      01944         BTFSC   STATUS, 0
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 37
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0050 EF00 F000 01945         GOTO    _00229_DS_
+0054 C000 FFE5 01946         MOVFF   r0x09, POSTDEC1
+0058 C000 FFE5 01947         MOVFF   r0x0a, POSTDEC1
+005C 6A00      01948         CLRF    r0x0a
+005E 3400      01949         RLCF    r0x01, W
+0060 3600      01950         RLCF    r0x0a, F
+0062 34E8      01951         RLCF    WREG, W
+0064 3600      01952         RLCF    r0x0a, F
+0066 0BFC      01953         ANDLW   0xfc
+0068 6E00      01954         MOVWF   r0x09
+006A 0E00      01955         MOVLW   UPPER(_00261_DS_)
+006C 6EFB      01956         MOVWF   PCLATU
+006E 0E00      01957         MOVLW   HIGH(_00261_DS_)
+0070 6EFA      01958         MOVWF   PCLATH
+0072 0E00      01959         MOVLW   LOW(_00261_DS_)
+0074 2600      01960         ADDWF   r0x09, F
+0076 5000      01961         MOVF    r0x0a, W
+0078 22FA      01962         ADDWFC  PCLATH, F
+007A B0D8      01963         BTFSC   STATUS, 0
+007C 2AFB      01964         INCF    PCLATU, F
+007E 5000      01965         MOVF    r0x09, W
+0080 CFE4 F000 01966         MOVFF   PREINC1, r0x0a
+0084 CFE4 F000 01967         MOVFF   PREINC1, r0x09
+0088 6EF9      01968         MOVWF   PCL
+008A 01969 _00261_DS_:
+008A EF00 F000 01970         GOTO    _00169_DS_
+008E EF00 F000 01971         GOTO    _00170_DS_
+0092 EF00 F000 01972         GOTO    _00173_DS_
+0096 EF00 F000 01973         GOTO    _00178_DS_
+009A EF00 F000 01974         GOTO    _00185_DS_
+009E EF00 F000 01975         GOTO    _00188_DS_
+00A2 EF00 F000 01976         GOTO    _00202_DS_
+00A6 EF00 F000 01977         GOTO    _00211_DS_
+00AA EF00 F000 01978         GOTO    _00216_DS_
+00AE EF00 F000 01979         GOTO    _00211_DS_
+00B2 EF00 F000 01980         GOTO    _00216_DS_
+00B6 EF00 F000 01981         GOTO    _00211_DS_
+00BA EF00 F000 01982         GOTO    _00216_DS_
+00BE 01983 _00169_DS_:
+               01984 ;       .line   496; TCPIP_Stack/DHCP.c break;
+00BE EF00 F000 01985         GOTO    _00229_DS_
+00C2 01986 _00170_DS_:
+               01987 ;       .line   501; TCPIP_Stack/DHCP.c UDPOpen(DHCP_CLIENT_PORT, NULL, DHCP_SERVER_PORT);
+00C2 0E00      01988         MOVLW   0x00
+00C4 6EE5      01989         MOVWF   POSTDEC1
+00C6 0E43      01990         MOVLW   0x43
+00C8 6EE5      01991         MOVWF   POSTDEC1
+00CA 0E00      01992         MOVLW   0x00
+00CC 6EE5      01993         MOVWF   POSTDEC1
+00CE 0E00      01994         MOVLW   0x00
+00D0 6EE5      01995         MOVWF   POSTDEC1
+00D2 0E00      01996         MOVLW   0x00
+00D4 6EE5      01997         MOVWF   POSTDEC1
+00D6 0E00      01998         MOVLW   0x00
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 38
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+00D8 6EE5      01999         MOVWF   POSTDEC1
+00DA 0E44      02000         MOVLW   0x44
+00DC 6EE5      02001         MOVWF   POSTDEC1
+00DE EC00 F000 02002         CALL    _UDPOpen
+00E2 6E00      02003         MOVWF   r0x01
+00E4 0E07      02004         MOVLW   0x07
+00E6 26E1      02005         ADDWF   FSR1L, F
+00E8 5000      02006         MOVF    r0x01, W
+00EA 0000      02007         BANKSEL _DHCPClient
+00EC 6F00      02008         MOVWF   _DHCPClient, B
+               02009 ;       .line   502; TCPIP_Stack/DHCP.c if(DHCPClient.hDHCPSocket == INVALID_UDP_SOCKET) break;
+00EE C000 F000 02010         MOVFF   _DHCPClient, r0x01
+00F2 6A00      02011         CLRF    r0x02
+00F4 5000      02012         MOVF    r0x01, W
+00F6 0AFF      02013         XORLW   0xff
+00F8 E100      02014         BNZ     _00263_DS_
+00FA 5000      02015         MOVF    r0x02, W
+00FC E100      02016         BNZ     _00263_DS_
+00FE EF00 F000 02017         GOTO    _00229_DS_
+0102 02018 _00263_DS_:
+               02019 ;       .line   504; TCPIP_Stack/DHCP.c DHCPClient.smState = SM_DHCP_SEND_DISCOVERY;
+0102 0E02      02020         MOVLW   0x02
+0104 0000      02021         BANKSEL (_DHCPClient + 1)
+0106 6F00      02022         MOVWF   (_DHCPClient + 1), B
+0108 02023 _00173_DS_:
+               02024 ;       .line   512; TCPIP_Stack/DHCP.c DHCPClient.dwLeaseTime = 60;
+0108 0E3C      02025         MOVLW   0x3c
+010A 0000      02026         BANKSEL (_DHCPClient + 7)
+010C 6F00      02027         MOVWF   (_DHCPClient + 7), B
+010E 0000      02028         BANKSEL (_DHCPClient + 8)
+0110 6B00      02029         CLRF    (_DHCPClient + 8), B
+0112 0000      02030         BANKSEL (_DHCPClient + 9)
+0114 6B00      02031         CLRF    (_DHCPClient + 9), B
+0116 0000      02032         BANKSEL (_DHCPClient + 10)
+0118 6B00      02033         CLRF    (_DHCPClient + 10), B
+011A 0000      02034         BANKSEL (_DHCPClient + 27)
+               02035 ;       .line   513; TCPIP_Stack/DHCP.c DHCPClient.validValues.val = 0x00;
+011C 6B00      02036         CLRF    (_DHCPClient + 27), B
+011E 0000      02037         BANKSEL (_DHCPClient + 2)
+               02038 ;       .line   514; TCPIP_Stack/DHCP.c DHCPClient.flags.bits.bIsBound = FALSE; 
+0120 9100      02039         BCF     (_DHCPClient + 2), 0, B
+0122 0000      02040         BANKSEL (_DHCPClient + 2)
+               02041 ;       .line   515; TCPIP_Stack/DHCP.c DHCPClient.flags.bits.bOfferReceived = FALSE;
+0124 9500      02042         BCF     (_DHCPClient + 2), 2, B
+               02043 ;       .line   519; TCPIP_Stack/DHCP.c if(!MACIsLinked()) break;
+0126 EC00 F000 02044         CALL    _MACIsLinked
+012A 6E00      02045         MOVWF   r0x01
+012C 5000      02046         MOVF    r0x01, W
+012E B4D8      02047         BTFSC   STATUS, 2
+0130 EF00 F000 02048         GOTO    _00229_DS_
+0134 0000      02049         BANKSEL _DHCPClient
+               02050 ;       .line   522; TCPIP_Stack/DHCP.c if(UDPIsPutReady(DHCPClient.hDHCPSocket) < 300u) break;
+0136 5100      02051         MOVF    _DHCPClient, W, B
+0138 6EE5      02052         MOVWF   POSTDEC1
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 39
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+013A EC00 F000 02053         CALL    _UDPIsPutReady
+013E 6E00      02054         MOVWF   r0x01
+0140 CFF3 F000 02055         MOVFF   PRODL, r0x02
+0144 2AE1      02056         INCF    FSR1L, F
+0146 0E01      02057         MOVLW   0x01
+0148 5C00      02058         SUBWF   r0x02, W
+014A E100      02059         BNZ     _00264_DS_
+014C 0E2C      02060         MOVLW   0x2c
+014E 5C00      02061         SUBWF   r0x01, W
+0150 02062 _00264_DS_:
+0150 A0D8      02063         BTFSS   STATUS, 0
+0152 EF00 F000 02064         GOTO    _00229_DS_
+               02065 ;       .line   528; TCPIP_Stack/DHCP.c DHCPClient.flags.bits.bUseUnicastMode ^= 1;
+0156 6A00      02066         CLRF    r0x01
+0158 0000      02067         BANKSEL (_DHCPClient + 2)
+015A B900      02068         BTFSC   (_DHCPClient + 2), 4, B
+015C 2A00      02069         INCF    r0x01, F
+015E 0E01      02070         MOVLW   0x01
+0160 1A00      02071         XORWF   r0x01, F
+0162 5000      02072         MOVF    r0x01, W
+0164 0B01      02073         ANDLW   0x01
+0166 38E8      02074         SWAPF   WREG, W
+0168 6EF4      02075         MOVWF   PRODH
+016A 0000      02076         BANKSEL (_DHCPClient + 2)
+016C 5100      02077         MOVF    (_DHCPClient + 2), W, B
+016E 0BEF      02078         ANDLW   0xef
+0170 10F4      02079         IORWF   PRODH, W
+0172 0000      02080         BANKSEL (_DHCPClient + 2)
+0174 6F00      02081         MOVWF   (_DHCPClient + 2), B
+               02082 ; ;multiply lit val:0x0e by variable _DHCPClient and store in r0x01
+               02083 ; ;Unrolled 8 X 8 multiplication
+               02084 ; ;FIXME: the function does not support result==WREG
+0176 0000      02085         BANKSEL _DHCPClient
+               02086 ;       .line   533; TCPIP_Stack/DHCP.c memset((void*)&UDPSocketInfo[DHCPClient.hDHCPSocket].remoteNode,
+0178 5100      02087         MOVF    _DHCPClient, W, B
+017A 0D0E      02088         MULLW   0x0e
+017C CFF3 F000 02089         MOVFF   PRODL, r0x01
+0180 6A00      02090         CLRF    r0x02
+0182 0E00      02091         MOVLW   LOW(_UDPSocketInfo)
+0184 2600      02092         ADDWF   r0x01, F
+0186 0E00      02093         MOVLW   HIGH(_UDPSocketInfo)
+0188 2200      02094         ADDWFC  r0x02, F
+               02095 ;       .line   534; TCPIP_Stack/DHCP.c 0xFF, sizeof(UDPSocketInfo[0].remoteNode));
+018A 0E00      02096         MOVLW   0x00
+018C 6EE5      02097         MOVWF   POSTDEC1
+018E 0E0A      02098         MOVLW   0x0a
+0190 6EE5      02099         MOVWF   POSTDEC1
+0192 0EFF      02100         MOVLW   0xff
+0194 6EE5      02101         MOVWF   POSTDEC1
+0196 5000      02102         MOVF    r0x02, W
+0198 6EE5      02103         MOVWF   POSTDEC1
+019A 5000      02104         MOVF    r0x01, W
+019C 6EE5      02105         MOVWF   POSTDEC1
+019E EC00 F000 02106         CALL    _memset
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 40
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+01A2 0E05      02107         MOVLW   0x05
+01A4 26E1      02108         ADDWF   FSR1L, F
+               02109 ;       .line   537; TCPIP_Stack/DHCP.c _DHCPSend(DHCP_DISCOVER_MESSAGE, FALSE);
+01A6 0E00      02110         MOVLW   0x00
+01A8 6EE5      02111         MOVWF   POSTDEC1
+01AA 0E01      02112         MOVLW   0x01
+01AC 6EE5      02113         MOVWF   POSTDEC1
+01AE EC00 F000 02114         CALL    __DHCPSend
+01B2 0E02      02115         MOVLW   0x02
+01B4 26E1      02116         ADDWF   FSR1L, F
+               02117 ;       .line   540; TCPIP_Stack/DHCP.c DHCPClient.dwTimer = TickGet();
+01B6 EC00 F000 02118         CALL    _TickGet
+01BA 6E00      02119         MOVWF   r0x01
+01BC CFF3 F000 02120         MOVFF   PRODL, r0x02
+01C0 CFF4 F000 02121         MOVFF   PRODH, r0x03
+01C4 CFE9 F000 02122         MOVFF   FSR0L, r0x04
+01C8 5000      02123         MOVF    r0x01, W
+01CA 0000      02124         BANKSEL (_DHCPClient + 3)
+01CC 6F00      02125         MOVWF   (_DHCPClient + 3), B
+01CE 5000      02126         MOVF    r0x02, W
+01D0 0000      02127         BANKSEL (_DHCPClient + 4)
+01D2 6F00      02128         MOVWF   (_DHCPClient + 4), B
+01D4 5000      02129         MOVF    r0x03, W
+01D6 0000      02130         BANKSEL (_DHCPClient + 5)
+01D8 6F00      02131         MOVWF   (_DHCPClient + 5), B
+01DA 5000      02132         MOVF    r0x04, W
+01DC 0000      02133         BANKSEL (_DHCPClient + 6)
+01DE 6F00      02134         MOVWF   (_DHCPClient + 6), B
+               02135 ;       .line   541; TCPIP_Stack/DHCP.c DHCPClient.smState = SM_DHCP_GET_OFFER;
+01E0 0E03      02136         MOVLW   0x03
+01E2 0000      02137         BANKSEL (_DHCPClient + 1)
+01E4 6F00      02138         MOVWF   (_DHCPClient + 1), B
+               02139 ;       .line   542; TCPIP_Stack/DHCP.c break;
+01E6 EF00 F000 02140         GOTO    _00229_DS_
+01EA 02141 _00178_DS_:
+01EA 0000      02142         BANKSEL _DHCPClient
+               02143 ;       .line   546; TCPIP_Stack/DHCP.c if(UDPIsGetReady(DHCPClient.hDHCPSocket) < 250u)
+01EC 5100      02144         MOVF    _DHCPClient, W, B
+01EE 6EE5      02145         MOVWF   POSTDEC1
+01F0 EC00 F000 02146         CALL    _UDPIsGetReady
+01F4 6E00      02147         MOVWF   r0x01
+01F6 CFF3 F000 02148         MOVFF   PRODL, r0x02
+01FA 2AE1      02149         INCF    FSR1L, F
+01FC 0E00      02150         MOVLW   0x00
+01FE 5C00      02151         SUBWF   r0x02, W
+0200 E100      02152         BNZ     _00266_DS_
+0202 0EFA      02153         MOVLW   0xfa
+0204 5C00      02154         SUBWF   r0x01, W
+0206 02155 _00266_DS_:
+0206 E200      02156         BC      _00182_DS_
+               02157 ;       .line   550; TCPIP_Stack/DHCP.c if(TickGet() - DHCPClient.dwTimer >= DHCP_TIMEOUT)
+0208 EC00 F000 02158         CALL    _TickGet
+020C 6E00      02159         MOVWF   r0x01
+020E CFF3 F000 02160         MOVFF   PRODL, r0x02
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 41
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0212 CFF4 F000 02161         MOVFF   PRODH, r0x03
+0216 CFE9 F000 02162         MOVFF   FSR0L, r0x04
+021A 0000      02163         BANKSEL (_DHCPClient + 3)
+021C 5100      02164         MOVF    (_DHCPClient + 3), W, B
+021E 5E00      02165         SUBWF   r0x01, F
+0220 0000      02166         BANKSEL (_DHCPClient + 4)
+0222 5100      02167         MOVF    (_DHCPClient + 4), W, B
+0224 5A00      02168         SUBWFB  r0x02, F
+0226 0000      02169         BANKSEL (_DHCPClient + 5)
+0228 5100      02170         MOVF    (_DHCPClient + 5), W, B
+022A 5A00      02171         SUBWFB  r0x03, F
+022C 0000      02172         BANKSEL (_DHCPClient + 6)
+022E 5100      02173         MOVF    (_DHCPClient + 6), W, B
+0230 5A00      02174         SUBWFB  r0x04, F
+0232 0E00      02175         MOVLW   0x00
+0234 5C00      02176         SUBWF   r0x04, W
+0236 E100      02177         BNZ     _00267_DS_
+0238 0E01      02178         MOVLW   0x01
+023A 5C00      02179         SUBWF   r0x03, W
+023C E100      02180         BNZ     _00267_DS_
+023E 0E3D      02181         MOVLW   0x3d
+0240 5C00      02182         SUBWF   r0x02, W
+0242 E100      02183         BNZ     _00267_DS_
+0244 0EE4      02184         MOVLW   0xe4
+0246 5C00      02185         SUBWF   r0x01, W
+0248 02186 _00267_DS_:
+0248 A0D8      02187         BTFSS   STATUS, 0
+024A EF00 F000 02188         GOTO    _00229_DS_
+               02189 ;       .line   551; TCPIP_Stack/DHCP.c DHCPClient.smState = SM_DHCP_SEND_DISCOVERY;
+024E 0E02      02190         MOVLW   0x02
+0250 0000      02191         BANKSEL (_DHCPClient + 1)
+0252 6F00      02192         MOVWF   (_DHCPClient + 1), B
+               02193 ;       .line   552; TCPIP_Stack/DHCP.c break;
+0254 EF00 F000 02194         GOTO    _00229_DS_
+0258 02195 _00182_DS_:
+0258 0000      02196         BANKSEL (_DHCPClient + 2)
+               02197 ;       .line   557; TCPIP_Stack/DHCP.c DHCPClient.flags.bits.bDHCPServerDetected = TRUE;
+025A 8700      02198         BSF     (_DHCPClient + 2), 3, B
+               02199 ;       .line   560; TCPIP_Stack/DHCP.c if(_DHCPReceive() != DHCP_OFFER_MESSAGE) break;
+025C EC00 F000 02200         CALL    __DHCPReceive
+0260 6E00      02201         MOVWF   r0x01
+0262 6A00      02202         CLRF    r0x02
+0264 5000      02203         MOVF    r0x01, W
+0266 0A02      02204         XORLW   0x02
+0268 E100      02205         BNZ     _00268_DS_
+026A 5000      02206         MOVF    r0x02, W
+026C E000      02207         BZ      _00269_DS_
+026E 02208 _00268_DS_:
+026E EF00 F000 02209         GOTO    _00229_DS_
+0272 02210 _00269_DS_:
+               02211 ;       .line   561; TCPIP_Stack/DHCP.c DHCPClient.smState = SM_DHCP_SEND_REQUEST;
+0272 0E04      02212         MOVLW   0x04
+0274 0000      02213         BANKSEL (_DHCPClient + 1)
+0276 6F00      02214         MOVWF   (_DHCPClient + 1), B
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 42
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0278 02215 _00185_DS_:
+0278 0000      02216         BANKSEL _DHCPClient
+               02217 ;       .line   565; TCPIP_Stack/DHCP.c if(UDPIsPutReady(DHCPClient.hDHCPSocket) < 258u) break;
+027A 5100      02218         MOVF    _DHCPClient, W, B
+027C 6EE5      02219         MOVWF   POSTDEC1
+027E EC00 F000 02220         CALL    _UDPIsPutReady
+0282 6E00      02221         MOVWF   r0x01
+0284 CFF3 F000 02222         MOVFF   PRODL, r0x02
+0288 2AE1      02223         INCF    FSR1L, F
+028A 0E01      02224         MOVLW   0x01
+028C 5C00      02225         SUBWF   r0x02, W
+028E E100      02226         BNZ     _00270_DS_
+0290 0E02      02227         MOVLW   0x02
+0292 5C00      02228         SUBWF   r0x01, W
+0294 02229 _00270_DS_:
+0294 A0D8      02230         BTFSS   STATUS, 0
+0296 EF00 F000 02231         GOTO    _00229_DS_
+               02232 ; ;multiply lit val:0x0e by variable _DHCPClient and store in r0x01
+               02233 ; ;Unrolled 8 X 8 multiplication
+               02234 ; ;FIXME: the function does not support result==WREG
+029A 0000      02235         BANKSEL _DHCPClient
+               02236 ;       .line   572; TCPIP_Stack/DHCP.c memset((void*)&UDPSocketInfo[DHCPClient.hDHCPSocket].remoteNode,
+029C 5100      02237         MOVF    _DHCPClient, W, B
+029E 0D0E      02238         MULLW   0x0e
+02A0 CFF3 F000 02239         MOVFF   PRODL, r0x01
+02A4 6A00      02240         CLRF    r0x02
+02A6 0E00      02241         MOVLW   LOW(_UDPSocketInfo)
+02A8 2600      02242         ADDWF   r0x01, F
+02AA 0E00      02243         MOVLW   HIGH(_UDPSocketInfo)
+02AC 2200      02244         ADDWFC  r0x02, F
+               02245 ;       .line   573; TCPIP_Stack/DHCP.c 0xFF, sizeof(UDPSocketInfo[0].remoteNode));
+02AE 0E00      02246         MOVLW   0x00
+02B0 6EE5      02247         MOVWF   POSTDEC1
+02B2 0E0A      02248         MOVLW   0x0a
+02B4 6EE5      02249         MOVWF   POSTDEC1
+02B6 0EFF      02250         MOVLW   0xff
+02B8 6EE5      02251         MOVWF   POSTDEC1
+02BA 5000      02252         MOVF    r0x02, W
+02BC 6EE5      02253         MOVWF   POSTDEC1
+02BE 5000      02254         MOVF    r0x01, W
+02C0 6EE5      02255         MOVWF   POSTDEC1
+02C2 EC00 F000 02256         CALL    _memset
+02C6 0E05      02257         MOVLW   0x05
+02C8 26E1      02258         ADDWF   FSR1L, F
+               02259 ;       .line   576; TCPIP_Stack/DHCP.c _DHCPSend(DHCP_REQUEST_MESSAGE, FALSE); 
+02CA 0E00      02260         MOVLW   0x00
+02CC 6EE5      02261         MOVWF   POSTDEC1
+02CE 0E03      02262         MOVLW   0x03
+02D0 6EE5      02263         MOVWF   POSTDEC1
+02D2 EC00 F000 02264         CALL    __DHCPSend
+02D6 0E02      02265         MOVLW   0x02
+02D8 26E1      02266         ADDWF   FSR1L, F
+               02267 ;       .line   579; TCPIP_Stack/DHCP.c DHCPClient.dwTimer = TickGet();
+02DA EC00 F000 02268         CALL    _TickGet
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 43
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+02DE 6E00      02269         MOVWF   r0x01
+02E0 CFF3 F000 02270         MOVFF   PRODL, r0x02
+02E4 CFF4 F000 02271         MOVFF   PRODH, r0x03
+02E8 CFE9 F000 02272         MOVFF   FSR0L, r0x04
+02EC 5000      02273         MOVF    r0x01, W
+02EE 0000      02274         BANKSEL (_DHCPClient + 3)
+02F0 6F00      02275         MOVWF   (_DHCPClient + 3), B
+02F2 5000      02276         MOVF    r0x02, W
+02F4 0000      02277         BANKSEL (_DHCPClient + 4)
+02F6 6F00      02278         MOVWF   (_DHCPClient + 4), B
+02F8 5000      02279         MOVF    r0x03, W
+02FA 0000      02280         BANKSEL (_DHCPClient + 5)
+02FC 6F00      02281         MOVWF   (_DHCPClient + 5), B
+02FE 5000      02282         MOVF    r0x04, W
+0300 0000      02283         BANKSEL (_DHCPClient + 6)
+0302 6F00      02284         MOVWF   (_DHCPClient + 6), B
+               02285 ;       .line   580; TCPIP_Stack/DHCP.c DHCPClient.smState = SM_DHCP_GET_REQUEST_ACK;
+0304 0E05      02286         MOVLW   0x05
+0306 0000      02287         BANKSEL (_DHCPClient + 1)
+0308 6F00      02288         MOVWF   (_DHCPClient + 1), B
+               02289 ;       .line   581; TCPIP_Stack/DHCP.c break;
+030A EF00 F000 02290         GOTO    _00229_DS_
+030E 02291 _00188_DS_:
+030E 0000      02292         BANKSEL _DHCPClient
+               02293 ;       .line   585; TCPIP_Stack/DHCP.c if(UDPIsGetReady(DHCPClient.hDHCPSocket) < 250u)
+0310 5100      02294         MOVF    _DHCPClient, W, B
+0312 6EE5      02295         MOVWF   POSTDEC1
+0314 EC00 F000 02296         CALL    _UDPIsGetReady
+0318 6E00      02297         MOVWF   r0x01
+031A CFF3 F000 02298         MOVFF   PRODL, r0x02
+031E 2AE1      02299         INCF    FSR1L, F
+0320 0E00      02300         MOVLW   0x00
+0322 5C00      02301         SUBWF   r0x02, W
+0324 E100      02302         BNZ     _00271_DS_
+0326 0EFA      02303         MOVLW   0xfa
+0328 5C00      02304         SUBWF   r0x01, W
+032A 02305 _00271_DS_:
+032A E200      02306         BC      _00192_DS_
+               02307 ;       .line   589; TCPIP_Stack/DHCP.c if(TickGet() - DHCPClient.dwTimer >= DHCP_TIMEOUT)
+032C EC00 F000 02308         CALL    _TickGet
+0330 6E00      02309         MOVWF   r0x01
+0332 CFF3 F000 02310         MOVFF   PRODL, r0x02
+0336 CFF4 F000 02311         MOVFF   PRODH, r0x03
+033A CFE9 F000 02312         MOVFF   FSR0L, r0x04
+033E 0000      02313         BANKSEL (_DHCPClient + 3)
+0340 5100      02314         MOVF    (_DHCPClient + 3), W, B
+0342 5E00      02315         SUBWF   r0x01, F
+0344 0000      02316         BANKSEL (_DHCPClient + 4)
+0346 5100      02317         MOVF    (_DHCPClient + 4), W, B
+0348 5A00      02318         SUBWFB  r0x02, F
+034A 0000      02319         BANKSEL (_DHCPClient + 5)
+034C 5100      02320         MOVF    (_DHCPClient + 5), W, B
+034E 5A00      02321         SUBWFB  r0x03, F
+0350 0000      02322         BANKSEL (_DHCPClient + 6)
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 44
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0352 5100      02323         MOVF    (_DHCPClient + 6), W, B
+0354 5A00      02324         SUBWFB  r0x04, F
+0356 0E00      02325         MOVLW   0x00
+0358 5C00      02326         SUBWF   r0x04, W
+035A E100      02327         BNZ     _00272_DS_
+035C 0E01      02328         MOVLW   0x01
+035E 5C00      02329         SUBWF   r0x03, W
+0360 E100      02330         BNZ     _00272_DS_
+0362 0E3D      02331         MOVLW   0x3d
+0364 5C00      02332         SUBWF   r0x02, W
+0366 E100      02333         BNZ     _00272_DS_
+0368 0EE4      02334         MOVLW   0xe4
+036A 5C00      02335         SUBWF   r0x01, W
+036C 02336 _00272_DS_:
+036C A0D8      02337         BTFSS   STATUS, 0
+036E D000      02338         BRA     _00229_DS_
+               02339 ;       .line   590; TCPIP_Stack/DHCP.c DHCPClient.smState = SM_DHCP_SEND_DISCOVERY;
+0370 0E02      02340         MOVLW   0x02
+0372 0000      02341         BANKSEL (_DHCPClient + 1)
+0374 6F00      02342         MOVWF   (_DHCPClient + 1), B
+               02343 ;       .line   591; TCPIP_Stack/DHCP.c break;
+0376 D000      02344         BRA     _00229_DS_
+0378 02345 _00192_DS_:
+               02346 ;       .line   595; TCPIP_Stack/DHCP.c switch(_DHCPReceive())
+0378 EC00 F000 02347         CALL    __DHCPReceive
+037C 6E00      02348         MOVWF   r0x01
+037E 6A00      02349         CLRF    r0x02
+0380 5000      02350         MOVF    r0x01, W
+0382 0A05      02351         XORLW   0x05
+0384 E100      02352         BNZ     _00274_DS_
+0386 5000      02353         MOVF    r0x02, W
+0388 E000      02354         BZ      _00193_DS_
+038A 02355 _00274_DS_:
+038A 5000      02356         MOVF    r0x01, W
+038C 0A06      02357         XORLW   0x06
+038E E100      02358         BNZ     _00276_DS_
+0390 5000      02359         MOVF    r0x02, W
+0392 E100      02360         BNZ     _00276_DS_
+0394 D000      02361         BRA     _00200_DS_
+0396 02362 _00276_DS_:
+0396 D000      02363         BRA     _00229_DS_
+0398 02364 _00193_DS_:
+0398 0000      02365         BANKSEL _DHCPClient
+               02366 ;       .line   598; TCPIP_Stack/DHCP.c UDPClose(DHCPClient.hDHCPSocket);
+039A 5100      02367         MOVF    _DHCPClient, W, B
+039C 6EE5      02368         MOVWF   POSTDEC1
+039E EC00 F000 02369         CALL    _UDPClose
+03A2 2AE1      02370         INCF    FSR1L, F
+03A4 0000      02371         BANKSEL _DHCPClient
+               02372 ;       .line   599; TCPIP_Stack/DHCP.c DHCPClient.hDHCPSocket = INVALID_UDP_SOCKET;
+03A6 6900      02373         SETF    _DHCPClient, B
+               02374 ;       .line   600; TCPIP_Stack/DHCP.c DHCPClient.dwTimer = TickGet();
+03A8 EC00 F000 02375         CALL    _TickGet
+03AC 6E00      02376         MOVWF   r0x01
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 45
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+03AE CFF3 F000 02377         MOVFF   PRODL, r0x02
+03B2 CFF4 F000 02378         MOVFF   PRODH, r0x03
+03B6 CFE9 F000 02379         MOVFF   FSR0L, r0x04
+03BA 5000      02380         MOVF    r0x01, W
+03BC 0000      02381         BANKSEL (_DHCPClient + 3)
+03BE 6F00      02382         MOVWF   (_DHCPClient + 3), B
+03C0 5000      02383         MOVF    r0x02, W
+03C2 0000      02384         BANKSEL (_DHCPClient + 4)
+03C4 6F00      02385         MOVWF   (_DHCPClient + 4), B
+03C6 5000      02386         MOVF    r0x03, W
+03C8 0000      02387         BANKSEL (_DHCPClient + 5)
+03CA 6F00      02388         MOVWF   (_DHCPClient + 5), B
+03CC 5000      02389         MOVF    r0x04, W
+03CE 0000      02390         BANKSEL (_DHCPClient + 6)
+03D0 6F00      02391         MOVWF   (_DHCPClient + 6), B
+               02392 ;       .line   601; TCPIP_Stack/DHCP.c DHCPClient.smState = SM_DHCP_BOUND;
+03D2 0E06      02393         MOVLW   0x06
+03D4 0000      02394         BANKSEL (_DHCPClient + 1)
+03D6 6F00      02395         MOVWF   (_DHCPClient + 1), B
+03D8 0000      02396         BANKSEL (_DHCPClient + 2)
+               02397 ;       .line   602; TCPIP_Stack/DHCP.c DHCPClient.flags.bits.bEvent = 1;
+03DA 8300      02398         BSF     (_DHCPClient + 2), 1, B
+03DC 0000      02399         BANKSEL (_DHCPClient + 2)
+               02400 ;       .line   603; TCPIP_Stack/DHCP.c DHCPClient.flags.bits.bIsBound = TRUE;  
+03DE 8100      02401         BSF     (_DHCPClient + 2), 0, B
+03E0 0000      02402         BANKSEL (_DHCPClient + 27)
+               02403 ;       .line   605; TCPIP_Stack/DHCP.c if(DHCPClient.validValues.bits.IPAddress)
+03E2 A100      02404         BTFSS   (_DHCPClient + 27), 0, B
+03E4 D000      02405         BRA     _00195_DS_
+03E6 0000      02406         BANKSEL (_DHCPClient + 15)
+               02407 ;       .line   606; TCPIP_Stack/DHCP.c AppConfig.MyIPAddr.Val = DHCPClient.tempIPAddress.Val;
+03E8 5100      02408         MOVF    (_DHCPClient + 15), W, B
+03EA 0000      02409         BANKSEL _AppConfig
+03EC 6F00      02410         MOVWF   _AppConfig, B
+03EE 0000      02411         BANKSEL (_DHCPClient + 16)
+03F0 5100      02412         MOVF    (_DHCPClient + 16), W, B
+03F2 0000      02413         BANKSEL (_AppConfig + 1)
+03F4 6F00      02414         MOVWF   (_AppConfig + 1), B
+03F6 0000      02415         BANKSEL (_DHCPClient + 17)
+03F8 5100      02416         MOVF    (_DHCPClient + 17), W, B
+03FA 0000      02417         BANKSEL (_AppConfig + 2)
+03FC 6F00      02418         MOVWF   (_AppConfig + 2), B
+03FE 0000      02419         BANKSEL (_DHCPClient + 18)
+0400 5100      02420         MOVF    (_DHCPClient + 18), W, B
+0402 0000      02421         BANKSEL (_AppConfig + 3)
+0404 6F00      02422         MOVWF   (_AppConfig + 3), B
+0406 02423 _00195_DS_:
+0406 0000      02424         BANKSEL (_DHCPClient + 27)
+               02425 ;       .line   607; TCPIP_Stack/DHCP.c if(DHCPClient.validValues.bits.Mask)
+0408 A500      02426         BTFSS   (_DHCPClient + 27), 2, B
+040A D000      02427         BRA     _00197_DS_
+040C 0000      02428         BANKSEL (_DHCPClient + 23)
+               02429 ;       .line   608; TCPIP_Stack/DHCP.c AppConfig.MyMask.Val = DHCPClient.tempMask.Val;
+040E 5100      02430         MOVF    (_DHCPClient + 23), W, B
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 46
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0410 0000      02431         BANKSEL (_AppConfig + 4)
+0412 6F00      02432         MOVWF   (_AppConfig + 4), B
+0414 0000      02433         BANKSEL (_DHCPClient + 24)
+0416 5100      02434         MOVF    (_DHCPClient + 24), W, B
+0418 0000      02435         BANKSEL (_AppConfig + 5)
+041A 6F00      02436         MOVWF   (_AppConfig + 5), B
+041C 0000      02437         BANKSEL (_DHCPClient + 25)
+041E 5100      02438         MOVF    (_DHCPClient + 25), W, B
+0420 0000      02439         BANKSEL (_AppConfig + 6)
+0422 6F00      02440         MOVWF   (_AppConfig + 6), B
+0424 0000      02441         BANKSEL (_DHCPClient + 26)
+0426 5100      02442         MOVF    (_DHCPClient + 26), W, B
+0428 0000      02443         BANKSEL (_AppConfig + 7)
+042A 6F00      02444         MOVWF   (_AppConfig + 7), B
+042C 02445 _00197_DS_:
+042C 0000      02446         BANKSEL (_DHCPClient + 27)
+               02447 ;       .line   609; TCPIP_Stack/DHCP.c if(DHCPClient.validValues.bits.Gateway)
+042E A300      02448         BTFSS   (_DHCPClient + 27), 1, B
+0430 D000      02449         BRA     _00229_DS_
+0432 0000      02450         BANKSEL (_DHCPClient + 19)
+               02451 ;       .line   610; TCPIP_Stack/DHCP.c AppConfig.MyGateway.Val = DHCPClient.tempGateway.Val;
+0434 5100      02452         MOVF    (_DHCPClient + 19), W, B
+0436 0000      02453         BANKSEL (_AppConfig + 8)
+0438 6F00      02454         MOVWF   (_AppConfig + 8), B
+043A 0000      02455         BANKSEL (_DHCPClient + 20)
+043C 5100      02456         MOVF    (_DHCPClient + 20), W, B
+043E 0000      02457         BANKSEL (_AppConfig + 9)
+0440 6F00      02458         MOVWF   (_AppConfig + 9), B
+0442 0000      02459         BANKSEL (_DHCPClient + 21)
+0444 5100      02460         MOVF    (_DHCPClient + 21), W, B
+0446 0000      02461         BANKSEL (_AppConfig + 10)
+0448 6F00      02462         MOVWF   (_AppConfig + 10), B
+044A 0000      02463         BANKSEL (_DHCPClient + 22)
+044C 5100      02464         MOVF    (_DHCPClient + 22), W, B
+044E 0000      02465         BANKSEL (_AppConfig + 11)
+0450 6F00      02466         MOVWF   (_AppConfig + 11), B
+               02467 ;       .line   624; TCPIP_Stack/DHCP.c break;
+0452 D000      02468         BRA     _00229_DS_
+0454 02469 _00200_DS_:
+               02470 ;       .line   627; TCPIP_Stack/DHCP.c DHCPClient.smState = SM_DHCP_SEND_DISCOVERY;
+0454 0E02      02471         MOVLW   0x02
+0456 0000      02472         BANKSEL (_DHCPClient + 1)
+0458 6F00      02473         MOVWF   (_DHCPClient + 1), B
+               02474 ;       .line   630; TCPIP_Stack/DHCP.c break;
+045A D000      02475         BRA     _00229_DS_
+045C 02476 _00202_DS_:
+               02477 ;       .line   633; TCPIP_Stack/DHCP.c if(TickGet() - DHCPClient.dwTimer < TICK_SECOND) break;
+045C EC00 F000 02478         CALL    _TickGet
+0460 6E00      02479         MOVWF   r0x01
+0462 CFF3 F000 02480         MOVFF   PRODL, r0x02
+0466 CFF4 F000 02481         MOVFF   PRODH, r0x03
+046A CFE9 F000 02482         MOVFF   FSR0L, r0x04
+046E C000 F000 02483         MOVFF   (_DHCPClient + 3), r0x05
+0472 C000 F000 02484         MOVFF   (_DHCPClient + 4), r0x06
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 47
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0476 C000 F000 02485         MOVFF   (_DHCPClient + 5), r0x07
+047A C000 F000 02486         MOVFF   (_DHCPClient + 6), r0x08
+047E 5000      02487         MOVF    r0x05, W
+0480 5E00      02488         SUBWF   r0x01, F
+0482 5000      02489         MOVF    r0x06, W
+0484 5A00      02490         SUBWFB  r0x02, F
+0486 5000      02491         MOVF    r0x07, W
+0488 5A00      02492         SUBWFB  r0x03, F
+048A 5000      02493         MOVF    r0x08, W
+048C 5A00      02494         SUBWFB  r0x04, F
+048E 0E00      02495         MOVLW   0x00
+0490 5C00      02496         SUBWF   r0x04, W
+0492 E100      02497         BNZ     _00277_DS_
+0494 0E00      02498         MOVLW   0x00
+0496 5C00      02499         SUBWF   r0x03, W
+0498 E100      02500         BNZ     _00277_DS_
+049A 0E9E      02501         MOVLW   0x9e
+049C 5C00      02502         SUBWF   r0x02, W
+049E E100      02503         BNZ     _00277_DS_
+04A0 0EF2      02504         MOVLW   0xf2
+04A2 5C00      02505         SUBWF   r0x01, W
+04A4 02506 _00277_DS_:
+04A4 A0D8      02507         BTFSS   STATUS, 0
+04A6 D000      02508         BRA     _00229_DS_
+               02509 ;       .line   637; TCPIP_Stack/DHCP.c if(DHCPClient.dwLeaseTime >= 2ul)
+04A8 C000 F000 02510         MOVFF   (_DHCPClient + 7), r0x01
+04AC C000 F000 02511         MOVFF   (_DHCPClient + 8), r0x02
+04B0 C000 F000 02512         MOVFF   (_DHCPClient + 9), r0x03
+04B4 C000 F000 02513         MOVFF   (_DHCPClient + 10), r0x04
+04B8 0E00      02514         MOVLW   0x00
+04BA 5C00      02515         SUBWF   r0x04, W
+04BC E100      02516         BNZ     _00278_DS_
+04BE 0E00      02517         MOVLW   0x00
+04C0 5C00      02518         SUBWF   r0x03, W
+04C2 E100      02519         BNZ     _00278_DS_
+04C4 0E00      02520         MOVLW   0x00
+04C6 5C00      02521         SUBWF   r0x02, W
+04C8 E100      02522         BNZ     _00278_DS_
+04CA 0E02      02523         MOVLW   0x02
+04CC 5C00      02524         SUBWF   r0x01, W
+04CE 02525 _00278_DS_:
+04CE E300      02526         BNC     _00206_DS_
+               02527 ;       .line   639; TCPIP_Stack/DHCP.c DHCPClient.dwTimer += TICK_SECOND;
+04D0 0EF2      02528         MOVLW   0xf2
+04D2 2600      02529         ADDWF   r0x05, F
+04D4 0E9E      02530         MOVLW   0x9e
+04D6 2200      02531         ADDWFC  r0x06, F
+04D8 0E00      02532         MOVLW   0x00
+04DA 2200      02533         ADDWFC  r0x07, F
+04DC 0E00      02534         MOVLW   0x00
+04DE 2200      02535         ADDWFC  r0x08, F
+04E0 5000      02536         MOVF    r0x05, W
+04E2 0000      02537         BANKSEL (_DHCPClient + 3)
+04E4 6F00      02538         MOVWF   (_DHCPClient + 3), B
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 48
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+04E6 5000      02539         MOVF    r0x06, W
+04E8 0000      02540         BANKSEL (_DHCPClient + 4)
+04EA 6F00      02541         MOVWF   (_DHCPClient + 4), B
+04EC 5000      02542         MOVF    r0x07, W
+04EE 0000      02543         BANKSEL (_DHCPClient + 5)
+04F0 6F00      02544         MOVWF   (_DHCPClient + 5), B
+04F2 5000      02545         MOVF    r0x08, W
+04F4 0000      02546         BANKSEL (_DHCPClient + 6)
+04F6 6F00      02547         MOVWF   (_DHCPClient + 6), B
+               02548 ;       .line   640; TCPIP_Stack/DHCP.c DHCPClient.dwLeaseTime--;
+04F8 0EFF      02549         MOVLW   0xff
+04FA 2600      02550         ADDWF   r0x01, F
+04FC 0EFF      02551         MOVLW   0xff
+04FE 2200      02552         ADDWFC  r0x02, F
+0500 0EFF      02553         MOVLW   0xff
+0502 2200      02554         ADDWFC  r0x03, F
+0504 0EFF      02555         MOVLW   0xff
+0506 2200      02556         ADDWFC  r0x04, F
+0508 5000      02557         MOVF    r0x01, W
+050A 0000      02558         BANKSEL (_DHCPClient + 7)
+050C 6F00      02559         MOVWF   (_DHCPClient + 7), B
+050E 5000      02560         MOVF    r0x02, W
+0510 0000      02561         BANKSEL (_DHCPClient + 8)
+0512 6F00      02562         MOVWF   (_DHCPClient + 8), B
+0514 5000      02563         MOVF    r0x03, W
+0516 0000      02564         BANKSEL (_DHCPClient + 9)
+0518 6F00      02565         MOVWF   (_DHCPClient + 9), B
+051A 5000      02566         MOVF    r0x04, W
+051C 0000      02567         BANKSEL (_DHCPClient + 10)
+051E 6F00      02568         MOVWF   (_DHCPClient + 10), B
+               02569 ;       .line   641; TCPIP_Stack/DHCP.c break;
+0520 D000      02570         BRA     _00229_DS_
+0522 02571 _00206_DS_:
+               02572 ;       .line   646; TCPIP_Stack/DHCP.c NULL, DHCP_SERVER_PORT);
+0522 0E00      02573         MOVLW   0x00
+0524 6EE5      02574         MOVWF   POSTDEC1
+0526 0E43      02575         MOVLW   0x43
+0528 6EE5      02576         MOVWF   POSTDEC1
+052A 0E00      02577         MOVLW   0x00
+052C 6EE5      02578         MOVWF   POSTDEC1
+052E 0E00      02579         MOVLW   0x00
+0530 6EE5      02580         MOVWF   POSTDEC1
+0532 0E00      02581         MOVLW   0x00
+0534 6EE5      02582         MOVWF   POSTDEC1
+0536 0E00      02583         MOVLW   0x00
+0538 6EE5      02584         MOVWF   POSTDEC1
+053A 0E44      02585         MOVLW   0x44
+053C 6EE5      02586         MOVWF   POSTDEC1
+053E EC00 F000 02587         CALL    _UDPOpen
+0542 6E00      02588         MOVWF   r0x01
+0544 0E07      02589         MOVLW   0x07
+0546 26E1      02590         ADDWF   FSR1L, F
+0548 5000      02591         MOVF    r0x01, W
+054A 0000      02592         BANKSEL _DHCPClient
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 49
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+054C 6F00      02593         MOVWF   _DHCPClient, B
+               02594 ;       .line   647; TCPIP_Stack/DHCP.c if(DHCPClient.hDHCPSocket == INVALID_UDP_SOCKET) break;
+054E C000 F000 02595         MOVFF   _DHCPClient, r0x01
+0552 6A00      02596         CLRF    r0x02
+0554 5000      02597         MOVF    r0x01, W
+0556 0AFF      02598         XORLW   0xff
+0558 E100      02599         BNZ     _00280_DS_
+055A 5000      02600         MOVF    r0x02, W
+055C E100      02601         BNZ     _00280_DS_
+055E D000      02602         BRA     _00229_DS_
+0560 02603 _00280_DS_:
+               02604 ;       .line   649; TCPIP_Stack/DHCP.c DHCPClient.smState = SM_DHCP_SEND_RENEW;
+0560 0E07      02605         MOVLW   0x07
+0562 0000      02606         BANKSEL (_DHCPClient + 1)
+0564 6F00      02607         MOVWF   (_DHCPClient + 1), B
+0566 02608 _00211_DS_:
+0566 0000      02609         BANKSEL _DHCPClient
+               02610 ;       .line   655; TCPIP_Stack/DHCP.c if(UDPIsPutReady(DHCPClient.hDHCPSocket) < 258u) break;
+0568 5100      02611         MOVF    _DHCPClient, W, B
+056A 6EE5      02612         MOVWF   POSTDEC1
+056C EC00 F000 02613         CALL    _UDPIsPutReady
+0570 6E00      02614         MOVWF   r0x01
+0572 CFF3 F000 02615         MOVFF   PRODL, r0x02
+0576 2AE1      02616         INCF    FSR1L, F
+0578 0E01      02617         MOVLW   0x01
+057A 5C00      02618         SUBWF   r0x02, W
+057C E100      02619         BNZ     _00281_DS_
+057E 0E02      02620         MOVLW   0x02
+0580 5C00      02621         SUBWF   r0x01, W
+0582 02622 _00281_DS_:
+0582 A0D8      02623         BTFSS   STATUS, 0
+0584 D000      02624         BRA     _00229_DS_
+               02625 ;       .line   658; TCPIP_Stack/DHCP.c _DHCPSend(DHCP_REQUEST_MESSAGE, TRUE);
+0586 0E01      02626         MOVLW   0x01
+0588 6EE5      02627         MOVWF   POSTDEC1
+058A 0E03      02628         MOVLW   0x03
+058C 6EE5      02629         MOVWF   POSTDEC1
+058E EC00 F000 02630         CALL    __DHCPSend
+0592 0E02      02631         MOVLW   0x02
+0594 26E1      02632         ADDWF   FSR1L, F
+0596 0000      02633         BANKSEL (_DHCPClient + 2)
+               02634 ;       .line   659; TCPIP_Stack/DHCP.c DHCPClient.flags.bits.bOfferReceived = FALSE;
+0598 9500      02635         BCF     (_DHCPClient + 2), 2, B
+               02636 ;       .line   662; TCPIP_Stack/DHCP.c DHCPClient.dwTimer = TickGet();
+059A EC00 F000 02637         CALL    _TickGet
+059E 6E00      02638         MOVWF   r0x01
+05A0 CFF3 F000 02639         MOVFF   PRODL, r0x02
+05A4 CFF4 F000 02640         MOVFF   PRODH, r0x03
+05A8 CFE9 F000 02641         MOVFF   FSR0L, r0x04
+05AC 5000      02642         MOVF    r0x01, W
+05AE 0000      02643         BANKSEL (_DHCPClient + 3)
+05B0 6F00      02644         MOVWF   (_DHCPClient + 3), B
+05B2 5000      02645         MOVF    r0x02, W
+05B4 0000      02646         BANKSEL (_DHCPClient + 4)
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 50
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+05B6 6F00      02647         MOVWF   (_DHCPClient + 4), B
+05B8 5000      02648         MOVF    r0x03, W
+05BA 0000      02649         BANKSEL (_DHCPClient + 5)
+05BC 6F00      02650         MOVWF   (_DHCPClient + 5), B
+05BE 5000      02651         MOVF    r0x04, W
+05C0 0000      02652         BANKSEL (_DHCPClient + 6)
+05C2 6F00      02653         MOVWF   (_DHCPClient + 6), B
+               02654 ;       .line   663; TCPIP_Stack/DHCP.c DHCPClient.smState++;
+05C4 C000 F000 02655         MOVFF   (_DHCPClient + 1), r0x01
+05C8 2A00      02656         INCF    r0x01, F
+05CA 5000      02657         MOVF    r0x01, W
+05CC 0000      02658         BANKSEL (_DHCPClient + 1)
+05CE 6F00      02659         MOVWF   (_DHCPClient + 1), B
+               02660 ;       .line   664; TCPIP_Stack/DHCP.c break;
+05D0 D000      02661         BRA     _00229_DS_
+05D2 02662 _00216_DS_:
+05D2 0000      02663         BANKSEL _DHCPClient
+               02664 ;       .line   670; TCPIP_Stack/DHCP.c if(UDPIsGetReady(DHCPClient.hDHCPSocket) < 250u)
+05D4 5100      02665         MOVF    _DHCPClient, W, B
+05D6 6EE5      02666         MOVWF   POSTDEC1
+05D8 EC00 F000 02667         CALL    _UDPIsGetReady
+05DC 6E00      02668         MOVWF   r0x01
+05DE CFF3 F000 02669         MOVFF   PRODL, r0x02
+05E2 2AE1      02670         INCF    FSR1L, F
+05E4 0E00      02671         MOVLW   0x00
+05E6 5C00      02672         SUBWF   r0x02, W
+05E8 E100      02673         BNZ     _00282_DS_
+05EA 0EFA      02674         MOVLW   0xfa
+05EC 5C00      02675         SUBWF   r0x01, W
+05EE 02676 _00282_DS_:
+05EE E200      02677         BC      _00222_DS_
+               02678 ;       .line   674; TCPIP_Stack/DHCP.c if(TickGet() - DHCPClient.dwTimer >=  DHCP_TIMEOUT)
+05F0 EC00 F000 02679         CALL    _TickGet
+05F4 6E00      02680         MOVWF   r0x01
+05F6 CFF3 F000 02681         MOVFF   PRODL, r0x02
+05FA CFF4 F000 02682         MOVFF   PRODH, r0x03
+05FE CFE9 F000 02683         MOVFF   FSR0L, r0x04
+0602 0000      02684         BANKSEL (_DHCPClient + 3)
+0604 5100      02685         MOVF    (_DHCPClient + 3), W, B
+0606 5E00      02686         SUBWF   r0x01, F
+0608 0000      02687         BANKSEL (_DHCPClient + 4)
+060A 5100      02688         MOVF    (_DHCPClient + 4), W, B
+060C 5A00      02689         SUBWFB  r0x02, F
+060E 0000      02690         BANKSEL (_DHCPClient + 5)
+0610 5100      02691         MOVF    (_DHCPClient + 5), W, B
+0612 5A00      02692         SUBWFB  r0x03, F
+0614 0000      02693         BANKSEL (_DHCPClient + 6)
+0616 5100      02694         MOVF    (_DHCPClient + 6), W, B
+0618 5A00      02695         SUBWFB  r0x04, F
+061A 0E00      02696         MOVLW   0x00
+061C 5C00      02697         SUBWF   r0x04, W
+061E E100      02698         BNZ     _00283_DS_
+0620 0E01      02699         MOVLW   0x01
+0622 5C00      02700         SUBWF   r0x03, W
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 51
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0624 E100      02701         BNZ     _00283_DS_
+0626 0E3D      02702         MOVLW   0x3d
+0628 5C00      02703         SUBWF   r0x02, W
+062A E100      02704         BNZ     _00283_DS_
+062C 0EE4      02705         MOVLW   0xe4
+062E 5C00      02706         SUBWF   r0x01, W
+0630 02707 _00283_DS_:
+0630 A0D8      02708         BTFSS   STATUS, 0
+0632 D000      02709         BRA     _00229_DS_
+0634 0000      02710         BANKSEL (_DHCPClient + 1)
+               02711 ;       .line   676; TCPIP_Stack/DHCP.c if(++DHCPClient.smState > SM_DHCP_GET_RENEW_ACK3)
+0636 2900      02712         INCF    (_DHCPClient + 1), W, B
+0638 6E00      02713         MOVWF   r0x01
+063A 5000      02714         MOVF    r0x01, W
+063C 0000      02715         BANKSEL (_DHCPClient + 1)
+063E 6F00      02716         MOVWF   (_DHCPClient + 1), B
+0640 0E0D      02717         MOVLW   0x0d
+0642 5C00      02718         SUBWF   r0x01, W
+0644 A0D8      02719         BTFSS   STATUS, 0
+0646 D000      02720         BRA     _00229_DS_
+               02721 ;       .line   677; TCPIP_Stack/DHCP.c DHCPClient.smState = SM_DHCP_SEND_DISCOVERY;
+0648 0E02      02722         MOVLW   0x02
+064A 0000      02723         BANKSEL (_DHCPClient + 1)
+064C 6F00      02724         MOVWF   (_DHCPClient + 1), B
+               02725 ;       .line   679; TCPIP_Stack/DHCP.c break;
+064E D000      02726         BRA     _00229_DS_
+0650 02727 _00222_DS_:
+               02728 ;       .line   683; TCPIP_Stack/DHCP.c switch(_DHCPReceive())
+0650 EC00 F000 02729         CALL    __DHCPReceive
+0654 6E00      02730         MOVWF   r0x01
+0656 6A00      02731         CLRF    r0x02
+0658 5000      02732         MOVF    r0x01, W
+065A 0A05      02733         XORLW   0x05
+065C E100      02734         BNZ     _00286_DS_
+065E 5000      02735         MOVF    r0x02, W
+0660 E000      02736         BZ      _00223_DS_
+0662 02737 _00286_DS_:
+0662 5000      02738         MOVF    r0x01, W
+0664 0A06      02739         XORLW   0x06
+0666 E100      02740         BNZ     _00229_DS_
+0668 5000      02741         MOVF    r0x02, W
+066A E000      02742         BZ      _00224_DS_
+066C 02743 _00288_DS_:
+066C D000      02744         BRA     _00229_DS_
+066E 02745 _00223_DS_:
+066E 0000      02746         BANKSEL _DHCPClient
+               02747 ;       .line   686; TCPIP_Stack/DHCP.c UDPClose(DHCPClient.hDHCPSocket);
+0670 5100      02748         MOVF    _DHCPClient, W, B
+0672 6EE5      02749         MOVWF   POSTDEC1
+0674 EC00 F000 02750         CALL    _UDPClose
+0678 2AE1      02751         INCF    FSR1L, F
+067A 0000      02752         BANKSEL _DHCPClient
+               02753 ;       .line   687; TCPIP_Stack/DHCP.c DHCPClient.hDHCPSocket = INVALID_UDP_SOCKET;
+067C 6900      02754         SETF    _DHCPClient, B
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 52
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               02755 ;       .line   688; TCPIP_Stack/DHCP.c DHCPClient.dwTimer = TickGet();
+067E EC00 F000 02756         CALL    _TickGet
+0682 6E00      02757         MOVWF   r0x01
+0684 CFF3 F000 02758         MOVFF   PRODL, r0x02
+0688 CFF4 F000 02759         MOVFF   PRODH, r0x03
+068C CFE9 F000 02760         MOVFF   FSR0L, r0x04
+0690 5000      02761         MOVF    r0x01, W
+0692 0000      02762         BANKSEL (_DHCPClient + 3)
+0694 6F00      02763         MOVWF   (_DHCPClient + 3), B
+0696 5000      02764         MOVF    r0x02, W
+0698 0000      02765         BANKSEL (_DHCPClient + 4)
+069A 6F00      02766         MOVWF   (_DHCPClient + 4), B
+069C 5000      02767         MOVF    r0x03, W
+069E 0000      02768         BANKSEL (_DHCPClient + 5)
+06A0 6F00      02769         MOVWF   (_DHCPClient + 5), B
+06A2 5000      02770         MOVF    r0x04, W
+06A4 0000      02771         BANKSEL (_DHCPClient + 6)
+06A6 6F00      02772         MOVWF   (_DHCPClient + 6), B
+               02773 ;       .line   689; TCPIP_Stack/DHCP.c DHCPClient.smState = SM_DHCP_BOUND;
+06A8 0E06      02774         MOVLW   0x06
+06AA 0000      02775         BANKSEL (_DHCPClient + 1)
+06AC 6F00      02776         MOVWF   (_DHCPClient + 1), B
+06AE 0000      02777         BANKSEL (_DHCPClient + 2)
+               02778 ;       .line   690; TCPIP_Stack/DHCP.c DHCPClient.flags.bits.bEvent = 1;
+06B0 8300      02779         BSF     (_DHCPClient + 2), 1, B
+               02780 ;       .line   691; TCPIP_Stack/DHCP.c break;
+06B2 D000      02781         BRA     _00229_DS_
+06B4 02782 _00224_DS_:
+               02783 ;       .line   694; TCPIP_Stack/DHCP.c DHCPClient.smState = SM_DHCP_SEND_DISCOVERY;
+06B4 0E02      02784         MOVLW   0x02
+06B6 0000      02785         BANKSEL (_DHCPClient + 1)
+06B8 6F00      02786         MOVWF   (_DHCPClient + 1), B
+06BA 02787 _00229_DS_:
+               02788 ;       .line   489; TCPIP_Stack/DHCP.c for(i = 0; i < NETWORK_INTERFACES; i++)
+06BA 2A00      02789         INCF    r0x00, F
+06BC EF00 F000 02790         GOTO    _00227_DS_
+06C0 02791 _00231_DS_:
+06C0 CFE4 F000 02792         MOVFF   PREINC1, r0x08
+06C4 CFE4 F000 02793         MOVFF   PREINC1, r0x07
+06C8 CFE4 F000 02794         MOVFF   PREINC1, r0x06
+06CC CFE4 F000 02795         MOVFF   PREINC1, r0x05
+06D0 CFE4 F000 02796         MOVFF   PREINC1, r0x04
+06D4 CFE4 F000 02797         MOVFF   PREINC1, r0x03
+06D8 CFE4 F000 02798         MOVFF   PREINC1, r0x02
+06DC CFE4 F000 02799         MOVFF   PREINC1, r0x01
+06E0 CFE4 F000 02800         MOVFF   PREINC1, r0x00
+06E4 CFE4 FFD9 02801         MOVFF   PREINC1, FSR2L
+06E8 0012      02802         RETURN  
+               02803 
+               02804 ; ; Starting pCode block
+               02805 S_DHCP__DHCPIsServerDetected    code
+0000 02806 _DHCPIsServerDetected:
+               02807 ;       .line   457; TCPIP_Stack/DHCP.c BOOL DHCPIsServerDetected(BYTE vInterface)
+0000 CFD9 FFE5 02808         MOVFF   FSR2L, POSTDEC1
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 53
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0004 CFE1 FFD9 02809         MOVFF   FSR1L, FSR2L
+0008 C000 FFE5 02810         MOVFF   r0x00, POSTDEC1
+               02811 ;       .line   460; TCPIP_Stack/DHCP.c return DHCPClient.flags.bits.bDHCPServerDetected;
+000C 6A00      02812         CLRF    r0x00
+000E 0000      02813         BANKSEL (_DHCPClient + 2)
+0010 B700      02814         BTFSC   (_DHCPClient + 2), 3, B
+0012 2A00      02815         INCF    r0x00, F
+0014 5000      02816         MOVF    r0x00, W
+0016 CFE4 F000 02817         MOVFF   PREINC1, r0x00
+001A CFE4 FFD9 02818         MOVFF   PREINC1, FSR2L
+001E 0012      02819         RETURN  
+               02820 
+               02821 ; ; Starting pCode block
+               02822 S_DHCP__DHCPStateChanged        code
+0000 02823 _DHCPStateChanged:
+               02824 ;       .line   420; TCPIP_Stack/DHCP.c BOOL DHCPStateChanged(BYTE vInterface)
+0000 CFD9 FFE5 02825         MOVFF   FSR2L, POSTDEC1
+0004 CFE1 FFD9 02826         MOVFF   FSR1L, FSR2L
+0008 0000      02827         BANKSEL (_DHCPClient + 2)
+               02828 ;       .line   423; TCPIP_Stack/DHCP.c if(DHCPClient.flags.bits.bEvent)
+000A A300      02829         BTFSS   (_DHCPClient + 2), 1, B
+000C D000      02830         BRA     _00158_DS_
+000E 0000      02831         BANKSEL (_DHCPClient + 2)
+               02832 ;       .line   425; TCPIP_Stack/DHCP.c DHCPClient.flags.bits.bEvent = 0;
+0010 9300      02833         BCF     (_DHCPClient + 2), 1, B
+               02834 ;       .line   426; TCPIP_Stack/DHCP.c return TRUE;
+0012 0E01      02835         MOVLW   0x01
+0014 D000      02836         BRA     _00159_DS_
+0016 02837 _00158_DS_:
+               02838 ;       .line   428; TCPIP_Stack/DHCP.c return FALSE;
+0016 6AE8      02839         CLRF    WREG
+0018 02840 _00159_DS_:
+0018 CFE4 FFD9 02841         MOVFF   PREINC1, FSR2L
+001C 0012      02842         RETURN  
+               02843 
+               02844 ; ; Starting pCode block
+               02845 S_DHCP__DHCPIsBound     code
+0000 02846 _DHCPIsBound:
+               02847 ;       .line   386; TCPIP_Stack/DHCP.c BOOL DHCPIsBound(BYTE vInterface)
+0000 CFD9 FFE5 02848         MOVFF   FSR2L, POSTDEC1
+0004 CFE1 FFD9 02849         MOVFF   FSR1L, FSR2L
+0008 C000 FFE5 02850         MOVFF   r0x00, POSTDEC1
+               02851 ;       .line   389; TCPIP_Stack/DHCP.c return DHCPClient.flags.bits.bIsBound;
+000C 6A00      02852         CLRF    r0x00
+000E 0000      02853         BANKSEL (_DHCPClient + 2)
+0010 B100      02854         BTFSC   (_DHCPClient + 2), 0, B
+0012 2A00      02855         INCF    r0x00, F
+0014 5000      02856         MOVF    r0x00, W
+0016 CFE4 F000 02857         MOVFF   PREINC1, r0x00
+001A CFE4 FFD9 02858         MOVFF   PREINC1, FSR2L
+001E 0012      02859         RETURN  
+               02860 
+               02861 ; ; Starting pCode block
+               02862 S_DHCP__DHCPIsEnabled   code
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 54
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0000 02863 _DHCPIsEnabled:
+               02864 ;       .line   355; TCPIP_Stack/DHCP.c BOOL DHCPIsEnabled(BYTE vInterface)
+0000 CFD9 FFE5 02865         MOVFF   FSR2L, POSTDEC1
+0004 CFE1 FFD9 02866         MOVFF   FSR1L, FSR2L
+0008 C000 FFE5 02867         MOVFF   r0x00, POSTDEC1
+               02868 ;       .line   358; TCPIP_Stack/DHCP.c return DHCPClient.smState != SM_DHCP_DISABLED;
+000C 6A00      02869         CLRF    r0x00
+000E 0000      02870         BANKSEL (_DHCPClient + 1)
+0010 5100      02871         MOVF    (_DHCPClient + 1), W, B
+0012 E100      02872         BNZ     _00147_DS_
+0014 2A00      02873         INCF    r0x00, F
+0016 02874 _00147_DS_:
+0016 5000      02875         MOVF    r0x00, W
+0018 80D8      02876         BSF     STATUS, 0
+001A 66E8      02877         TSTFSZ  WREG
+001C 90D8      02878         BCF     STATUS, 0
+001E 6A00      02879         CLRF    r0x00
+0020 3600      02880         RLCF    r0x00, F
+0022 5000      02881         MOVF    r0x00, W
+0024 CFE4 F000 02882         MOVFF   PREINC1, r0x00
+0028 CFE4 FFD9 02883         MOVFF   PREINC1, FSR2L
+002C 0012      02884         RETURN  
+               02885 
+               02886 ; ; Starting pCode block
+               02887 S_DHCP__DHCPEnable      code
+0000 02888 _DHCPEnable:
+               02889 ;       .line   324; TCPIP_Stack/DHCP.c void DHCPEnable(BYTE vInterface)
+0000 CFD9 FFE5 02890         MOVFF   FSR2L, POSTDEC1
+0004 CFE1 FFD9 02891         MOVFF   FSR1L, FSR2L
+0008 0000      02892         BANKSEL (_DHCPClient + 1)
+               02893 ;       .line   328; TCPIP_Stack/DHCP.c if(DHCPClient.smState == SM_DHCP_DISABLED)
+000A 5100      02894         MOVF    (_DHCPClient + 1), W, B
+000C E100      02895         BNZ     _00139_DS_
+               02896 ;       .line   330; TCPIP_Stack/DHCP.c DHCPClient.smState = SM_DHCP_GET_SOCKET;
+000E 0E01      02897         MOVLW   0x01
+0010 0000      02898         BANKSEL (_DHCPClient + 1)
+0012 6F00      02899         MOVWF   (_DHCPClient + 1), B
+0014 0000      02900         BANKSEL (_DHCPClient + 2)
+               02901 ;       .line   331; TCPIP_Stack/DHCP.c DHCPClient.flags.bits.bIsBound = FALSE;
+0016 9100      02902         BCF     (_DHCPClient + 2), 0, B
+0018 02903 _00139_DS_:
+0018 CFE4 FFD9 02904         MOVFF   PREINC1, FSR2L
+001C 0012      02905         RETURN  
+               02906 
+               02907 ; ; Starting pCode block
+               02908 S_DHCP__DHCPDisable     code
+0000 02909 _DHCPDisable:
+               02910 ;       .line   289; TCPIP_Stack/DHCP.c void DHCPDisable(BYTE vInterface)
+0000 CFD9 FFE5 02911         MOVFF   FSR2L, POSTDEC1
+0004 CFE1 FFD9 02912         MOVFF   FSR1L, FSR2L
+0008 C000 FFE5 02913         MOVFF   r0x00, POSTDEC1
+000C C000 FFE5 02914         MOVFF   r0x01, POSTDEC1
+0010 C000 FFE5 02915         MOVFF   r0x02, POSTDEC1
+               02916 ;       .line   293; TCPIP_Stack/DHCP.c if(DHCPClient.hDHCPSocket != INVALID_UDP_SOCKET)
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 55
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0014 C000 F000 02917         MOVFF   _DHCPClient, r0x00
+0018 C000 F000 02918         MOVFF   r0x00, r0x01
+001C 6A00      02919         CLRF    r0x02
+001E 5000      02920         MOVF    r0x01, W
+0020 0AFF      02921         XORLW   0xff
+0022 E100      02922         BNZ     _00132_DS_
+0024 5000      02923         MOVF    r0x02, W
+0026 E000      02924         BZ      _00127_DS_
+0028 02925 _00132_DS_:
+               02926 ;       .line   295; TCPIP_Stack/DHCP.c UDPClose(DHCPClient.hDHCPSocket);
+0028 5000      02927         MOVF    r0x00, W
+002A 6EE5      02928         MOVWF   POSTDEC1
+002C EC00 F000 02929         CALL    _UDPClose
+0030 2AE1      02930         INCF    FSR1L, F
+0032 0000      02931         BANKSEL _DHCPClient
+               02932 ;       .line   296; TCPIP_Stack/DHCP.c DHCPClient.hDHCPSocket = INVALID_UDP_SOCKET;
+0034 6900      02933         SETF    _DHCPClient, B
+0036 02934 _00127_DS_:
+0036 0000      02935         BANKSEL (_DHCPClient + 1)
+               02936 ;       .line   299; TCPIP_Stack/DHCP.c DHCPClient.smState = SM_DHCP_DISABLED;
+0038 6B00      02937         CLRF    (_DHCPClient + 1), B
+003A CFE4 F000 02938         MOVFF   PREINC1, r0x02
+003E CFE4 F000 02939         MOVFF   PREINC1, r0x01
+0042 CFE4 F000 02940         MOVFF   PREINC1, r0x00
+0046 CFE4 FFD9 02941         MOVFF   PREINC1, FSR2L
+004A 0012      02942         RETURN  
+               02943 
+               02944 ; ; Starting pCode block
+               02945 S_DHCP__DHCPInit        code
+0000 02946 _DHCPInit:
+               02947 ;       .line   223; TCPIP_Stack/DHCP.c void DHCPInit(BYTE vInterface)
+0000 CFD9 FFE5 02948         MOVFF   FSR2L, POSTDEC1
+0004 CFE1 FFD9 02949         MOVFF   FSR1L, FSR2L
+0008 C000 FFE5 02950         MOVFF   r0x00, POSTDEC1
+000C C000 FFE5 02951         MOVFF   r0x01, POSTDEC1
+0010 C000 FFE5 02952         MOVFF   r0x02, POSTDEC1
+0014 0000      02953         BANKSEL _DHCPClientInitializedOnce
+               02954 ;       .line   229; TCPIP_Stack/DHCP.c if(!DHCPClientInitializedOnce)
+0016 5100      02955         MOVF    _DHCPClientInitializedOnce, W, B
+0018 E100      02956         BNZ     _00106_DS_
+               02957 ;       .line   231; TCPIP_Stack/DHCP.c DHCPClientInitializedOnce = TRUE;
+001A 0E01      02958         MOVLW   0x01
+001C 0000      02959         BANKSEL _DHCPClientInitializedOnce
+001E 6F00      02960         MOVWF   _DHCPClientInitializedOnce, B
+               02961 ;       .line   232; TCPIP_Stack/DHCP.c for(i = 0; i < NETWORK_INTERFACES; i++)
+0020 6A00      02962         CLRF    r0x00
+0022 02963 _00109_DS_:
+0022 C000 F000 02964         MOVFF   r0x00, r0x01
+0026 6A00      02965         CLRF    r0x02
+0028 0E00      02966         MOVLW   0x00
+002A 5C00      02967         SUBWF   r0x02, W
+002C E100      02968         BNZ     _00119_DS_
+002E 0E01      02969         MOVLW   0x01
+0030 5C00      02970         SUBWF   r0x01, W
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 56
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0032 02971 _00119_DS_:
+0032 E200      02972         BC      _00106_DS_
+0034 0000      02973         BANKSEL _DHCPClient
+               02974 ;       .line   235; TCPIP_Stack/DHCP.c DHCPClient.hDHCPSocket = INVALID_UDP_SOCKET;
+0036 6900      02975         SETF    _DHCPClient, B
+               02976 ;       .line   232; TCPIP_Stack/DHCP.c for(i = 0; i < NETWORK_INTERFACES; i++)
+0038 0E01      02977         MOVLW   0x01
+003A 6E00      02978         MOVWF   r0x00
+003C D000      02979         BRA     _00109_DS_
+003E 02980 _00106_DS_:
+               02981 ;       .line   242; TCPIP_Stack/DHCP.c if(DHCPClient.hDHCPSocket != INVALID_UDP_SOCKET)
+003E C000 F000 02982         MOVFF   _DHCPClient, r0x00
+0042 C000 F000 02983         MOVFF   r0x00, r0x01
+0046 6A00      02984         CLRF    r0x02
+0048 5000      02985         MOVF    r0x01, W
+004A 0AFF      02986         XORLW   0xff
+004C E100      02987         BNZ     _00121_DS_
+004E 5000      02988         MOVF    r0x02, W
+0050 E000      02989         BZ      _00108_DS_
+0052 02990 _00121_DS_:
+               02991 ;       .line   244; TCPIP_Stack/DHCP.c UDPClose(DHCPClient.hDHCPSocket);
+0052 5000      02992         MOVF    r0x00, W
+0054 6EE5      02993         MOVWF   POSTDEC1
+0056 EC00 F000 02994         CALL    _UDPClose
+005A 2AE1      02995         INCF    FSR1L, F
+005C 0000      02996         BANKSEL _DHCPClient
+               02997 ;       .line   245; TCPIP_Stack/DHCP.c DHCPClient.hDHCPSocket = INVALID_UDP_SOCKET;
+005E 6900      02998         SETF    _DHCPClient, B
+0060 02999 _00108_DS_:
+               03000 ;       .line   249; TCPIP_Stack/DHCP.c DHCPClient.smState = SM_DHCP_GET_SOCKET;
+0060 0E01      03001         MOVLW   0x01
+0062 0000      03002         BANKSEL (_DHCPClient + 1)
+0064 6F00      03003         MOVWF   (_DHCPClient + 1), B
+0066 0000      03004         BANKSEL (_DHCPClient + 2)
+               03005 ;       .line   250; TCPIP_Stack/DHCP.c DHCPClient.flags.val = 0;
+0068 6B00      03006         CLRF    (_DHCPClient + 2), B
+006A 0000      03007         BANKSEL (_DHCPClient + 2)
+               03008 ;       .line   251; TCPIP_Stack/DHCP.c DHCPClient.flags.bits.bUseUnicastMode = TRUE; // This flag toggles before 
+006C 8900      03009         BSF     (_DHCPClient + 2), 4, B
+006E 0000      03010         BANKSEL (_DHCPClient + 2)
+               03011 ;       .line   255; TCPIP_Stack/DHCP.c DHCPClient.flags.bits.bEvent = TRUE;
+0070 8300      03012         BSF     (_DHCPClient + 2), 1, B
+0072 CFE4 F000 03013         MOVFF   PREINC1, r0x02
+0076 CFE4 F000 03014         MOVFF   PREINC1, r0x01
+007A CFE4 F000 03015         MOVFF   PREINC1, r0x00
+007E CFE4 FFD9 03016         MOVFF   PREINC1, FSR2L
+0082 0012      03017         RETURN  
+               03018 
+               03019 
+               03020 
+               03021 ; Statistics:
+               03022 ; code size:     4782 (0x12ae) bytes ( 3.65%)
+               03023 ;                2391 (0x0957) words
+               03024 ; udata size:      39 (0x0027) bytes ( 1.02%)
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 57
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               03025 ; access size:     11 (0x000b) bytes
+               03026 
+               03027 
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 58
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+FSR0H                             00000FEA
+FSR0L                             00000FE9
+FSR1L                             00000FE1
+FSR2L                             00000FD9
+INDF0                             00000FEF
+PCL                               00000FF9
+PCLATH                            00000FFA
+PCLATU                            00000FFB
+PLUSW2                            00000FDB
+POSTDEC1                          00000FE5
+PREINC1                           00000FE4
+PRODH                             00000FF4
+PRODL                             00000FF3
+STATUS                            00000FD8
+WREG                              00000FE8
+_00106_DS_                        0000003E
+_00108_DS_                        00000060
+_00109_DS_                        00000022
+_00119_DS_                        00000032
+_00121_DS_                        00000052
+_00127_DS_                        00000036
+_00132_DS_                        00000028
+_00139_DS_                        00000018
+_00147_DS_                        00000016
+_00158_DS_                        00000016
+_00159_DS_                        00000018
+_00169_DS_                        000000BE
+_00170_DS_                        000000C2
+_00173_DS_                        00000108
+_00178_DS_                        000001EA
+_00182_DS_                        00000258
+_00185_DS_                        00000278
+_00188_DS_                        0000030E
+_00192_DS_                        00000378
+_00193_DS_                        00000398
+_00195_DS_                        00000406
+_00197_DS_                        0000042C
+_00200_DS_                        00000454
+_00202_DS_                        0000045C
+_00206_DS_                        00000522
+_00211_DS_                        00000566
+_00216_DS_                        000005D2
+_00222_DS_                        00000650
+_00223_DS_                        0000066E
+_00224_DS_                        000006B4
+_00227_DS_                        0000002E
+_00229_DS_                        000006BA
+_00231_DS_                        000006C0
+_00259_DS_                        0000003E
+_00261_DS_                        0000008A
+_00263_DS_                        00000102
+_00264_DS_                        00000150
+_00266_DS_                        00000206
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 59
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_00267_DS_                        00000248
+_00268_DS_                        0000026E
+_00269_DS_                        00000272
+_00270_DS_                        00000294
+_00271_DS_                        0000032A
+_00272_DS_                        0000036C
+_00274_DS_                        0000038A
+_00276_DS_                        00000396
+_00277_DS_                        000004A4
+_00278_DS_                        000004CE
+_00280_DS_                        00000560
+_00281_DS_                        00000582
+_00282_DS_                        000005EE
+_00283_DS_                        00000630
+_00286_DS_                        00000662
+_00288_DS_                        0000066C
+_00294_DS_                        000000B4
+_00295_DS_                        000000E0
+_00300_DS_                        0000020C
+_00307_DS_                        0000027E
+_00309_DS_                        000002E4
+_00314_DS_                        00000312
+_00316_DS_                        00000378
+_00320_DS_                        000003A4
+_00321_DS_                        000003AE
+_00324_DS_                        000003E0
+_00328_DS_                        00000494
+_00329_DS_                        0000049A
+_00331_DS_                        000004FC
+_00336_DS_                        000005F2
+_00337_DS_                        00000616
+_00341_DS_                        00000192
+_00342_DS_                        00000650
+_00345_DS_                        00000658
+_00349_DS_                        00000690
+_00350_DS_                        000006BC
+_00351_DS_                        000006C6
+_00354_DS_                        0000005C
+_00357_DS_                        0000008C
+_00360_DS_                        000000E4
+_00361_DS_                        0000010C
+_00364_DS_                        00000166
+_00367_DS_                        0000016A
+_00370_DS_                        000002BC
+_00373_DS_                        00000350
+_00376_DS_                        000004D6
+_00377_DS_                        000006CC
+_00422_DS_                        00000646
+_00423_DS_                        0000064C
+_00424_DS_                        00000054
+_00425_DS_                        00000058
+_00426_DS_                        0000011C
+_00428_DS_                        00000162
+_00430_DS_                        000001CE
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 60
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_00432_DS_                        000001DA
+_00434_DS_                        000001E6
+_00436_DS_                        000001F0
+_00438_DS_                        000001FC
+_00440_DS_                        00000208
+_00441_DS_                        0000023C
+_00442_DS_                        00000240
+_00444_DS_                        0000027C
+_00445_DS_                        000002AE
+_00446_DS_                        000002B2
+_00447_DS_                        00000342
+_00448_DS_                        00000410
+_00449_DS_                        00000412
+_00450_DS_                        000004CA
+_00451_DS_                        000004CC
+_00454_DS_                        00000668
+_00455_DS_                        0000066A
+_00457_DS_                        000006B8
+_00463_DS_                        00000104
+_00464_DS_                        0000012C
+_00467_DS_                        000001D6
+_00469_DS_                        00000222
+_00471_DS_                        0000027C
+_00472_DS_                        000002B8
+_00475_DS_                        00000266
+_00476_DS_                        000002C2
+_00478_DS_                        000002DE
+_00480_DS_                        00000312
+_00483_DS_                        00000130
+_00486_DS_                        0000016C
+_00489_DS_                        000000A6
+_00490_DS_                        000000AA
+_00507_DS_                        000000D2
+_00511_DS_                        000001CE
+_00512_DS_                        000002D0
+_ADCON0                           00000000
+_ADCON0bits                       00000000
+_ADCON1                           00000000
+_ADCON1bits                       00000000
+_ADCON2                           00000000
+_ADCON2bits                       00000000
+_ADRES                            00000000
+_ADRESH                           00000000
+_ADRESL                           00000000
+_AN0String                        00000000
+_AppConfig                        00000000
+_BAUDCON                          00000000
+_BAUDCON1                         00000000
+_BAUDCON1bits                     00000000
+_BAUDCON2                         00000000
+_BAUDCON2bits                     00000000
+_BAUDCONbits                      00000000
+_BAUDCTL                          00000000
+_BAUDCTL1                         00000000
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 61
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_BAUDCTL1bits                     00000000
+_BAUDCTL2                         00000000
+_BAUDCTL2bits                     00000000
+_BAUDCTLbits                      00000000
+_BSR                              00000000
+_CCP1CON                          00000000
+_CCP1CONbits                      00000000
+_CCP2CON                          00000000
+_CCP2CONbits                      00000000
+_CCP3CON                          00000000
+_CCP3CONbits                      00000000
+_CCP4CON                          00000000
+_CCP4CONbits                      00000000
+_CCP5CON                          00000000
+_CCP5CONbits                      00000000
+_CCPR1                            00000000
+_CCPR1H                           00000000
+_CCPR1L                           00000000
+_CCPR2                            00000000
+_CCPR2H                           00000000
+_CCPR2L                           00000000
+_CCPR3                            00000000
+_CCPR3H                           00000000
+_CCPR3L                           00000000
+_CCPR4                            00000000
+_CCPR4H                           00000000
+_CCPR4L                           00000000
+_CCPR5                            00000000
+_CCPR5H                           00000000
+_CCPR5L                           00000000
+_CMCON                            00000000
+_CMCONbits                        00000000
+_CVRCON                           00000000
+_CVRCONbits                       00000000
+_DDRA                             00000000
+_DDRAbits                         00000000
+_DDRB                             00000000
+_DDRBbits                         00000000
+_DDRC                             00000000
+_DDRCbits                         00000000
+_DDRD                             00000000
+_DDRDbits                         00000000
+_DDRE                             00000000
+_DDREbits                         00000000
+_DDRF                             00000000
+_DDRFbits                         00000000
+_DDRG                             00000000
+_DDRGbits                         00000000
+_DDRH                             00000000
+_DDRHbits                         00000000
+_DDRJ                             00000000
+_DDRJbits                         00000000
+_DHCPClient                       00000000
+_DHCPClientInitializedOnce        00000000
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 62
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_DHCPDisable                      00000000
+_DHCPEnable                       00000000
+_DHCPInit                         00000000
+_DHCPIsBound                      00000000
+_DHCPIsEnabled                    00000000
+_DHCPIsServerDetected             00000000
+_DHCPStateChanged                 00000000
+_DHCPTask                         00000000
+_EBSTCON                          00000000
+_EBSTCONbits                      00000000
+_EBSTCS                           00000000
+_EBSTCSH                          00000000
+_EBSTCSL                          00000000
+_EBSTSD                           00000000
+_ECCP1AS                          00000000
+_ECCP1ASbits                      00000000
+_ECCP1CON                         00000000
+_ECCP1CONbits                     00000000
+_ECCP1DEL                         00000000
+_ECCP1DELbits                     00000000
+_ECCP2AS                          00000000
+_ECCP2ASbits                      00000000
+_ECCP2CON                         00000000
+_ECCP2CONbits                     00000000
+_ECCP2DEL                         00000000
+_ECCP2DELbits                     00000000
+_ECCP3AS                          00000000
+_ECCP3ASbits                      00000000
+_ECCP3CON                         00000000
+_ECCP3CONbits                     00000000
+_ECCP3DEL                         00000000
+_ECCP3DELbits                     00000000
+_ECON1                            00000000
+_ECON1bits                        00000000
+_ECON2                            00000000
+_ECON2bits                        00000000
+_EDATA                            00000000
+_EDATAbits                        00000000
+_EDMACS                           00000000
+_EDMACSH                          00000000
+_EDMACSL                          00000000
+_EDMADST                          00000000
+_EDMADSTH                         00000000
+_EDMADSTL                         00000000
+_EDMAND                           00000000
+_EDMANDH                          00000000
+_EDMANDL                          00000000
+_EDMAST                           00000000
+_EDMASTH                          00000000
+_EDMASTL                          00000000
+_EECON1                           00000000
+_EECON1bits                       00000000
+_EECON2                           00000000
+_EFLOCON                          00000000
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 63
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_EFLOCONbits                      00000000
+_EHT0                             00000000
+_EHT1                             00000000
+_EHT2                             00000000
+_EHT3                             00000000
+_EHT4                             00000000
+_EHT5                             00000000
+_EHT6                             00000000
+_EHT7                             00000000
+_EIE                              00000000
+_EIEbits                          00000000
+_EIR                              00000000
+_EIRbits                          00000000
+_EPAUS                            00000000
+_EPAUSH                           00000000
+_EPAUSL                           00000000
+_EPKTCNT                          00000000
+_EPMCS                            00000000
+_EPMCSH                           00000000
+_EPMCSL                           00000000
+_EPMM0                            00000000
+_EPMM1                            00000000
+_EPMM2                            00000000
+_EPMM3                            00000000
+_EPMM4                            00000000
+_EPMM5                            00000000
+_EPMM6                            00000000
+_EPMM7                            00000000
+_EPMO                             00000000
+_EPMOH                            00000000
+_EPMOL                            00000000
+_ERDPT                            00000000
+_ERDPTH                           00000000
+_ERDPTL                           00000000
+_ERXFCON                          00000000
+_ERXFCONbits                      00000000
+_ERXND                            00000000
+_ERXNDH                           00000000
+_ERXNDL                           00000000
+_ERXRDPT                          00000000
+_ERXRDPTH                         00000000
+_ERXRDPTL                         00000000
+_ERXST                            00000000
+_ERXSTH                           00000000
+_ERXSTL                           00000000
+_ERXWRPT                          00000000
+_ERXWRPTH                         00000000
+_ERXWRPTL                         00000000
+_ESTAT                            00000000
+_ESTATbits                        00000000
+_ETXND                            00000000
+_ETXNDH                           00000000
+_ETXNDL                           00000000
+_ETXST                            00000000
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 64
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_ETXSTH                           00000000
+_ETXSTL                           00000000
+_EWOLIE                           00000000
+_EWOLIEbits                       00000000
+_EWOLIR                           00000000
+_EWOLIRbits                       00000000
+_EWRPT                            00000000
+_EWRPTH                           00000000
+_EWRPTL                           00000000
+_FSR0H                            00000000
+_FSR0L                            00000000
+_FSR1H                            00000000
+_FSR1L                            00000000
+_FSR2H                            00000000
+_FSR2L                            00000000
+_INDF0                            00000000
+_INDF1                            00000000
+_INDF2                            00000000
+_INTCON                           00000000
+_INTCON2                          00000000
+_INTCON2bits                      00000000
+_INTCON3                          00000000
+_INTCON3bits                      00000000
+_INTCONbits                       00000000
+_IPR1                             00000000
+_IPR1bits                         00000000
+_IPR2                             00000000
+_IPR2bits                         00000000
+_IPR3                             00000000
+_IPR3bits                         00000000
+_LATA                             00000000
+_LATAbits                         00000000
+_LATB                             00000000
+_LATBbits                         00000000
+_LATC                             00000000
+_LATCbits                         00000000
+_LATD                             00000000
+_LATDbits                         00000000
+_LATE                             00000000
+_LATEbits                         00000000
+_LATF                             00000000
+_LATFbits                         00000000
+_LATG                             00000000
+_LATGbits                         00000000
+_LATH                             00000000
+_LATHbits                         00000000
+_LATJ                             00000000
+_LATJbits                         00000000
+_LCDText                          00000000
+_MAADR1                           00000000
+_MAADR2                           00000000
+_MAADR3                           00000000
+_MAADR4                           00000000
+_MAADR5                           00000000
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 65
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_MAADR6                           00000000
+_MABBIPG                          00000000
+_MACIsLinked                      00000000
+_MACLCON1                         00000000
+_MACLCON1bits                     00000000
+_MACLCON2                         00000000
+_MACLCON2bits                     00000000
+_MACON1                           00000000
+_MACON1bits                       00000000
+_MACON2                           00000000
+_MACON2bits                       00000000
+_MACON3                           00000000
+_MACON3bits                       00000000
+_MACON4                           00000000
+_MACON4bits                       00000000
+_MAIPG                            00000000
+_MAIPGH                           00000000
+_MAIPGL                           00000000
+_MAMXFL                           00000000
+_MAMXFLH                          00000000
+_MAMXFLL                          00000000
+_MEMCON                           00000000
+_MEMCONbits                       00000000
+_MICMD                            00000000
+_MICMDbits                        00000000
+_MICON                            00000000
+_MICONbits                        00000000
+_MIRD                             00000000
+_MIRDH                            00000000
+_MIRDL                            00000000
+_MIREGADR                         00000000
+_MISTAT                           00000000
+_MISTATbits                       00000000
+_MIWR                             00000000
+_MIWRH                            00000000
+_MIWRL                            00000000
+_OSCCON                           00000000
+_OSCCONbits                       00000000
+_OSCTUNE                          00000000
+_OSCTUNEbits                      00000000
+_PC                               00000000
+_PCL                              00000000
+_PCLATH                           00000000
+_PCLATU                           00000000
+_PIE1                             00000000
+_PIE1bits                         00000000
+_PIE2                             00000000
+_PIE2bits                         00000000
+_PIE3                             00000000
+_PIE3bits                         00000000
+_PIR1                             00000000
+_PIR1bits                         00000000
+_PIR2                             00000000
+_PIR2bits                         00000000
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 66
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_PIR3                             00000000
+_PIR3bits                         00000000
+_PLUSW0                           00000000
+_PLUSW1                           00000000
+_PLUSW2                           00000000
+_PORTA                            00000000
+_PORTAbits                        00000000
+_PORTB                            00000000
+_PORTBbits                        00000000
+_PORTC                            00000000
+_PORTCbits                        00000000
+_PORTD                            00000000
+_PORTDbits                        00000000
+_PORTE                            00000000
+_PORTEbits                        00000000
+_PORTF                            00000000
+_PORTFbits                        00000000
+_PORTG                            00000000
+_PORTGbits                        00000000
+_PORTH                            00000000
+_PORTHbits                        00000000
+_PORTJ                            00000000
+_PORTJbits                        00000000
+_POSTDEC0                         00000000
+_POSTDEC1                         00000000
+_POSTDEC2                         00000000
+_POSTINC0                         00000000
+_POSTINC1                         00000000
+_POSTINC2                         00000000
+_PR2                              00000000
+_PR4                              00000000
+_PREINC0                          00000000
+_PREINC1                          00000000
+_PREINC2                          00000000
+_PROD                             00000000
+_PRODH                            00000000
+_PRODL                            00000000
+_PSPCON                           00000000
+_PSPCONbits                       00000000
+_RCON                             00000000
+_RCONbits                         00000000
+_RCREG                            00000000
+_RCREG1                           00000000
+_RCREG2                           00000000
+_RCSTA                            00000000
+_RCSTA1                           00000000
+_RCSTA1bits                       00000000
+_RCSTA2                           00000000
+_RCSTA2bits                       00000000
+_RCSTAbits                        00000000
+_SPBRG                            00000000
+_SPBRG1                           00000000
+_SPBRG2                           00000000
+_SPBRGH                           00000000
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 67
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_SPBRGH1                          00000000
+_SPBRGH2                          00000000
+_SSP1ADD                          00000000
+_SSP1BUF                          00000000
+_SSP1CON1                         00000000
+_SSP1CON1bits                     00000000
+_SSP1CON2                         00000000
+_SSP1CON2bits                     00000000
+_SSP1STAT                         00000000
+_SSP1STATbits                     00000000
+_SSP2ADD                          00000000
+_SSP2BUF                          00000000
+_SSP2CON1                         00000000
+_SSP2CON1bits                     00000000
+_SSP2CON2                         00000000
+_SSP2CON2bits                     00000000
+_SSP2STAT                         00000000
+_SSP2STATbits                     00000000
+_SSPADD                           00000000
+_SSPBUF                           00000000
+_SSPCON1                          00000000
+_SSPCON1bits                      00000000
+_SSPCON2                          00000000
+_SSPCON2bits                      00000000
+_SSPSTAT                          00000000
+_SSPSTATbits                      00000000
+_STATUS                           00000000
+_STATUSbits                       00000000
+_STKPTR                           00000000
+_STKPTRbits                       00000000
+_T0CON                            00000000
+_T0CONbits                        00000000
+_T1CON                            00000000
+_T1CONbits                        00000000
+_T2CON                            00000000
+_T2CONbits                        00000000
+_T3CON                            00000000
+_T3CONbits                        00000000
+_T4CON                            00000000
+_T4CONbits                        00000000
+_TABLAT                           00000000
+_TBLPTR                           00000000
+_TBLPTRH                          00000000
+_TBLPTRL                          00000000
+_TBLPTRU                          00000000
+_TMR0H                            00000000
+_TMR0L                            00000000
+_TMR1H                            00000000
+_TMR1L                            00000000
+_TMR2                             00000000
+_TMR3H                            00000000
+_TMR3L                            00000000
+_TMR4                             00000000
+_TOS                              00000000
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 68
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_TOSH                             00000000
+_TOSL                             00000000
+_TOSU                             00000000
+_TRISA                            00000000
+_TRISAbits                        00000000
+_TRISB                            00000000
+_TRISBbits                        00000000
+_TRISC                            00000000
+_TRISCbits                        00000000
+_TRISD                            00000000
+_TRISDbits                        00000000
+_TRISE                            00000000
+_TRISEbits                        00000000
+_TRISF                            00000000
+_TRISFbits                        00000000
+_TRISG                            00000000
+_TRISGbits                        00000000
+_TRISH                            00000000
+_TRISHbits                        00000000
+_TRISJ                            00000000
+_TRISJbits                        00000000
+_TXREG                            00000000
+_TXREG1                           00000000
+_TXREG2                           00000000
+_TXSTA                            00000000
+_TXSTA1                           00000000
+_TXSTA1bits                       00000000
+_TXSTA2                           00000000
+_TXSTA2bits                       00000000
+_TXSTAbits                        00000000
+_TickGet                          00000000
+_UDPClose                         00000000
+_UDPDiscard                       00000000
+_UDPFlush                         00000000
+_UDPGet                           00000000
+_UDPGetArray                      00000000
+_UDPIsGetReady                    00000000
+_UDPIsPutReady                    00000000
+_UDPOpen                          00000000
+_UDPPut                           00000000
+_UDPPutArray                      00000000
+_UDPRxCount                       00000000
+_UDPSocketInfo                    00000000
+_UDPTxCount                       00000000
+_WDTCON                           00000000
+_WDTCONbits                       00000000
+_WREG                             00000000
+__18F97J60                        00000001
+__DHCPReceive                     00000000
+__DHCPReceive_j_1_1               00000000
+__DHCPReceive_tempServerID_1_1    00000000
+__DHCPReceive_type_1_1            00000000
+__DHCPReceive_v_1_1               00000000
+__DHCPSend                        00000000
+gpasm-0.13.7 beta               Objects/DHCP.asm3-15-2010  11:43:29          PAGE 69
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+__DHCPSend_MyIP_1_1               00000000
+_activeUDPSocket                  00000000
+_memset                           00000000
+_stdin                            00000000
+_stdout                           00000000
+r0x00                             00000000
+r0x01                             00000001
+r0x02                             00000002
+r0x03                             00000003
+r0x04                             00000004
+r0x05                             00000005
+r0x06                             00000006
+r0x07                             00000007
+r0x08                             00000008
+r0x09                             00000009
+r0x0a                             0000000A
+
+
+Errors   :       0
+Warnings :       0 reported,       0 suppressed
+Messages :       0 reported,       0 suppressed
+

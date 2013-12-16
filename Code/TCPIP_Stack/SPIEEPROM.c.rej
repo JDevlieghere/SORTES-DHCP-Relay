@@ -1,0 +1,1177 @@
+***************
+*** 4,122 ****
+   *
+   *********************************************************************
+   * FileName:        SPIEEPROM.c
+-  * Dependencies:    None
+-  * Processor:       PIC18, PIC24F, PIC24H, dsPIC30F, dsPIC33F, PIC32
+-  * Compiler:        Microchip C32 v1.05 or higher
+-  *					Microchip C30 v3.12 or higher
+-  *					Microchip C18 v3.30 or higher
+-  *					HI-TECH PICC-18 PRO 9.63PL2 or higher
+   * Company:         Microchip Technology, Inc.
+   *
+   * Software License Agreement
+   *
+-  * Copyright (C) 2002-2009 Microchip Technology Inc.  All rights
+   * reserved.
+   *
+-  * Microchip licenses to you the right to use, modify, copy, and
+-  * distribute:
+-  * (i)  the Software when embedded on a Microchip microcontroller or
+-  *      digital signal controller product ("Device") which is
+-  *      integrated into Licensee's product; or
+-  * (ii) ONLY the Software driver source files ENC28J60.c, ENC28J60.h,
+-  *		ENCX24J600.c and ENCX24J600.h ported to a non-Microchip device
+-  *		used in conjunction with a Microchip ethernet controller for
+-  *		the sole purpose of interfacing with the ethernet controller.
+   *
+-  * You should refer to the license agreement accompanying this
+-  * Software for additional information regarding your rights and
+   * obligations.
+   *
+-  * THE SOFTWARE AND DOCUMENTATION ARE PROVIDED "AS IS" WITHOUT
+-  * WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT
+-  * LIMITATION, ANY WARRANTY OF MERCHANTABILITY, FITNESS FOR A
+-  * PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+-  * MICROCHIP BE LIABLE FOR ANY INCIDENTAL, SPECIAL, INDIRECT OR
+-  * CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF
+-  * PROCUREMENT OF SUBSTITUTE GOODS, TECHNOLOGY OR SERVICES, ANY CLAIMS
+-  * BY THIRD PARTIES (INCLUDING BUT NOT LIMITED TO ANY DEFENSE
+-  * THEREOF), ANY CLAIMS FOR INDEMNITY OR CONTRIBUTION, OR OTHER
+-  * SIMILAR COSTS, WHETHER ASSERTED ON THE BASIS OF CONTRACT, TORT
+   * (INCLUDING NEGLIGENCE), BREACH OF WARRANTY, OR OTHERWISE.
+   *
+   *
+   * Author               Date        Comment
+   *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * Nilesh Rajbharti     5/20/02     Original (Rev. 1.0)
+-  * Howard Schlunder     9/01/04     Rewritten for SPI EEPROMs
+-  * Howard Schlunder     8/10/06     Modified to control SPI module
+-  *                                  frequency whenever EEPROM accessed
+-  *                                  to allow bus sharing with different
+-  *                                  frequencies.
+  ********************************************************************/
+  #define __SPIEEPROM_C
+  
+- #include "HardwareProfile.h"
+  
+- #if defined(EEPROM_CS_TRIS)
+  
+- #include "TCPIP Stack/TCPIP.h"
+  
+- // IMPORTANT SPI NOTE: The code in this file expects that the SPI interrupt
+- //      flag (EEPROM_SPI_IF) be clear at all times.  If the SPI is shared with
+- //      other hardware, the other code should clear the EEPROM_SPI_IF when it is
+- //      done using the SPI.
+  
+  // SPI Serial EEPROM buffer size.  To enhance performance while
+- // cooperatively sharing the SPI bus with other peripherals, bytes
+- // read and written to the memory are locally buffered. Legal
+  // sizes are 1 to the EEPROM page size.
+- #define EEPROM_BUFFER_SIZE              (32)
+  
+- // Must be the EEPROM write page size, or any binary power of 2 divisor.  If 
+- // using a smaller number, make sure it is at least EEPROM_BUFFER_SIZE big for 
+- // max performance.  Microchip 25LC256 uses 64 byte page size, 25LC1024 uses 
+- // 256 byte page size, so 64 is compatible with both.
+- #define EEPROM_PAGE_SIZE				(64)
+  
+  // EEPROM SPI opcodes
+- #define READ    0x03    // Read data from memory array beginning at selected address
+- #define WRITE   0x02    // Write data to memory array beginning at selected address
+- #define WRDI    0x04    // Reset the write enable latch (disable write operations)
+- #define WREN    0x06    // Set the write enable latch (enable write operations)
+- #define RDSR    0x05    // Read Status register
+- #define WRSR    0x01    // Write Status register
+- 
+- #define EEPROM_MAX_SPI_FREQ     (10000000ul)    // Hz
+- 
+- #if defined (__18CXX)
+-     #define ClearSPIDoneFlag()  {EEPROM_SPI_IF = 0;}
+-     #define WaitForDataByte()   {while(!EEPROM_SPI_IF); EEPROM_SPI_IF = 0;}
+-     #define SPI_ON_BIT          (EEPROM_SPICON1bits.SSPEN)
+- #elif defined(__C30__)
+-     #define ClearSPIDoneFlag()
+-     static inline __attribute__((__always_inline__)) void WaitForDataByte( void )
+-     {
+-         while ((EEPROM_SPISTATbits.SPITBF == 1) || (EEPROM_SPISTATbits.SPIRBF == 0));
+-     }
+  
+-     #define SPI_ON_BIT          (EEPROM_SPISTATbits.SPIEN)
+- #elif defined( __PIC32MX__ )
+-     #define ClearSPIDoneFlag()
+-     static inline __attribute__((__always_inline__)) void WaitForDataByte( void )
+-     {
+-         while (!EEPROM_SPISTATbits.SPITBE || !EEPROM_SPISTATbits.SPIRBF);
+-     }
+  
+-     #define SPI_ON_BIT          (EEPROM_SPICON1bits.ON)
+- #else
+-     #error Determine SPI flag mechanism
+- #endif
+  
+  static void DoWrite(void);
+  
+  static DWORD EEPROMAddress;
+  static BYTE EEPROMBuffer[EEPROM_BUFFER_SIZE];
+- static BYTE vBytesInBuffer;
+  
+  /*********************************************************************
+   * Function:        void XEEInit(unsigned char speed)
+--- 4,139 ----
+   *
+   *********************************************************************
+   * FileName:        SPIEEPROM.c
++  * Dependencies:    Compiler.h
++  *                  XEEPROM.h
++  * Processor:       PIC18, PIC24F, PIC24H, dsPIC30F, dsPIC33F
++  * Complier:        Microchip C18 v3.02 or higher
++  *					Microchip C30 v2.01 or higher
+   * Company:         Microchip Technology, Inc.
+   *
+   * Software License Agreement
+   *
++  * Copyright © 2002-2007 Microchip Technology Inc.  All rights 
+   * reserved.
+   *
++  * Microchip licenses to you the right to use, modify, copy, and 
++  * distribute: 
++  * (i)  the Software when embedded on a Microchip microcontroller or 
++  *      digital signal controller product (“Device”) which is 
++  *      integrated into Licensee’s product; or
++  * (ii) ONLY the Software driver source files ENC28J60.c and 
++  *      ENC28J60.h ported to a non-Microchip device used in 
++  *      conjunction with a Microchip ethernet controller for the 
++  *      sole purpose of interfacing with the ethernet controller. 
+   *
++  * You should refer to the license agreement accompanying this 
++  * Software for additional information regarding your rights and 
+   * obligations.
+   *
++  * THE SOFTWARE AND DOCUMENTATION ARE PROVIDED “AS IS” WITHOUT 
++  * WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT 
++  * LIMITATION, ANY WARRANTY OF MERCHANTABILITY, FITNESS FOR A 
++  * PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT. IN NO EVENT SHALL 
++  * MICROCHIP BE LIABLE FOR ANY INCIDENTAL, SPECIAL, INDIRECT OR 
++  * CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF 
++  * PROCUREMENT OF SUBSTITUTE GOODS, TECHNOLOGY OR SERVICES, ANY CLAIMS 
++  * BY THIRD PARTIES (INCLUDING BUT NOT LIMITED TO ANY DEFENSE 
++  * THEREOF), ANY CLAIMS FOR INDEMNITY OR CONTRIBUTION, OR OTHER 
++  * SIMILAR COSTS, WHETHER ASSERTED ON THE BASIS OF CONTRACT, TORT 
+   * (INCLUDING NEGLIGENCE), BREACH OF WARRANTY, OR OTHERWISE.
+   *
+   *
+   * Author               Date        Comment
+   *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   * Nilesh Rajbharti     5/20/02     Original (Rev. 1.0)
++  * Howard Schlunder		9/01/04		Rewritten for SPI EEPROMs
++  * Howard Schlunder		8/10/06		Modified to control SPI module 
++  *									frequency whenever EEPROM accessed 
++  *									to allow bus sharing with different 
++  *									frequencies.
++   * Ivan Vasilev, Olimex Ltd  14/08/07	Imported support for Atmel dataflash
+  ********************************************************************/
+  #define __SPIEEPROM_C
+  
++ #include "TCPIP Stack/TCPIP.h"
+  
++ #if defined(OLIMEX_HW)
++ 	#define	USE_ATMEL_FLASH
++ 	/* Psuedo functions */
++ #define SPISelectEEPROM()	EEPROM_CS_IO = 0
++ #define SPIUnselectEEPROM()	EEPROM_CS_IO = 1
++ #define PIR1_SSPIF	EEPROM_SPI_IF
++ 
++ void WriteBufferToMainMemory(unsigned int address);
++ void ReadBufferFromMainMemory(unsigned int address);
++ void ByteToBuffer(unsigned int byte, unsigned int address);
++ void SPITransfer(unsigned char inbyte)
++ {	
++ 	SSPBUF = inbyte;
++ 	while(!PIR1_SSPIF);
++ 	PIR1_SSPIF = 0;	
++ }	
+  
++ #endif
+  
++ #if defined(MPFS_USE_EEPROM) && defined(EEPROM_CS_TRIS) && defined(STACK_USE_MPFS2)
++ // IMPORTANT SPI NOTE: The code in this file expects that the SPI interrupt 
++ //		flag (EEPROM_SPI_IF) be clear at all times.  If the SPI is shared with 
++ //		other hardware, the other code should clear the EEPROM_SPI_IF when it is 
++ //		done using the SPI.
+  
+  // SPI Serial EEPROM buffer size.  To enhance performance while
++ // cooperatively sharing the SPI bus with other peripherals, bytes 
++ // read and written to the memory are locally buffered. Legal 
+  // sizes are 1 to the EEPROM page size.
++ #define EEPROM_BUFFER_SIZE    			(32)
++ #define FLASH_BUFFER_SIZE    			(12)
++ 
++ /* Atmel opcodes*/
++ #define BUFFER_1_WRITE 						0x84	// buffer 1 write 
++ #define BUFFER_2_WRITE 						0x87 	// buffer 2 write 
++ #define BUFFER_1_READ 						0x54	// buffer 1 read
++ #define BUFFER_2_READ 						0x56	// buffer 2 read		
++ #define B1_TO_MM_PAGE_PROG_WITH_ERASE 		0x83	// buffer 1 to main memory page program with built-in erase
++ #define B2_TO_MM_PAGE_PROG_WITH_ERASE 		0x86	// buffer 2 to main memory page program with built-in erase
++ #define B1_TO_MM_PAGE_PROG_WITHOUT_ERASE 	0x88	// buffer 1 to main memory page program without built-in erase
++ #define B2_TO_MM_PAGE_PROG_WITHOUT_ERASE 	0x89	// buffer 2 to main memory page program without built-in erase
++ #define MM_PAGE_PROG_THROUGH_B1 			0x82	// main memory page program through buffer 1
++ #define MM_PAGE_PROG_THROUGH_B2 			0x85	// main memory page program through buffer 2
++ #define AUTO_PAGE_REWRITE_THROUGH_B1 		0x58	// auto page rewrite through buffer 1
++ #define AUTO_PAGE_REWRITE_THROUGH_B2 		0x59	// auto page rewrite through buffer 2
++ #define MM_PAGE_TO_B1_COMP 					0x60	// main memory page compare to buffer 1
++ #define MM_PAGE_TO_B2_COMP 					0x61	// main memory page compare to buffer 2
++ #define MM_PAGE_TO_B1_XFER 					0x53	// main memory page to buffer 1 transfer
++ #define MM_PAGE_TO_B2_XFER 					0x55	// main memory page to buffer 2 transfer
++ #define	READ_STATUS_REGISTER				0xD7	// read status register
++ #define CONTINUOUS_ARRAY_READ				0xE8	// continuous read 
++ #define MAIN_MEMORY_PAGE_READ               0x52	// main page read
++ #define PAGE_ERASE                          0x81	// page erase
+  
+  
+  // EEPROM SPI opcodes
++ #define READ	0x03	// Read data from memory array beginning at selected address
++ #define WRITE	0x02	// Write data to memory array beginning at selected address
++ #define WRDI	0x04	// Reset the write enable latch (disable write operations)
++ #define WREN	0x06	// Set the write enable latch (enable write operations)
++ #define RDSR	0x05	// Read Status register
++ #define WRSR	0x01	// Write Status register
+  
+  
+  
++ #if defined(USE_ATMEL_FLASH)
++ BYTE FLASHReadyFlag;
++ DWORD FLASHAddress;
++ BYTE *FLASHBufferPtr;
++ BYTE FLASHBuffer[FLASH_BUFFER_SIZE];
++ #else
+  static void DoWrite(void);
+  
+  static DWORD EEPROMAddress;
+  static BYTE EEPROMBuffer[EEPROM_BUFFER_SIZE];
++ static BYTE *EEPROMBufferPtr;
++ #endif
+  
+  /*********************************************************************
+   * Function:        void XEEInit(unsigned char speed)
+***************
+*** 255,271 ****
+  
+  
+  /*********************************************************************
+-  * Function:        XEE_RESULT XEEReadArray(DWORD address,
+-  *                                          BYTE *buffer,
+-  *                                          BYTE length)
+   *
+   * PreCondition:    XEEInit() is already called.
+   *
+-  * Input:           address     - Address from where array is to be read
+   *                  buffer      - Caller supplied buffer to hold the data
+   *                  length      - Number of bytes to read.
+   *
+-  * Output:          XEE_SUCCESS
+   *
+   * Side Effects:    None
+   *
+--- 304,323 ----
+  
+  
+  /*********************************************************************
++  * Function:        XEE_RESULT XEEReadArray(unsigned char control,
++  *                                          XEE_ADDR address,
++  *                                          unsigned char *buffer,
++  *                                          unsigned char length)
+   *
+   * PreCondition:    XEEInit() is already called.
+   *
++  * Input:           control     - Unused
++  *                  address     - Address from where array is to be read
+   *                  buffer      - Caller supplied buffer to hold the data
+   *                  length      - Number of bytes to read.
+   *
++  * Output:          XEE_SUCCESS if successful
++  *                  other value if failed.
+   *
+   * Side Effects:    None
+   *
+***************
+*** 279,375 ****
+                          BYTE *buffer,
+                          BYTE length)
+  {
+-     volatile BYTE Dummy;
+-     BYTE vSPIONSave;
+-     #if defined(__18CXX)
+-     BYTE SPICON1Save;
+-     #elif defined(__C30__)
+-     WORD SPICON1Save;
+-     #else
+-     DWORD SPICON1Save;
+-     #endif
+- 
+-     // Save SPI state (clock speed)
+-     SPICON1Save = EEPROM_SPICON1;
+-     vSPIONSave = SPI_ON_BIT;
+- 
+-     // Configure SPI
+-     SPI_ON_BIT = 0;
+-     EEPROM_SPICON1 = PROPER_SPICON1;
+-     SPI_ON_BIT = 1;
+- 
+-     EEPROM_CS_IO = 0;
+- 
+-     // Send READ opcode
+-     EEPROM_SSPBUF = READ;
+-     WaitForDataByte();
+-     Dummy = EEPROM_SSPBUF;
+- 
+-     // Send address
+-     #if defined(USE_EEPROM_25LC1024)
+-     EEPROM_SSPBUF = ((DWORD_VAL*)&address)->v[2];
+-     WaitForDataByte();
+-     Dummy = EEPROM_SSPBUF;
+-     #endif
+- 
+-     EEPROM_SSPBUF = ((DWORD_VAL*)&address)->v[1];
+-     WaitForDataByte();
+-     Dummy = EEPROM_SSPBUF;
+- 
+-     EEPROM_SSPBUF = ((DWORD_VAL*)&address)->v[0];
+-     WaitForDataByte();
+-     Dummy = EEPROM_SSPBUF;
+  
+-     while(length--)
+-     {
+-         EEPROM_SSPBUF = 0;
+-         WaitForDataByte();
+-         Dummy = EEPROM_SSPBUF;
+-         if(buffer != NULL)
+-             *buffer++ = Dummy;
+-     };
+- 
+-     EEPROM_CS_IO = 1;
+- 
+-     // Restore SPI state
+-     SPI_ON_BIT = 0;
+-     EEPROM_SPICON1 = SPICON1Save;
+-     SPI_ON_BIT = vSPIONSave;
+  
+  
+-     return XEE_SUCCESS;
+  }
+  
+  
+  /*********************************************************************
+-  * Function:        XEE_RESULT XEEBeginWrite(DWORD address)
+   *
+-  * PreCondition:    None
+   *
+-  * Input:           address     - address to be set for writing
+   *
+-  * Output:          XEE_SUCCESS
+   *
+   * Side Effects:    None
+   *
+   * Overview:        Modifies internal address counter of EEPROM.
+   *
+-  * Note:            Unlike XEESetAddr() in xeeprom.c for I2C EEPROM
+-  *                  memories, this function is used only for writing
+-  *                  to the EEPROM.  Reads must use XEEBeginRead(),
+-  *                  XEERead(), and XEEEndRead().
+-  *                  This function does not use the SPI bus.
+   ********************************************************************/
+  XEE_RESULT XEEBeginWrite(DWORD address)
+  {
+- 	vBytesInBuffer = 0;
+-     EEPROMAddress = address;
+-     return XEE_SUCCESS;
+  }
+  
+  
+  /*********************************************************************
+-  * Function:        XEE_RESULT XEEWrite(BYTE val)
+   *
+   * PreCondition:    XEEInit() && XEEBeginWrite() are already called.
+   *
+--- 331,501 ----
+                          BYTE *buffer,
+                          BYTE length)
+  {
++ #if defined(USE_ATMEL_FLASH)
+  
++ 	unsigned int addr	= 0;
++ 	unsigned int page	= 0;
+  
++ 	page = address/264;
++ 	addr = address%264;
+  
++ 	page<<=1;	
++ 
++ 	// perform to transfer
++ 	EEPROM_SPISTATbits.CKE = 0;	// Data transmitted on falling edge of SCK
++ 	SSPCON1 = 0x30;			// perform SPI Mode 3
++ 
++ 	SPISelectEEPROM();
++ 
++ 	// Send READ opcode
++ 	//SPITransfer = CONTINUOUS_ARRAY_READ;
++ 	//SSPBUF = MAIN_MEMORY_PAGE_READ;
++ 	//while(!PIR1_SSPIF);
++ 	//PIR1_SSPIF = 0;
++ 	SPITransfer(CONTINUOUS_ARRAY_READ);
++ 	
++ 	// 24 bit page and address
++ 	//SSPBUF = (*((unsigned char*)&page+1));
++ 	//while(!PIR1_SSPIF);
++ 	//PIR1_SSPIF = 0;
++ 	SPITransfer((*((unsigned char*)&page+1)));
++ 
++ 	//SSPBUF = (((unsigned char)page&0xFE)|(*((unsigned char*)&addr+1) & 0x01));
++ 	//while(!PIR1_SSPIF);
++ 	//PIR1_SSPIF = 0;
++ 	SPITransfer((((unsigned char)page&0xFE)|(*((unsigned char*)&addr+1) & 0x01)));
++ 
++ 	//SSPBUF = (unsigned char)addr;
++ 	//while(!PIR1_SSPIF);
++ 	//PIR1_SSPIF = 0;
++ 	SPITransfer((unsigned char)addr);
++ 
++ 	// 32 don't care bits
++ 	//SSPBUF = 0;
++ 	//while(!PIR1_SSPIF);
++ 	//PIR1_SSPIF = 0;	
++ 	SPITransfer(0);
++ 
++ 	//SSPBUF = 0;
++ 	//while(!PIR1_SSPIF);
++ 	//PIR1_SSPIF = 0;
++ 	SPITransfer(0);
++ 
++ 	//SSPBUF = 0;
++ 	//while(!PIR1_SSPIF);
++ 	//PIR1_SSPIF = 0;
++ 	SPITransfer(0);
++ 
++ 	//SSPBUF = 0;
++ 	//while(!PIR1_SSPIF);
++ 	//PIR1_SSPIF = 0;
++ 	SPITransfer(0);
++ 
++ 
++ 	while(length--)
++ 	{
++ 		//SSPBUF = 0;
++ 		//while(!PIR1_SSPIF);
++ 		//PIR1_SSPIF = 0;
++ 		SPITransfer(0);
++ 		*buffer++ = SSPBUF;
++ 	};
++ 	
++ 	SPIUnselectEEPROM();
++ 
++ 	// perform to transfer
++ 	EEPROM_SPISTATbits.CKE = 1;	// Transmit data on rising edge of clock
++ 	SSPCON1 = 0x20;			// perform SPI Mode 0
++ 
++ 	return XEE_SUCCESS;
++ 
++ #else
++ 	BYTE Dummy;
++ 	#if defined(__18CXX)
++ 	BYTE SPICON1Save;
++ 	#else
++ 	WORD SPICON1Save;
++ 	#endif	
++ 
++ 	// Save SPI state (clock speed)
++ 	SPICON1Save = EEPROM_SPICON1;
++ 	EEPROM_SPICON1 = PROPER_SPICON1;
++ 
++ 	EEPROM_CS_IO = 0;
++ 
++ 	// Send READ opcode
++ 	EEPROM_SSPBUF = READ;
++ 	while(!EEPROM_SPI_IF);
++ 	Dummy = EEPROM_SSPBUF;
++ 	EEPROM_SPI_IF = 0;
++ 	
++ 	// Send address
++ 	EEPROM_SSPBUF = ((WORD_VAL*)&address)->v[1];
++ 	while(!EEPROM_SPI_IF);
++ 	Dummy = EEPROM_SSPBUF;
++ 	EEPROM_SPI_IF = 0;
++ 	EEPROM_SSPBUF = ((WORD_VAL*)&address)->v[0];
++ 	while(!EEPROM_SPI_IF);
++ 	Dummy = EEPROM_SSPBUF;
++ 	EEPROM_SPI_IF = 0;
++ 	
++ 	while(length--)
++ 	{
++ 		EEPROM_SSPBUF = 0;
++ 		while(!EEPROM_SPI_IF);
++ 		*buffer++ = EEPROM_SSPBUF;
++ 		EEPROM_SPI_IF = 0;
++ 	};
++ 	
++ 	EEPROM_CS_IO = 1;
++ 
++ 	// Restore SPI state
++ 	EEPROM_SPICON1 = SPICON1Save;
++ 
++ 	return XEE_SUCCESS;
++ #endif
+  }
+  
+  
+  /*********************************************************************
++  * Function:        XEE_RESULT XEESetAddr(unsigned char control,
++  *                                        XEE_ADDR address)
+   *
++  * PreCondition:    XEEInit() is already called.
+   *
++  * Input:           control     - data EEPROM control code
++  *                  address     - address to be set for writing
+   *
++  * Output:          XEE_SUCCESS if successful
++  *                  other value if failed.
+   *
+   * Side Effects:    None
+   *
+   * Overview:        Modifies internal address counter of EEPROM.
+   *
++  * Note:            Unlike XEESetAddr() in xeeprom.c for I2C EEPROM 
++  *					 memories, this function is used only for writing
++  *					 to the EEPROM.  Reads must use XEEBeginRead(), 
++  *					 XEERead(), and XEEEndRead().
++  *					This function does not release the SPI bus.
+   ********************************************************************/
+  XEE_RESULT XEEBeginWrite(DWORD address)
+  {
++ #if defined(USE_ATMEL_FLASH)
++ 	FLASHReadyFlag = 1;
++ 	FLASHAddress = address;
++ 	FLASHBufferPtr = FLASHBuffer;
++ 	return XEE_SUCCESS;
++ #else
++ 	EEPROMAddress = address;
++ 	EEPROMBufferPtr = EEPROMBuffer;
++ 	return XEE_SUCCESS;
++ #endif
+  }
+  
+  
+  /*********************************************************************
++  * Function:        XEE_RESULT XEEWrite(unsigned char val)
+   *
+   * PreCondition:    XEEInit() && XEEBeginWrite() are already called.
+   *
+***************
+*** 442,541 ****
+   *
+   * Input:           None
+   *
+-  * Output:          XEE_SUCCESS
+   *
+   * Side Effects:    None
+   *
+-  * Overview:        Commits any last uncommitted bytes in cache to 
+-  *					physical storage.
+   *
+-  * Note:            Call this function when you no longer need to 
+-  *					write any more bytes at the selected address.
+   ********************************************************************/
+  XEE_RESULT XEEEndWrite(void)
+  {
+- 	if(vBytesInBuffer)
+  		DoWrite();
+  
+      return XEE_SUCCESS;
+  }
+  
+  static void DoWrite(void)
+  {
+-     BYTE i;
+-     volatile BYTE vDummy;
+-     BYTE vSPIONSave;
+-     #if defined(__18CXX)
+-     BYTE SPICON1Save;
+-     #elif defined(__C30__)
+-     WORD SPICON1Save;
+-     #else
+-     DWORD SPICON1Save;
+-     #endif
+- 
+-     // Save SPI state
+-     SPICON1Save = EEPROM_SPICON1;
+-     vSPIONSave = SPI_ON_BIT;
+- 
+-     // Configure SPI
+-     SPI_ON_BIT = 0;
+-     EEPROM_SPICON1 = PROPER_SPICON1;
+-     SPI_ON_BIT = 1;
+- 
+-     // Set the Write Enable latch
+-     EEPROM_CS_IO = 0;
+-     EEPROM_SSPBUF = WREN;
+-     WaitForDataByte();
+-     vDummy = EEPROM_SSPBUF;
+-     EEPROM_CS_IO = 1;
+- 
+-     // Send WRITE opcode
+-     EEPROM_CS_IO = 0;
+-     EEPROM_SSPBUF = WRITE;
+-     WaitForDataByte();
+-     vDummy = EEPROM_SSPBUF;
+- 
+-     // Send address
+-     #if defined(USE_EEPROM_25LC1024)
+-     EEPROM_SSPBUF = ((DWORD_VAL*)&EEPROMAddress)->v[2];
+-     WaitForDataByte();
+-     vDummy = EEPROM_SSPBUF;
+-     #endif
+- 
+-     EEPROM_SSPBUF = ((DWORD_VAL*)&EEPROMAddress)->v[1];
+-     WaitForDataByte();
+-     vDummy = EEPROM_SSPBUF;
+- 
+-     EEPROM_SSPBUF = ((DWORD_VAL*)&EEPROMAddress)->v[0];
+-     WaitForDataByte();
+-     vDummy = EEPROM_SSPBUF;
+- 
+- 
+-     for(i = 0; i < vBytesInBuffer; i++)
+-     {
+-         // Send the byte to write
+-         EEPROM_SSPBUF = EEPROMBuffer[i];
+-         WaitForDataByte();
+-         vDummy = EEPROM_SSPBUF;
+-     }
+- 
+-     // Begin the write
+-     EEPROM_CS_IO = 1;
+  
+- 	// Update write address and clear write cache
+-     EEPROMAddress += vBytesInBuffer;
+-     vBytesInBuffer = 0;
+  
+-     // Restore SPI State
+-     SPI_ON_BIT = 0;
+-     EEPROM_SPICON1 = SPICON1Save;
+-     SPI_ON_BIT = vSPIONSave;
+  
+  
+-     // Wait for write to complete
+-     while( XEEIsBusy() );
+  }
+- 
+  
+  /*********************************************************************
+   * Function:        BOOL XEEIsBusy(void)
+--- 587,693 ----
+   *
+   * Input:           None
+   *
++  * Output:          XEE_SUCCESS if successful
++  *                  other value if failed.
+   *
+   * Side Effects:    None
+   *
++  * Overview:        Instructs EEPROM to begin write cycle.
+   *
++  * Note:            Call this function after either page full of bytes
++  *                  written or no more bytes are left to load.
++  *                  This function initiates the write cycle.
++  *                  User must call for XEEIsBusy() to ensure that write
++  *                  cycle is finished before calling any other
++  *                  routine.
+   ********************************************************************/
+  XEE_RESULT XEEEndWrite(void)
+  {
++ #if defined(USE_ATMEL_FLASH)
++ 
++ 	FLASHReadyFlag = 0;
++ 	if((FLASHAddress%FLASH_BUFFER_SIZE) != 0) {
++ 		WriteBufferToMainMemory(FLASHAddress-1);		
++ 	}    
++ 
++ 	return XEE_SUCCESS;
++ 
++ #else
++ 	if( EEPROMBufferPtr != EEPROMBuffer )
++     {
+  		DoWrite();
++     }
+  
+      return XEE_SUCCESS;
++ #endif
+  }
+  
++ #if  !defined(USE_ATMEL_FLASH)
+  static void DoWrite(void)
+  {
++ 	BYTE Dummy;
++ 	BYTE BytesToWrite;
++ 	#if defined(__18CXX)
++ 	BYTE SPICON1Save;
++ 	#else
++ 	WORD SPICON1Save;
++ 	#endif	
++ 
++ 	// Save SPI state (clock speed)
++ 	SPICON1Save = EEPROM_SPICON1;
++ 	EEPROM_SPICON1 = PROPER_SPICON1;
++ 	
++ 	// Set the Write Enable latch
++ 	EEPROM_CS_IO = 0;
++ 	EEPROM_SSPBUF = WREN;
++ 	while(!EEPROM_SPI_IF);
++ 	Dummy = EEPROM_SSPBUF;
++ 	EEPROM_SPI_IF = 0;
++ 	EEPROM_CS_IO = 1;
++ 	
++ 	// Send WRITE opcode
++ 	EEPROM_CS_IO = 0;
++ 	EEPROM_SSPBUF = WRITE;
++ 	while(!EEPROM_SPI_IF);
++ 	Dummy = EEPROM_SSPBUF;
++ 	EEPROM_SPI_IF = 0;
++ 	
++ 	// Send address
++ 	EEPROM_SSPBUF = ((WORD_VAL*)&EEPROMAddress)->v[1];
++ 	while(!EEPROM_SPI_IF);
++ 	Dummy = EEPROM_SSPBUF;
++ 	EEPROM_SPI_IF = 0;
++ 	EEPROM_SSPBUF = ((WORD_VAL*)&EEPROMAddress)->v[0];
++ 	while(!EEPROM_SPI_IF);
++ 	Dummy = EEPROM_SSPBUF;
++ 	EEPROM_SPI_IF = 0;
++ 	
++ 	BytesToWrite = (BYTE)(EEPROMBufferPtr - EEPROMBuffer);
++ 	
++ 	EEPROMAddress += BytesToWrite;
++ 	EEPROMBufferPtr = EEPROMBuffer;
+  
++ 	while(BytesToWrite--)
++ 	{
++ 		// Send the byte to write
++ 		EEPROM_SSPBUF = *EEPROMBufferPtr++;
++ 		while(!EEPROM_SPI_IF);
++ 		Dummy = EEPROM_SSPBUF;
++ 		EEPROM_SPI_IF = 0;
++ 	}
++ 
++ 	// Begin the write
++ 	EEPROM_CS_IO = 1;
+  
++ 	EEPROMBufferPtr = EEPROMBuffer;
+  
++ 	// Restore SPI State
++ 	EEPROM_SPICON1 = SPICON1Save;
+  
++ 	// Wait for write to complete
++ 	while( XEEIsBusy() );
+  }
++ #endif
+  
+  /*********************************************************************
+   * Function:        BOOL XEEIsBusy(void)
+***************
+*** 555,598 ****
+   ********************************************************************/
+  BOOL XEEIsBusy(void)
+  {
+-     volatile BYTE_VAL result;
+-     BYTE vSPIONSave;
+-     #if defined(__18CXX)
+-     BYTE SPICON1Save;
+-     #elif defined(__C30__)
+-     WORD SPICON1Save;
+-     #else
+-     DWORD SPICON1Save;
+-     #endif
+- 
+-     // Save SPI state
+-     SPICON1Save = EEPROM_SPICON1;
+-     vSPIONSave = SPI_ON_BIT;
+- 
+-     // Configure SPI
+-     SPI_ON_BIT = 0;
+-     EEPROM_SPICON1 = PROPER_SPICON1;
+-     SPI_ON_BIT = 1;
+- 
+-     EEPROM_CS_IO = 0;
+-     // Send RDSR - Read Status Register opcode
+-     EEPROM_SSPBUF = RDSR;
+-     WaitForDataByte();
+-     result.Val = EEPROM_SSPBUF;
+- 
+-     // Get register contents
+-     EEPROM_SSPBUF = 0;
+-     WaitForDataByte();
+-     result.Val = EEPROM_SSPBUF;
+-     EEPROM_CS_IO = 1;
+- 
+-     // Restore SPI State
+-     SPI_ON_BIT = 0;
+-     EEPROM_SPICON1 = SPICON1Save;
+-     SPI_ON_BIT = vSPIONSave;
+  
+-     return result.bits.b0;
+  }
+  
+  
+- #endif //#if defined(EEPROM_CS_TRIS)
+--- 707,1057 ----
+   ********************************************************************/
+  BOOL XEEIsBusy(void)
+  {
++ 	BYTE_VAL result;
++ #if defined(USE_ATMEL_FLASH)
++ 
++ 	// perform to transfer
++ 	EEPROM_SPISTATbits.CKE = 0; 	// Data transmitted on falling edge of SCK
++ 	SSPCON1 = 0x30;			// perform SPI Mode 3
++ 
++ 	SPISelectEEPROM();
++ 
++ 	// Send RDSR - Read Status Register opcode
++ 	//SSPBUF = READ_STATUS_REGISTER;
++ 	//while(!PIR1_SSPIF);
++ 	//PIR1_SSPIF = 0;
++ 	SPITransfer(READ_STATUS_REGISTER);
++ 
++ 	// Get register contents
++ 	//SSPBUF = 0;
++ 	//while(!PIR1_SSPIF);
++ 	//PIR1_SSPIF = 0;
++ 	SPITransfer(0);
++ 	result.Val = SSPBUF;
++ 
++ 	SPIUnselectEEPROM();
++ 
++ 	// perform to transfer
++ 	EEPROM_SPISTATbits.CKE = 1; 	// Transmit data on rising edge of clock
++ 	SSPCON1 = 0x20;			// perform SPI Mode 0
++ 
++ 	if(result.Val&0x80) 
++ 		return FALSE;
++ 	else 
++ 		return TRUE;
++ 
++ #else
++ 	#if defined(__18CXX)
++ 	BYTE SPICON1Save;
++ 	#else
++ 	WORD SPICON1Save;
++ 	#endif	
++ 
++ 	// Save SPI state (clock speed)
++ 	SPICON1Save = EEPROM_SPICON1;
++ 	EEPROM_SPICON1 = PROPER_SPICON1;
++ 
++ 	EEPROM_CS_IO = 0;
++ 	// Send RDSR - Read Status Register opcode
++ 	EEPROM_SSPBUF = RDSR;
++ 	while(!EEPROM_SPI_IF);
++ 	result.Val = EEPROM_SSPBUF;
++ 	EEPROM_SPI_IF = 0;
++ 	
++ 	// Get register contents
++ 	EEPROM_SSPBUF = 0;
++ 	while(!EEPROM_SPI_IF);
++ 	result.Val = EEPROM_SSPBUF;
++ 	EEPROM_SPI_IF = 0;
++ 	EEPROM_CS_IO = 1;
++ 
++ 	// Restore SPI State
++ 	EEPROM_SPICON1 = SPICON1Save;
++ 
++ 	return result.bits.b0;
++ #endif
++ }
++ 
++ /*********************************************************************
++  * Function:        EraseSector at specify address
++  *
++  * PreCondition:    XEEInit() is already called.
++  *
++  * Input:           Address to erase
++  *
++  * Side Effects:    None
++  *
++  * Overview:        Erase sector
++  *
++  * Note:            None
++  ********************************************************************/
++ void EraseSector(unsigned int address) {
++ 
++ // WORK BUT NOT ENOUGHT SPACE
++ /* 
++ #if defined(USE_ATMEL_FLASH)
++ 
++ 	unsigned int addr	= 0;
++ 	unsigned int page	= 0;
++ 		
++ 	page = address/264;
++ 	addr = address%264;	
++ 
++ 	page<<=1;
++ 
++ 	// Wait for write to complete
++ 	while( XEEIsBusy(0) );
++ 
++ 	// perform to transfer
++ 	SSPSTAT_CKE = 0; 		// Data transmitted on falling edge of SCK
++ 	SSPCON1 = 0x30;			// perform SPI Mode 3
++ 
++ 	SPISelectEEPROM();
++ 
++ 	//command
++ 	SSPBUF = PAGE_ERASE;
++ 	while(!PIR1_SSPIF);
++ 	PIR1_SSPIF = 0;	
++ 
++ 	//6 reserved + 2 high address
++ 	SSPBUF = (*((unsigned char*)&page+1));
++ 	while(!PIR1_SSPIF);
++ 	PIR1_SSPIF = 0;	
++ 
++ 	//7 low address bits + 1 don't care
++ 	SSPBUF = ((unsigned char)page);
++ 	while(!PIR1_SSPIF);
++ 	PIR1_SSPIF = 0;	
++ 
++ 	//don't care 8 bits
++ 	SSPBUF = 0;
++ 	while(!PIR1_SSPIF);
++ 	PIR1_SSPIF = 0;	
++ 	
++ 	SPIUnselectEEPROM();
++ 
++ 	// Wait for write to complete
++ 	while( XEEIsBusy(0) );
++ 
++ 	// perform to transfer
++ 	SSPSTAT_CKE = 1; 		// Transmit data on rising edge of clock
++ 	SSPCON1 = 0x20;			// perform SPI Mode 0
++ 
++ #endif
++ */
++ }
++ 
++ 
++ 
++ /*********************************************************************
++  * Function:        Write buffer to main memory
++  *
++  * PreCondition:    XEEInit() is already called.
++  *
++  * Input:           Address which determine page to write
++  *
++  * Side Effects:    None
++  *
++  * Overview:        Write buffer to main memory
++  *
++  * Note:            None
++  ********************************************************************/
++ void WriteBufferToMainMemory(unsigned int address) {
++ 	
++ #if defined(USE_ATMEL_FLASH)
++ 
++ 	// unsigned int addr	= 0;
++ 	unsigned int page	= 0;
++ 		
++ 	page = address/264;
++ 	// addr = address%264;	
++ 
++ 	page<<=1;
++ 
++ 	// Wait for write to complete
++ 	while( XEEIsBusy() );	
++ 
++ 	// perform to transfer
++ 	EEPROM_SPISTATbits.CKE = 0; 	// Data transmitted on falling edge of SCK
++ 	SSPCON1 = 0x30;			// perform SPI Mode 3
++ 
++ 	SPISelectEEPROM();
++ 
++ 	//command
++ 	//SSPBUF = B1_TO_MM_PAGE_PROG_WITH_ERASE;
++ 	//while(!PIR1_SSPIF);
++ 	//PIR1_SSPIF = 0;	
++ 	SPITransfer(B1_TO_MM_PAGE_PROG_WITH_ERASE);
++ 
++ 	//6 reserved + 2 high address
++ 	//SSPBUF = (*((unsigned char*)&page+1));
++ 	//while(!PIR1_SSPIF);
++ 	//PIR1_SSPIF = 0;	
++ 	SPITransfer((*((unsigned char*)&page+1)));
++ 
++ 	//7 low address bits + 1 don't care
++ 	//SSPBUF = ((unsigned char)page);
++ 	//while(!PIR1_SSPIF);
++ 	//PIR1_SSPIF = 0;	
++ 	SPITransfer(((unsigned char)page));
++ 
++ 	//don't care 8 bits
++ 	//SSPBUF = 0;
++ 	//while(!PIR1_SSPIF);
++ 	//PIR1_SSPIF = 0;	
++ 	SPITransfer(0);
++ 	
++ 	SPIUnselectEEPROM();
++ 
++ 	// Wait for write to complete
++ 	while( XEEIsBusy() );
++ 
++ 	// perform to transfer
++ 	EEPROM_SPISTATbits.CKE = 1; 	// Transmit data on rising edge of clock
++ 	SSPCON1 = 0x20;			// perform SPI Mode 0
++ 
++ #endif
++ 
++ }
++ 
++ 
++ /*********************************************************************
++  * Function:        Read buffer from main memory
++  *
++  * PreCondition:    XEEInit() is already called.
++  *
++  * Input:           Address which determine page to read
++  *
++  * Side Effects:    None
++  *
++  * Overview:        Read buffer to main memory
++  *
++  * Note:            None
++  ********************************************************************/
++ void ReadBufferFromMainMemory(unsigned int address) {
++ 
++ #if defined(USE_ATMEL_FLASH)	
++ 
++ 	// unsigned int addr	= 0;
++ 	unsigned int page	= 0;
++ 		
++ 	page = address/264;
++ 	// addr = address%264;	
++ 
++ 	page<<=1;
++ 
++ 	// Wait for write to complete
++ 	while( XEEIsBusy() );	
++ 
++ 	// perform to transfer
++ 	EEPROM_SPISTATbits.CKE = 0; 	// Data transmitted on falling edge of SCK
++ 	SSPCON1 = 0x30;			// perform SPI Mode 3
++ 
++ 	SPISelectEEPROM();
++ 
++ 	//command
++ 	//SSPBUF = MM_PAGE_TO_B1_XFER;
++ 	//while(!PIR1_SSPIF);
++ 	//PIR1_SSPIF = 0;	
++ 	SPITransfer(MM_PAGE_TO_B1_XFER);
++ 	
++ 	//6 reserved + 2 high address
++ 	//SSPBUF = (*((unsigned char*)&page+1));
++ 	//while(!PIR1_SSPIF);
++ 	//PIR1_SSPIF = 0;	
++ 	SPITransfer((*((unsigned char*)&page+1)));
++ 
++ 	//7 low address bits + 1 don't care
++ 	//SSPBUF = ((unsigned char)page);
++ 	//while(!PIR1_SSPIF);
++ 	//PIR1_SSPIF = 0;	
++ 	SPITransfer(((unsigned char)page));
++ 
++ 	//don't care 8 bits
++ 	//SSPBUF = 0;
++ 	//while(!PIR1_SSPIF);
++ 	//PIR1_SSPIF = 0;	
++ 	SPITransfer(0);
++ 	
++ 	SPIUnselectEEPROM();
++ 
++ 	// Wait for write to complete
++ 	while( XEEIsBusy() );
++ 
++ 	// perform to transfer
++ 	EEPROM_SPISTATbits.CKE = 1; 	// Transmit data on rising edge of clock
++ 	SSPCON1 = 0x20;			// perform SPI Mode 0
++ 
++ #endif
++ 
++ }
++ 
++ /*********************************************************************
++  * Function:        Program byte to buffer
++  *
++  * PreCondition:    XEEInit() is already called.
++  *
++  * Input:           Byte to program and address 
++  *
++  * Side Effects:    None
++  *
++  * Overview:        Program byte to buffer
++  *
++  * Note:            None
++  ********************************************************************/
++ void ByteToBuffer(unsigned int byte, unsigned int address) {
++ 	
++ 	unsigned int 	addr			= 0;
++ 	//unsigned int 	page			= 0;
++ 
++ 	//page = address/264;
++ 	addr = address%264;	
++ 
++ 	// Wait for write to complete
++ 	while( XEEIsBusy() );	
++ 
++ 	// perform to transfer
++ 	EEPROM_SPISTATbits.CKE = 0; 	// Data transmitted on falling edge of SCK
++ 	SSPCON1 = 0x30;			// perform SPI Mode 3
++ 
++ 	// Set the Write Enable latch
++ 	SPISelectEEPROM();
++ 
++ 	//SSPBUF = BUFFER_1_WRITE;
++ 	//while(!PIR1_SSPIF);
++ 	//PIR1_SSPIF = 0;
++ 	SPITransfer(BUFFER_1_WRITE);
++ 	
++ 	//SSPBUF = 0;
++ 	//while(!PIR1_SSPIF);
++ 	//PIR1_SSPIF = 0;
++ 	SPITransfer(0);
++ 	
++ 	//SSPBUF = (*((unsigned char*)&addr +1));
++ 	//while(!PIR1_SSPIF);
++ 	//PIR1_SSPIF = 0;
++ 	SPITransfer((*((unsigned char*)&addr +1)));
++ 	
++ 	//SSPBUF = ((unsigned char)addr);
++ 	//while(!PIR1_SSPIF);
++ 	//PIR1_SSPIF = 0;
++ 	SPITransfer(((unsigned char)addr));
++ 
++ 	// Send the byte to write
++ 	//SSPBUF = byte;
++ 	//while(!PIR1_SSPIF);
++ 	//PIR1_SSPIF = 0;		
++ 	SPITransfer(byte);
++ 	
++ 	SPIUnselectEEPROM();
++ 
++ 	// Wait for write to complete
++ 	while( XEEIsBusy() );
+  
++ 	// perform to transfer
++ 	EEPROM_SPISTATbits.CKE = 1; 	// Transmit data on rising edge of clock
++ 	SSPCON1 = 0x20;			// perform SPI Mode 0
+  }
+  
+  
++ #endif //#if defined(MPFS_USE_EEPROM) && defined(EEPROM_CS_TRIS) && defined(STACK_USE_MPFS)

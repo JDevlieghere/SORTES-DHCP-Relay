@@ -1,0 +1,989 @@
+gpasm-0.13.7 beta               Objects/NBNS.asm12-16-2009  22:31:37         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00001 ;--------------------------------------------------------
+               00002 ; File Created by SDCC : free open source ANSI-C Compiler
+               00003 ; Version 2.9.4 #5582 (Dec  9 2009) (UNIX)
+               00004 ; This file was generated Wed Dec 16 22:31:37 2009
+               00005 ;--------------------------------------------------------
+               00006 ; PIC16 port for the Microchip 16-bit core micros
+               00007 ;--------------------------------------------------------
+               00008         list    p=18f97j60
+               00009 
+               00010         radix dec
+               00011 
+               00012 ;--------------------------------------------------------
+               00013 ; public variables in this module
+               00014 ;--------------------------------------------------------
+               00015 
+               00016 ;--------------------------------------------------------
+               00017 ; extern variables in this module
+               00018 ;--------------------------------------------------------
+               00019         extern _EBSTCONbits
+               00020         extern _MISTATbits
+               00021         extern _EFLOCONbits
+               00022         extern _MACON1bits
+               00023         extern _MACON2bits
+               00024         extern _MACON3bits
+               00025         extern _MACON4bits
+               00026         extern _MACLCON1bits
+               00027         extern _MACLCON2bits
+               00028         extern _MICONbits
+               00029         extern _MICMDbits
+               00030         extern _EWOLIEbits
+               00031         extern _EWOLIRbits
+               00032         extern _ERXFCONbits
+               00033         extern _EIEbits
+               00034         extern _ESTATbits
+               00035         extern _ECON2bits
+               00036         extern _EIRbits
+               00037         extern _EDATAbits
+               00038         extern _SSP2CON2bits
+               00039         extern _SSP2CON1bits
+               00040         extern _SSP2STATbits
+               00041         extern _ECCP2DELbits
+               00042         extern _ECCP2ASbits
+               00043         extern _ECCP3DELbits
+               00044         extern _ECCP3ASbits
+               00045         extern _RCSTA2bits
+               00046         extern _TXSTA2bits
+               00047         extern _CCP5CONbits
+               00048         extern _CCP4CONbits
+               00049         extern _T4CONbits
+               00050         extern _ECCP1DELbits
+               00051         extern _BAUDCON2bits
+               00052         extern _BAUDCTL2bits
+               00053         extern _BAUDCONbits
+               00054         extern _BAUDCON1bits
+gpasm-0.13.7 beta               Objects/NBNS.asm12-16-2009  22:31:37         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00055         extern _BAUDCTLbits
+               00056         extern _BAUDCTL1bits
+               00057         extern _PORTAbits
+               00058         extern _PORTBbits
+               00059         extern _PORTCbits
+               00060         extern _PORTDbits
+               00061         extern _PORTEbits
+               00062         extern _PORTFbits
+               00063         extern _PORTGbits
+               00064         extern _PORTHbits
+               00065         extern _PORTJbits
+               00066         extern _LATAbits
+               00067         extern _LATBbits
+               00068         extern _LATCbits
+               00069         extern _LATDbits
+               00070         extern _LATEbits
+               00071         extern _LATFbits
+               00072         extern _LATGbits
+               00073         extern _LATHbits
+               00074         extern _LATJbits
+               00075         extern _DDRAbits
+               00076         extern _TRISAbits
+               00077         extern _DDRBbits
+               00078         extern _TRISBbits
+               00079         extern _DDRCbits
+               00080         extern _TRISCbits
+               00081         extern _DDRDbits
+               00082         extern _TRISDbits
+               00083         extern _DDREbits
+               00084         extern _TRISEbits
+               00085         extern _DDRFbits
+               00086         extern _TRISFbits
+               00087         extern _DDRGbits
+               00088         extern _TRISGbits
+               00089         extern _DDRHbits
+               00090         extern _TRISHbits
+               00091         extern _DDRJbits
+               00092         extern _TRISJbits
+               00093         extern _OSCTUNEbits
+               00094         extern _MEMCONbits
+               00095         extern _PIE1bits
+               00096         extern _PIR1bits
+               00097         extern _IPR1bits
+               00098         extern _PIE2bits
+               00099         extern _PIR2bits
+               00100         extern _IPR2bits
+               00101         extern _PIE3bits
+               00102         extern _PIR3bits
+               00103         extern _IPR3bits
+               00104         extern _EECON1bits
+               00105         extern _RCSTAbits
+               00106         extern _RCSTA1bits
+               00107         extern _TXSTAbits
+               00108         extern _TXSTA1bits
+gpasm-0.13.7 beta               Objects/NBNS.asm12-16-2009  22:31:37         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00109         extern _PSPCONbits
+               00110         extern _T3CONbits
+               00111         extern _CMCONbits
+               00112         extern _CVRCONbits
+               00113         extern _ECCP1ASbits
+               00114         extern _CCP3CONbits
+               00115         extern _ECCP3CONbits
+               00116         extern _CCP2CONbits
+               00117         extern _ECCP2CONbits
+               00118         extern _CCP1CONbits
+               00119         extern _ECCP1CONbits
+               00120         extern _ADCON2bits
+               00121         extern _ADCON1bits
+               00122         extern _ADCON0bits
+               00123         extern _SSP1CON2bits
+               00124         extern _SSPCON2bits
+               00125         extern _SSP1CON1bits
+               00126         extern _SSPCON1bits
+               00127         extern _SSP1STATbits
+               00128         extern _SSPSTATbits
+               00129         extern _T2CONbits
+               00130         extern _T1CONbits
+               00131         extern _RCONbits
+               00132         extern _WDTCONbits
+               00133         extern _ECON1bits
+               00134         extern _OSCCONbits
+               00135         extern _T0CONbits
+               00136         extern _STATUSbits
+               00137         extern _INTCON3bits
+               00138         extern _INTCON2bits
+               00139         extern _INTCONbits
+               00140         extern _STKPTRbits
+               00141         extern _stdin
+               00142         extern _stdout
+               00143         extern _AppConfig
+               00144         extern _activeUDPSocket
+               00145         extern _UDPSocketInfo
+               00146         extern _UDPTxCount
+               00147         extern _UDPRxCount
+               00148         extern _LCDText
+               00149         extern _MAADR5
+               00150         extern _MAADR6
+               00151         extern _MAADR3
+               00152         extern _MAADR4
+               00153         extern _MAADR1
+               00154         extern _MAADR2
+               00155         extern _EBSTSD
+               00156         extern _EBSTCON
+               00157         extern _EBSTCS
+               00158         extern _EBSTCSL
+               00159         extern _EBSTCSH
+               00160         extern _MISTAT
+               00161         extern _EFLOCON
+               00162         extern _EPAUS
+gpasm-0.13.7 beta               Objects/NBNS.asm12-16-2009  22:31:37         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00163         extern _EPAUSL
+               00164         extern _EPAUSH
+               00165         extern _MACON1
+               00166         extern _MACON2
+               00167         extern _MACON3
+               00168         extern _MACON4
+               00169         extern _MABBIPG
+               00170         extern _MAIPG
+               00171         extern _MAIPGL
+               00172         extern _MAIPGH
+               00173         extern _MACLCON1
+               00174         extern _MACLCON2
+               00175         extern _MAMXFL
+               00176         extern _MAMXFLL
+               00177         extern _MAMXFLH
+               00178         extern _MICON
+               00179         extern _MICMD
+               00180         extern _MIREGADR
+               00181         extern _MIWR
+               00182         extern _MIWRL
+               00183         extern _MIWRH
+               00184         extern _MIRD
+               00185         extern _MIRDL
+               00186         extern _MIRDH
+               00187         extern _EHT0
+               00188         extern _EHT1
+               00189         extern _EHT2
+               00190         extern _EHT3
+               00191         extern _EHT4
+               00192         extern _EHT5
+               00193         extern _EHT6
+               00194         extern _EHT7
+               00195         extern _EPMM0
+               00196         extern _EPMM1
+               00197         extern _EPMM2
+               00198         extern _EPMM3
+               00199         extern _EPMM4
+               00200         extern _EPMM5
+               00201         extern _EPMM6
+               00202         extern _EPMM7
+               00203         extern _EPMCS
+               00204         extern _EPMCSL
+               00205         extern _EPMCSH
+               00206         extern _EPMO
+               00207         extern _EPMOL
+               00208         extern _EPMOH
+               00209         extern _EWOLIE
+               00210         extern _EWOLIR
+               00211         extern _ERXFCON
+               00212         extern _EPKTCNT
+               00213         extern _EWRPT
+               00214         extern _EWRPTL
+               00215         extern _EWRPTH
+               00216         extern _ETXST
+gpasm-0.13.7 beta               Objects/NBNS.asm12-16-2009  22:31:37         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00217         extern _ETXSTL
+               00218         extern _ETXSTH
+               00219         extern _ETXND
+               00220         extern _ETXNDL
+               00221         extern _ETXNDH
+               00222         extern _ERXST
+               00223         extern _ERXSTL
+               00224         extern _ERXSTH
+               00225         extern _ERXND
+               00226         extern _ERXNDL
+               00227         extern _ERXNDH
+               00228         extern _ERXRDPT
+               00229         extern _ERXRDPTL
+               00230         extern _ERXRDPTH
+               00231         extern _ERXWRPT
+               00232         extern _ERXWRPTL
+               00233         extern _ERXWRPTH
+               00234         extern _EDMAST
+               00235         extern _EDMASTL
+               00236         extern _EDMASTH
+               00237         extern _EDMAND
+               00238         extern _EDMANDL
+               00239         extern _EDMANDH
+               00240         extern _EDMADST
+               00241         extern _EDMADSTL
+               00242         extern _EDMADSTH
+               00243         extern _EDMACS
+               00244         extern _EDMACSL
+               00245         extern _EDMACSH
+               00246         extern _EIE
+               00247         extern _ESTAT
+               00248         extern _ECON2
+               00249         extern _EIR
+               00250         extern _EDATA
+               00251         extern _SSP2CON2
+               00252         extern _SSP2CON1
+               00253         extern _SSP2STAT
+               00254         extern _SSP2ADD
+               00255         extern _SSP2BUF
+               00256         extern _ECCP2DEL
+               00257         extern _ECCP2AS
+               00258         extern _ECCP3DEL
+               00259         extern _ECCP3AS
+               00260         extern _RCSTA2
+               00261         extern _TXSTA2
+               00262         extern _TXREG2
+               00263         extern _RCREG2
+               00264         extern _SPBRG2
+               00265         extern _CCP5CON
+               00266         extern _CCPR5
+               00267         extern _CCPR5L
+               00268         extern _CCPR5H
+               00269         extern _CCP4CON
+               00270         extern _CCPR4
+gpasm-0.13.7 beta               Objects/NBNS.asm12-16-2009  22:31:37         PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00271         extern _CCPR4L
+               00272         extern _CCPR4H
+               00273         extern _T4CON
+               00274         extern _PR4
+               00275         extern _TMR4
+               00276         extern _ECCP1DEL
+               00277         extern _ERDPT
+               00278         extern _ERDPTL
+               00279         extern _ERDPTH
+               00280         extern _BAUDCON2
+               00281         extern _BAUDCTL2
+               00282         extern _SPBRGH2
+               00283         extern _BAUDCON
+               00284         extern _BAUDCON1
+               00285         extern _BAUDCTL
+               00286         extern _BAUDCTL1
+               00287         extern _SPBRGH
+               00288         extern _SPBRGH1
+               00289         extern _PORTA
+               00290         extern _PORTB
+               00291         extern _PORTC
+               00292         extern _PORTD
+               00293         extern _PORTE
+               00294         extern _PORTF
+               00295         extern _PORTG
+               00296         extern _PORTH
+               00297         extern _PORTJ
+               00298         extern _LATA
+               00299         extern _LATB
+               00300         extern _LATC
+               00301         extern _LATD
+               00302         extern _LATE
+               00303         extern _LATF
+               00304         extern _LATG
+               00305         extern _LATH
+               00306         extern _LATJ
+               00307         extern _DDRA
+               00308         extern _TRISA
+               00309         extern _DDRB
+               00310         extern _TRISB
+               00311         extern _DDRC
+               00312         extern _TRISC
+               00313         extern _DDRD
+               00314         extern _TRISD
+               00315         extern _DDRE
+               00316         extern _TRISE
+               00317         extern _DDRF
+               00318         extern _TRISF
+               00319         extern _DDRG
+               00320         extern _TRISG
+               00321         extern _DDRH
+               00322         extern _TRISH
+               00323         extern _DDRJ
+               00324         extern _TRISJ
+gpasm-0.13.7 beta               Objects/NBNS.asm12-16-2009  22:31:37         PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00325         extern _OSCTUNE
+               00326         extern _MEMCON
+               00327         extern _PIE1
+               00328         extern _PIR1
+               00329         extern _IPR1
+               00330         extern _PIE2
+               00331         extern _PIR2
+               00332         extern _IPR2
+               00333         extern _PIE3
+               00334         extern _PIR3
+               00335         extern _IPR3
+               00336         extern _EECON1
+               00337         extern _EECON2
+               00338         extern _RCSTA
+               00339         extern _RCSTA1
+               00340         extern _TXSTA
+               00341         extern _TXSTA1
+               00342         extern _TXREG
+               00343         extern _TXREG1
+               00344         extern _RCREG
+               00345         extern _RCREG1
+               00346         extern _SPBRG
+               00347         extern _SPBRG1
+               00348         extern _PSPCON
+               00349         extern _T3CON
+               00350         extern _TMR3L
+               00351         extern _TMR3H
+               00352         extern _CMCON
+               00353         extern _CVRCON
+               00354         extern _ECCP1AS
+               00355         extern _CCP3CON
+               00356         extern _ECCP3CON
+               00357         extern _CCPR3
+               00358         extern _CCPR3L
+               00359         extern _CCPR3H
+               00360         extern _CCP2CON
+               00361         extern _ECCP2CON
+               00362         extern _CCPR2
+               00363         extern _CCPR2L
+               00364         extern _CCPR2H
+               00365         extern _CCP1CON
+               00366         extern _ECCP1CON
+               00367         extern _CCPR1
+               00368         extern _CCPR1L
+               00369         extern _CCPR1H
+               00370         extern _ADCON2
+               00371         extern _ADCON1
+               00372         extern _ADCON0
+               00373         extern _ADRES
+               00374         extern _ADRESL
+               00375         extern _ADRESH
+               00376         extern _SSP1CON2
+               00377         extern _SSPCON2
+               00378         extern _SSP1CON1
+gpasm-0.13.7 beta               Objects/NBNS.asm12-16-2009  22:31:37         PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00379         extern _SSPCON1
+               00380         extern _SSP1STAT
+               00381         extern _SSPSTAT
+               00382         extern _SSP1ADD
+               00383         extern _SSPADD
+               00384         extern _SSP1BUF
+               00385         extern _SSPBUF
+               00386         extern _T2CON
+               00387         extern _PR2
+               00388         extern _TMR2
+               00389         extern _T1CON
+               00390         extern _TMR1L
+               00391         extern _TMR1H
+               00392         extern _RCON
+               00393         extern _WDTCON
+               00394         extern _ECON1
+               00395         extern _OSCCON
+               00396         extern _T0CON
+               00397         extern _TMR0L
+               00398         extern _TMR0H
+               00399         extern _STATUS
+               00400         extern _FSR2L
+               00401         extern _FSR2H
+               00402         extern _PLUSW2
+               00403         extern _PREINC2
+               00404         extern _POSTDEC2
+               00405         extern _POSTINC2
+               00406         extern _INDF2
+               00407         extern _BSR
+               00408         extern _FSR1L
+               00409         extern _FSR1H
+               00410         extern _PLUSW1
+               00411         extern _PREINC1
+               00412         extern _POSTDEC1
+               00413         extern _POSTINC1
+               00414         extern _INDF1
+               00415         extern _WREG
+               00416         extern _FSR0L
+               00417         extern _FSR0H
+               00418         extern _PLUSW0
+               00419         extern _PREINC0
+               00420         extern _POSTDEC0
+               00421         extern _POSTINC0
+               00422         extern _INDF0
+               00423         extern _INTCON3
+               00424         extern _INTCON2
+               00425         extern _INTCON
+               00426         extern _PROD
+               00427         extern _PRODL
+               00428         extern _PRODH
+               00429         extern _TABLAT
+               00430         extern _TBLPTR
+               00431         extern _TBLPTRL
+               00432         extern _TBLPTRH
+gpasm-0.13.7 beta               Objects/NBNS.asm12-16-2009  22:31:37         PAGE  9
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00433         extern _TBLPTRU
+               00434         extern _PC
+               00435         extern _PCL
+               00436         extern _PCLATH
+               00437         extern _PCLATU
+               00438         extern _STKPTR
+               00439         extern _TOS
+               00440         extern _TOSL
+               00441         extern _TOSH
+               00442         extern _TOSU
+               00443 
+               00444 ;--------------------------------------------------------
+               00445 ; global & static initialisations
+               00446 ;--------------------------------------------------------
+               00447 ; I code from now on!
+               00448 
+               00449 
+               00450 ; Statistics:
+               00451 ; code size:       -1 (0xffffffff) bytes (3276800.00%)
+               00452 ;               2147483647 (0x7fffffff) words
+               00453 ; udata size:       0 (0x0000) bytes ( 0.00%)
+               00454 ; access size:      0 (0x0000) bytes
+               00455 
+               00456 
+gpasm-0.13.7 beta               Objects/NBNS.asm12-16-2009  22:31:37         PAGE 10
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_ADCON0                           00000000
+_ADCON0bits                       00000000
+_ADCON1                           00000000
+_ADCON1bits                       00000000
+_ADCON2                           00000000
+_ADCON2bits                       00000000
+_ADRES                            00000000
+_ADRESH                           00000000
+_ADRESL                           00000000
+_AppConfig                        00000000
+_BAUDCON                          00000000
+_BAUDCON1                         00000000
+_BAUDCON1bits                     00000000
+_BAUDCON2                         00000000
+_BAUDCON2bits                     00000000
+_BAUDCONbits                      00000000
+_BAUDCTL                          00000000
+_BAUDCTL1                         00000000
+_BAUDCTL1bits                     00000000
+_BAUDCTL2                         00000000
+_BAUDCTL2bits                     00000000
+_BAUDCTLbits                      00000000
+_BSR                              00000000
+_CCP1CON                          00000000
+_CCP1CONbits                      00000000
+_CCP2CON                          00000000
+_CCP2CONbits                      00000000
+_CCP3CON                          00000000
+_CCP3CONbits                      00000000
+_CCP4CON                          00000000
+_CCP4CONbits                      00000000
+_CCP5CON                          00000000
+_CCP5CONbits                      00000000
+_CCPR1                            00000000
+_CCPR1H                           00000000
+_CCPR1L                           00000000
+_CCPR2                            00000000
+_CCPR2H                           00000000
+_CCPR2L                           00000000
+_CCPR3                            00000000
+_CCPR3H                           00000000
+_CCPR3L                           00000000
+_CCPR4                            00000000
+_CCPR4H                           00000000
+_CCPR4L                           00000000
+_CCPR5                            00000000
+_CCPR5H                           00000000
+_CCPR5L                           00000000
+_CMCON                            00000000
+_CMCONbits                        00000000
+_CVRCON                           00000000
+_CVRCONbits                       00000000
+_DDRA                             00000000
+gpasm-0.13.7 beta               Objects/NBNS.asm12-16-2009  22:31:37         PAGE 11
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_DDRAbits                         00000000
+_DDRB                             00000000
+_DDRBbits                         00000000
+_DDRC                             00000000
+_DDRCbits                         00000000
+_DDRD                             00000000
+_DDRDbits                         00000000
+_DDRE                             00000000
+_DDREbits                         00000000
+_DDRF                             00000000
+_DDRFbits                         00000000
+_DDRG                             00000000
+_DDRGbits                         00000000
+_DDRH                             00000000
+_DDRHbits                         00000000
+_DDRJ                             00000000
+_DDRJbits                         00000000
+_EBSTCON                          00000000
+_EBSTCONbits                      00000000
+_EBSTCS                           00000000
+_EBSTCSH                          00000000
+_EBSTCSL                          00000000
+_EBSTSD                           00000000
+_ECCP1AS                          00000000
+_ECCP1ASbits                      00000000
+_ECCP1CON                         00000000
+_ECCP1CONbits                     00000000
+_ECCP1DEL                         00000000
+_ECCP1DELbits                     00000000
+_ECCP2AS                          00000000
+_ECCP2ASbits                      00000000
+_ECCP2CON                         00000000
+_ECCP2CONbits                     00000000
+_ECCP2DEL                         00000000
+_ECCP2DELbits                     00000000
+_ECCP3AS                          00000000
+_ECCP3ASbits                      00000000
+_ECCP3CON                         00000000
+_ECCP3CONbits                     00000000
+_ECCP3DEL                         00000000
+_ECCP3DELbits                     00000000
+_ECON1                            00000000
+_ECON1bits                        00000000
+_ECON2                            00000000
+_ECON2bits                        00000000
+_EDATA                            00000000
+_EDATAbits                        00000000
+_EDMACS                           00000000
+_EDMACSH                          00000000
+_EDMACSL                          00000000
+_EDMADST                          00000000
+_EDMADSTH                         00000000
+_EDMADSTL                         00000000
+_EDMAND                           00000000
+gpasm-0.13.7 beta               Objects/NBNS.asm12-16-2009  22:31:37         PAGE 12
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_EDMANDH                          00000000
+_EDMANDL                          00000000
+_EDMAST                           00000000
+_EDMASTH                          00000000
+_EDMASTL                          00000000
+_EECON1                           00000000
+_EECON1bits                       00000000
+_EECON2                           00000000
+_EFLOCON                          00000000
+_EFLOCONbits                      00000000
+_EHT0                             00000000
+_EHT1                             00000000
+_EHT2                             00000000
+_EHT3                             00000000
+_EHT4                             00000000
+_EHT5                             00000000
+_EHT6                             00000000
+_EHT7                             00000000
+_EIE                              00000000
+_EIEbits                          00000000
+_EIR                              00000000
+_EIRbits                          00000000
+_EPAUS                            00000000
+_EPAUSH                           00000000
+_EPAUSL                           00000000
+_EPKTCNT                          00000000
+_EPMCS                            00000000
+_EPMCSH                           00000000
+_EPMCSL                           00000000
+_EPMM0                            00000000
+_EPMM1                            00000000
+_EPMM2                            00000000
+_EPMM3                            00000000
+_EPMM4                            00000000
+_EPMM5                            00000000
+_EPMM6                            00000000
+_EPMM7                            00000000
+_EPMO                             00000000
+_EPMOH                            00000000
+_EPMOL                            00000000
+_ERDPT                            00000000
+_ERDPTH                           00000000
+_ERDPTL                           00000000
+_ERXFCON                          00000000
+_ERXFCONbits                      00000000
+_ERXND                            00000000
+_ERXNDH                           00000000
+_ERXNDL                           00000000
+_ERXRDPT                          00000000
+_ERXRDPTH                         00000000
+_ERXRDPTL                         00000000
+_ERXST                            00000000
+_ERXSTH                           00000000
+_ERXSTL                           00000000
+gpasm-0.13.7 beta               Objects/NBNS.asm12-16-2009  22:31:37         PAGE 13
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_ERXWRPT                          00000000
+_ERXWRPTH                         00000000
+_ERXWRPTL                         00000000
+_ESTAT                            00000000
+_ESTATbits                        00000000
+_ETXND                            00000000
+_ETXNDH                           00000000
+_ETXNDL                           00000000
+_ETXST                            00000000
+_ETXSTH                           00000000
+_ETXSTL                           00000000
+_EWOLIE                           00000000
+_EWOLIEbits                       00000000
+_EWOLIR                           00000000
+_EWOLIRbits                       00000000
+_EWRPT                            00000000
+_EWRPTH                           00000000
+_EWRPTL                           00000000
+_FSR0H                            00000000
+_FSR0L                            00000000
+_FSR1H                            00000000
+_FSR1L                            00000000
+_FSR2H                            00000000
+_FSR2L                            00000000
+_INDF0                            00000000
+_INDF1                            00000000
+_INDF2                            00000000
+_INTCON                           00000000
+_INTCON2                          00000000
+_INTCON2bits                      00000000
+_INTCON3                          00000000
+_INTCON3bits                      00000000
+_INTCONbits                       00000000
+_IPR1                             00000000
+_IPR1bits                         00000000
+_IPR2                             00000000
+_IPR2bits                         00000000
+_IPR3                             00000000
+_IPR3bits                         00000000
+_LATA                             00000000
+_LATAbits                         00000000
+_LATB                             00000000
+_LATBbits                         00000000
+_LATC                             00000000
+_LATCbits                         00000000
+_LATD                             00000000
+_LATDbits                         00000000
+_LATE                             00000000
+_LATEbits                         00000000
+_LATF                             00000000
+_LATFbits                         00000000
+_LATG                             00000000
+_LATGbits                         00000000
+_LATH                             00000000
+gpasm-0.13.7 beta               Objects/NBNS.asm12-16-2009  22:31:37         PAGE 14
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_LATHbits                         00000000
+_LATJ                             00000000
+_LATJbits                         00000000
+_LCDText                          00000000
+_MAADR1                           00000000
+_MAADR2                           00000000
+_MAADR3                           00000000
+_MAADR4                           00000000
+_MAADR5                           00000000
+_MAADR6                           00000000
+_MABBIPG                          00000000
+_MACLCON1                         00000000
+_MACLCON1bits                     00000000
+_MACLCON2                         00000000
+_MACLCON2bits                     00000000
+_MACON1                           00000000
+_MACON1bits                       00000000
+_MACON2                           00000000
+_MACON2bits                       00000000
+_MACON3                           00000000
+_MACON3bits                       00000000
+_MACON4                           00000000
+_MACON4bits                       00000000
+_MAIPG                            00000000
+_MAIPGH                           00000000
+_MAIPGL                           00000000
+_MAMXFL                           00000000
+_MAMXFLH                          00000000
+_MAMXFLL                          00000000
+_MEMCON                           00000000
+_MEMCONbits                       00000000
+_MICMD                            00000000
+_MICMDbits                        00000000
+_MICON                            00000000
+_MICONbits                        00000000
+_MIRD                             00000000
+_MIRDH                            00000000
+_MIRDL                            00000000
+_MIREGADR                         00000000
+_MISTAT                           00000000
+_MISTATbits                       00000000
+_MIWR                             00000000
+_MIWRH                            00000000
+_MIWRL                            00000000
+_OSCCON                           00000000
+_OSCCONbits                       00000000
+_OSCTUNE                          00000000
+_OSCTUNEbits                      00000000
+_PC                               00000000
+_PCL                              00000000
+_PCLATH                           00000000
+_PCLATU                           00000000
+_PIE1                             00000000
+_PIE1bits                         00000000
+gpasm-0.13.7 beta               Objects/NBNS.asm12-16-2009  22:31:37         PAGE 15
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_PIE2                             00000000
+_PIE2bits                         00000000
+_PIE3                             00000000
+_PIE3bits                         00000000
+_PIR1                             00000000
+_PIR1bits                         00000000
+_PIR2                             00000000
+_PIR2bits                         00000000
+_PIR3                             00000000
+_PIR3bits                         00000000
+_PLUSW0                           00000000
+_PLUSW1                           00000000
+_PLUSW2                           00000000
+_PORTA                            00000000
+_PORTAbits                        00000000
+_PORTB                            00000000
+_PORTBbits                        00000000
+_PORTC                            00000000
+_PORTCbits                        00000000
+_PORTD                            00000000
+_PORTDbits                        00000000
+_PORTE                            00000000
+_PORTEbits                        00000000
+_PORTF                            00000000
+_PORTFbits                        00000000
+_PORTG                            00000000
+_PORTGbits                        00000000
+_PORTH                            00000000
+_PORTHbits                        00000000
+_PORTJ                            00000000
+_PORTJbits                        00000000
+_POSTDEC0                         00000000
+_POSTDEC1                         00000000
+_POSTDEC2                         00000000
+_POSTINC0                         00000000
+_POSTINC1                         00000000
+_POSTINC2                         00000000
+_PR2                              00000000
+_PR4                              00000000
+_PREINC0                          00000000
+_PREINC1                          00000000
+_PREINC2                          00000000
+_PROD                             00000000
+_PRODH                            00000000
+_PRODL                            00000000
+_PSPCON                           00000000
+_PSPCONbits                       00000000
+_RCON                             00000000
+_RCONbits                         00000000
+_RCREG                            00000000
+_RCREG1                           00000000
+_RCREG2                           00000000
+_RCSTA                            00000000
+_RCSTA1                           00000000
+gpasm-0.13.7 beta               Objects/NBNS.asm12-16-2009  22:31:37         PAGE 16
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_RCSTA1bits                       00000000
+_RCSTA2                           00000000
+_RCSTA2bits                       00000000
+_RCSTAbits                        00000000
+_SPBRG                            00000000
+_SPBRG1                           00000000
+_SPBRG2                           00000000
+_SPBRGH                           00000000
+_SPBRGH1                          00000000
+_SPBRGH2                          00000000
+_SSP1ADD                          00000000
+_SSP1BUF                          00000000
+_SSP1CON1                         00000000
+_SSP1CON1bits                     00000000
+_SSP1CON2                         00000000
+_SSP1CON2bits                     00000000
+_SSP1STAT                         00000000
+_SSP1STATbits                     00000000
+_SSP2ADD                          00000000
+_SSP2BUF                          00000000
+_SSP2CON1                         00000000
+_SSP2CON1bits                     00000000
+_SSP2CON2                         00000000
+_SSP2CON2bits                     00000000
+_SSP2STAT                         00000000
+_SSP2STATbits                     00000000
+_SSPADD                           00000000
+_SSPBUF                           00000000
+_SSPCON1                          00000000
+_SSPCON1bits                      00000000
+_SSPCON2                          00000000
+_SSPCON2bits                      00000000
+_SSPSTAT                          00000000
+_SSPSTATbits                      00000000
+_STATUS                           00000000
+_STATUSbits                       00000000
+_STKPTR                           00000000
+_STKPTRbits                       00000000
+_T0CON                            00000000
+_T0CONbits                        00000000
+_T1CON                            00000000
+_T1CONbits                        00000000
+_T2CON                            00000000
+_T2CONbits                        00000000
+_T3CON                            00000000
+_T3CONbits                        00000000
+_T4CON                            00000000
+_T4CONbits                        00000000
+_TABLAT                           00000000
+_TBLPTR                           00000000
+_TBLPTRH                          00000000
+_TBLPTRL                          00000000
+_TBLPTRU                          00000000
+_TMR0H                            00000000
+gpasm-0.13.7 beta               Objects/NBNS.asm12-16-2009  22:31:37         PAGE 17
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_TMR0L                            00000000
+_TMR1H                            00000000
+_TMR1L                            00000000
+_TMR2                             00000000
+_TMR3H                            00000000
+_TMR3L                            00000000
+_TMR4                             00000000
+_TOS                              00000000
+_TOSH                             00000000
+_TOSL                             00000000
+_TOSU                             00000000
+_TRISA                            00000000
+_TRISAbits                        00000000
+_TRISB                            00000000
+_TRISBbits                        00000000
+_TRISC                            00000000
+_TRISCbits                        00000000
+_TRISD                            00000000
+_TRISDbits                        00000000
+_TRISE                            00000000
+_TRISEbits                        00000000
+_TRISF                            00000000
+_TRISFbits                        00000000
+_TRISG                            00000000
+_TRISGbits                        00000000
+_TRISH                            00000000
+_TRISHbits                        00000000
+_TRISJ                            00000000
+_TRISJbits                        00000000
+_TXREG                            00000000
+_TXREG1                           00000000
+_TXREG2                           00000000
+_TXSTA                            00000000
+_TXSTA1                           00000000
+_TXSTA1bits                       00000000
+_TXSTA2                           00000000
+_TXSTA2bits                       00000000
+_TXSTAbits                        00000000
+_UDPRxCount                       00000000
+_UDPSocketInfo                    00000000
+_UDPTxCount                       00000000
+_WDTCON                           00000000
+_WDTCONbits                       00000000
+_WREG                             00000000
+__18F97J60                        00000001
+_activeUDPSocket                  00000000
+_stdin                            00000000
+_stdout                           00000000
+
+
+Errors   :       0
+Warnings :       0 reported,       0 suppressed
+Messages :       0 reported,       0 suppressed
+

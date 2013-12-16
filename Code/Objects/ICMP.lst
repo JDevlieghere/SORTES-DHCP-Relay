@@ -1,0 +1,1289 @@
+gpasm-0.13.7 beta               Objects/ICMP.asm3-15-2010  11:43:31          PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00001 ;--------------------------------------------------------
+               00002 ; File Created by SDCC : free open source ANSI-C Compiler
+               00003 ; Version 2.9.4 #5595 (Dec 17 2009) (UNIX)
+               00004 ; This file was generated Mon Mar 15 11:43:31 2010
+               00005 ;--------------------------------------------------------
+               00006 ; PIC16 port for the Microchip 16-bit core micros
+               00007 ;--------------------------------------------------------
+               00008         list    p=18f97j60
+               00009 
+               00010         radix dec
+               00011 
+               00012 ;--------------------------------------------------------
+               00013 ; public variables in this module
+               00014 ;--------------------------------------------------------
+               00015         global _ICMPProcess
+               00016 
+               00017 ;--------------------------------------------------------
+               00018 ; extern variables in this module
+               00019 ;--------------------------------------------------------
+               00020         extern _EBSTCONbits
+               00021         extern _MISTATbits
+               00022         extern _EFLOCONbits
+               00023         extern _MACON1bits
+               00024         extern _MACON2bits
+               00025         extern _MACON3bits
+               00026         extern _MACON4bits
+               00027         extern _MACLCON1bits
+               00028         extern _MACLCON2bits
+               00029         extern _MICONbits
+               00030         extern _MICMDbits
+               00031         extern _EWOLIEbits
+               00032         extern _EWOLIRbits
+               00033         extern _ERXFCONbits
+               00034         extern _EIEbits
+               00035         extern _ESTATbits
+               00036         extern _ECON2bits
+               00037         extern _EIRbits
+               00038         extern _EDATAbits
+               00039         extern _SSP2CON2bits
+               00040         extern _SSP2CON1bits
+               00041         extern _SSP2STATbits
+               00042         extern _ECCP2DELbits
+               00043         extern _ECCP2ASbits
+               00044         extern _ECCP3DELbits
+               00045         extern _ECCP3ASbits
+               00046         extern _RCSTA2bits
+               00047         extern _TXSTA2bits
+               00048         extern _CCP5CONbits
+               00049         extern _CCP4CONbits
+               00050         extern _T4CONbits
+               00051         extern _ECCP1DELbits
+               00052         extern _BAUDCON2bits
+               00053         extern _BAUDCTL2bits
+               00054         extern _BAUDCONbits
+gpasm-0.13.7 beta               Objects/ICMP.asm3-15-2010  11:43:31          PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00055         extern _BAUDCON1bits
+               00056         extern _BAUDCTLbits
+               00057         extern _BAUDCTL1bits
+               00058         extern _PORTAbits
+               00059         extern _PORTBbits
+               00060         extern _PORTCbits
+               00061         extern _PORTDbits
+               00062         extern _PORTEbits
+               00063         extern _PORTFbits
+               00064         extern _PORTGbits
+               00065         extern _PORTHbits
+               00066         extern _PORTJbits
+               00067         extern _LATAbits
+               00068         extern _LATBbits
+               00069         extern _LATCbits
+               00070         extern _LATDbits
+               00071         extern _LATEbits
+               00072         extern _LATFbits
+               00073         extern _LATGbits
+               00074         extern _LATHbits
+               00075         extern _LATJbits
+               00076         extern _DDRAbits
+               00077         extern _TRISAbits
+               00078         extern _DDRBbits
+               00079         extern _TRISBbits
+               00080         extern _DDRCbits
+               00081         extern _TRISCbits
+               00082         extern _DDRDbits
+               00083         extern _TRISDbits
+               00084         extern _DDREbits
+               00085         extern _TRISEbits
+               00086         extern _DDRFbits
+               00087         extern _TRISFbits
+               00088         extern _DDRGbits
+               00089         extern _TRISGbits
+               00090         extern _DDRHbits
+               00091         extern _TRISHbits
+               00092         extern _DDRJbits
+               00093         extern _TRISJbits
+               00094         extern _OSCTUNEbits
+               00095         extern _MEMCONbits
+               00096         extern _PIE1bits
+               00097         extern _PIR1bits
+               00098         extern _IPR1bits
+               00099         extern _PIE2bits
+               00100         extern _PIR2bits
+               00101         extern _IPR2bits
+               00102         extern _PIE3bits
+               00103         extern _PIR3bits
+               00104         extern _IPR3bits
+               00105         extern _EECON1bits
+               00106         extern _RCSTAbits
+               00107         extern _RCSTA1bits
+               00108         extern _TXSTAbits
+gpasm-0.13.7 beta               Objects/ICMP.asm3-15-2010  11:43:31          PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00109         extern _TXSTA1bits
+               00110         extern _PSPCONbits
+               00111         extern _T3CONbits
+               00112         extern _CMCONbits
+               00113         extern _CVRCONbits
+               00114         extern _ECCP1ASbits
+               00115         extern _CCP3CONbits
+               00116         extern _ECCP3CONbits
+               00117         extern _CCP2CONbits
+               00118         extern _ECCP2CONbits
+               00119         extern _CCP1CONbits
+               00120         extern _ECCP1CONbits
+               00121         extern _ADCON2bits
+               00122         extern _ADCON1bits
+               00123         extern _ADCON0bits
+               00124         extern _SSP1CON2bits
+               00125         extern _SSPCON2bits
+               00126         extern _SSP1CON1bits
+               00127         extern _SSPCON1bits
+               00128         extern _SSP1STATbits
+               00129         extern _SSPSTATbits
+               00130         extern _T2CONbits
+               00131         extern _T1CONbits
+               00132         extern _RCONbits
+               00133         extern _WDTCONbits
+               00134         extern _ECON1bits
+               00135         extern _OSCCONbits
+               00136         extern _T0CONbits
+               00137         extern _STATUSbits
+               00138         extern _INTCON3bits
+               00139         extern _INTCON2bits
+               00140         extern _INTCONbits
+               00141         extern _STKPTRbits
+               00142         extern _stdin
+               00143         extern _stdout
+               00144         extern _AN0String
+               00145         extern _AppConfig
+               00146         extern _activeUDPSocket
+               00147         extern _UDPSocketInfo
+               00148         extern _UDPTxCount
+               00149         extern _UDPRxCount
+               00150         extern _LCDText
+               00151         extern _MAADR5
+               00152         extern _MAADR6
+               00153         extern _MAADR3
+               00154         extern _MAADR4
+               00155         extern _MAADR1
+               00156         extern _MAADR2
+               00157         extern _EBSTSD
+               00158         extern _EBSTCON
+               00159         extern _EBSTCS
+               00160         extern _EBSTCSL
+               00161         extern _EBSTCSH
+               00162         extern _MISTAT
+gpasm-0.13.7 beta               Objects/ICMP.asm3-15-2010  11:43:31          PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00163         extern _EFLOCON
+               00164         extern _EPAUS
+               00165         extern _EPAUSL
+               00166         extern _EPAUSH
+               00167         extern _MACON1
+               00168         extern _MACON2
+               00169         extern _MACON3
+               00170         extern _MACON4
+               00171         extern _MABBIPG
+               00172         extern _MAIPG
+               00173         extern _MAIPGL
+               00174         extern _MAIPGH
+               00175         extern _MACLCON1
+               00176         extern _MACLCON2
+               00177         extern _MAMXFL
+               00178         extern _MAMXFLL
+               00179         extern _MAMXFLH
+               00180         extern _MICON
+               00181         extern _MICMD
+               00182         extern _MIREGADR
+               00183         extern _MIWR
+               00184         extern _MIWRL
+               00185         extern _MIWRH
+               00186         extern _MIRD
+               00187         extern _MIRDL
+               00188         extern _MIRDH
+               00189         extern _EHT0
+               00190         extern _EHT1
+               00191         extern _EHT2
+               00192         extern _EHT3
+               00193         extern _EHT4
+               00194         extern _EHT5
+               00195         extern _EHT6
+               00196         extern _EHT7
+               00197         extern _EPMM0
+               00198         extern _EPMM1
+               00199         extern _EPMM2
+               00200         extern _EPMM3
+               00201         extern _EPMM4
+               00202         extern _EPMM5
+               00203         extern _EPMM6
+               00204         extern _EPMM7
+               00205         extern _EPMCS
+               00206         extern _EPMCSL
+               00207         extern _EPMCSH
+               00208         extern _EPMO
+               00209         extern _EPMOL
+               00210         extern _EPMOH
+               00211         extern _EWOLIE
+               00212         extern _EWOLIR
+               00213         extern _ERXFCON
+               00214         extern _EPKTCNT
+               00215         extern _EWRPT
+               00216         extern _EWRPTL
+gpasm-0.13.7 beta               Objects/ICMP.asm3-15-2010  11:43:31          PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00217         extern _EWRPTH
+               00218         extern _ETXST
+               00219         extern _ETXSTL
+               00220         extern _ETXSTH
+               00221         extern _ETXND
+               00222         extern _ETXNDL
+               00223         extern _ETXNDH
+               00224         extern _ERXST
+               00225         extern _ERXSTL
+               00226         extern _ERXSTH
+               00227         extern _ERXND
+               00228         extern _ERXNDL
+               00229         extern _ERXNDH
+               00230         extern _ERXRDPT
+               00231         extern _ERXRDPTL
+               00232         extern _ERXRDPTH
+               00233         extern _ERXWRPT
+               00234         extern _ERXWRPTL
+               00235         extern _ERXWRPTH
+               00236         extern _EDMAST
+               00237         extern _EDMASTL
+               00238         extern _EDMASTH
+               00239         extern _EDMAND
+               00240         extern _EDMANDL
+               00241         extern _EDMANDH
+               00242         extern _EDMADST
+               00243         extern _EDMADSTL
+               00244         extern _EDMADSTH
+               00245         extern _EDMACS
+               00246         extern _EDMACSL
+               00247         extern _EDMACSH
+               00248         extern _EIE
+               00249         extern _ESTAT
+               00250         extern _ECON2
+               00251         extern _EIR
+               00252         extern _EDATA
+               00253         extern _SSP2CON2
+               00254         extern _SSP2CON1
+               00255         extern _SSP2STAT
+               00256         extern _SSP2ADD
+               00257         extern _SSP2BUF
+               00258         extern _ECCP2DEL
+               00259         extern _ECCP2AS
+               00260         extern _ECCP3DEL
+               00261         extern _ECCP3AS
+               00262         extern _RCSTA2
+               00263         extern _TXSTA2
+               00264         extern _TXREG2
+               00265         extern _RCREG2
+               00266         extern _SPBRG2
+               00267         extern _CCP5CON
+               00268         extern _CCPR5
+               00269         extern _CCPR5L
+               00270         extern _CCPR5H
+gpasm-0.13.7 beta               Objects/ICMP.asm3-15-2010  11:43:31          PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00271         extern _CCP4CON
+               00272         extern _CCPR4
+               00273         extern _CCPR4L
+               00274         extern _CCPR4H
+               00275         extern _T4CON
+               00276         extern _PR4
+               00277         extern _TMR4
+               00278         extern _ECCP1DEL
+               00279         extern _ERDPT
+               00280         extern _ERDPTL
+               00281         extern _ERDPTH
+               00282         extern _BAUDCON2
+               00283         extern _BAUDCTL2
+               00284         extern _SPBRGH2
+               00285         extern _BAUDCON
+               00286         extern _BAUDCON1
+               00287         extern _BAUDCTL
+               00288         extern _BAUDCTL1
+               00289         extern _SPBRGH
+               00290         extern _SPBRGH1
+               00291         extern _PORTA
+               00292         extern _PORTB
+               00293         extern _PORTC
+               00294         extern _PORTD
+               00295         extern _PORTE
+               00296         extern _PORTF
+               00297         extern _PORTG
+               00298         extern _PORTH
+               00299         extern _PORTJ
+               00300         extern _LATA
+               00301         extern _LATB
+               00302         extern _LATC
+               00303         extern _LATD
+               00304         extern _LATE
+               00305         extern _LATF
+               00306         extern _LATG
+               00307         extern _LATH
+               00308         extern _LATJ
+               00309         extern _DDRA
+               00310         extern _TRISA
+               00311         extern _DDRB
+               00312         extern _TRISB
+               00313         extern _DDRC
+               00314         extern _TRISC
+               00315         extern _DDRD
+               00316         extern _TRISD
+               00317         extern _DDRE
+               00318         extern _TRISE
+               00319         extern _DDRF
+               00320         extern _TRISF
+               00321         extern _DDRG
+               00322         extern _TRISG
+               00323         extern _DDRH
+               00324         extern _TRISH
+gpasm-0.13.7 beta               Objects/ICMP.asm3-15-2010  11:43:31          PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00325         extern _DDRJ
+               00326         extern _TRISJ
+               00327         extern _OSCTUNE
+               00328         extern _MEMCON
+               00329         extern _PIE1
+               00330         extern _PIR1
+               00331         extern _IPR1
+               00332         extern _PIE2
+               00333         extern _PIR2
+               00334         extern _IPR2
+               00335         extern _PIE3
+               00336         extern _PIR3
+               00337         extern _IPR3
+               00338         extern _EECON1
+               00339         extern _EECON2
+               00340         extern _RCSTA
+               00341         extern _RCSTA1
+               00342         extern _TXSTA
+               00343         extern _TXSTA1
+               00344         extern _TXREG
+               00345         extern _TXREG1
+               00346         extern _RCREG
+               00347         extern _RCREG1
+               00348         extern _SPBRG
+               00349         extern _SPBRG1
+               00350         extern _PSPCON
+               00351         extern _T3CON
+               00352         extern _TMR3L
+               00353         extern _TMR3H
+               00354         extern _CMCON
+               00355         extern _CVRCON
+               00356         extern _ECCP1AS
+               00357         extern _CCP3CON
+               00358         extern _ECCP3CON
+               00359         extern _CCPR3
+               00360         extern _CCPR3L
+               00361         extern _CCPR3H
+               00362         extern _CCP2CON
+               00363         extern _ECCP2CON
+               00364         extern _CCPR2
+               00365         extern _CCPR2L
+               00366         extern _CCPR2H
+               00367         extern _CCP1CON
+               00368         extern _ECCP1CON
+               00369         extern _CCPR1
+               00370         extern _CCPR1L
+               00371         extern _CCPR1H
+               00372         extern _ADCON2
+               00373         extern _ADCON1
+               00374         extern _ADCON0
+               00375         extern _ADRES
+               00376         extern _ADRESL
+               00377         extern _ADRESH
+               00378         extern _SSP1CON2
+gpasm-0.13.7 beta               Objects/ICMP.asm3-15-2010  11:43:31          PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00379         extern _SSPCON2
+               00380         extern _SSP1CON1
+               00381         extern _SSPCON1
+               00382         extern _SSP1STAT
+               00383         extern _SSPSTAT
+               00384         extern _SSP1ADD
+               00385         extern _SSPADD
+               00386         extern _SSP1BUF
+               00387         extern _SSPBUF
+               00388         extern _T2CON
+               00389         extern _PR2
+               00390         extern _TMR2
+               00391         extern _T1CON
+               00392         extern _TMR1L
+               00393         extern _TMR1H
+               00394         extern _RCON
+               00395         extern _WDTCON
+               00396         extern _ECON1
+               00397         extern _OSCCON
+               00398         extern _T0CON
+               00399         extern _TMR0L
+               00400         extern _TMR0H
+               00401         extern _STATUS
+               00402         extern _FSR2L
+               00403         extern _FSR2H
+               00404         extern _PLUSW2
+               00405         extern _PREINC2
+               00406         extern _POSTDEC2
+               00407         extern _POSTINC2
+               00408         extern _INDF2
+               00409         extern _BSR
+               00410         extern _FSR1L
+               00411         extern _FSR1H
+               00412         extern _PLUSW1
+               00413         extern _PREINC1
+               00414         extern _POSTDEC1
+               00415         extern _POSTINC1
+               00416         extern _INDF1
+               00417         extern _WREG
+               00418         extern _FSR0L
+               00419         extern _FSR0H
+               00420         extern _PLUSW0
+               00421         extern _PREINC0
+               00422         extern _POSTDEC0
+               00423         extern _POSTINC0
+               00424         extern _INDF0
+               00425         extern _INTCON3
+               00426         extern _INTCON2
+               00427         extern _INTCON
+               00428         extern _PROD
+               00429         extern _PRODL
+               00430         extern _PRODH
+               00431         extern _TABLAT
+               00432         extern _TBLPTR
+gpasm-0.13.7 beta               Objects/ICMP.asm3-15-2010  11:43:31          PAGE  9
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00433         extern _TBLPTRL
+               00434         extern _TBLPTRH
+               00435         extern _TBLPTRU
+               00436         extern _PC
+               00437         extern _PCL
+               00438         extern _PCLATH
+               00439         extern _PCLATU
+               00440         extern _STKPTR
+               00441         extern _TOS
+               00442         extern _TOSL
+               00443         extern _TOSH
+               00444         extern _TOSU
+               00445         extern _MACCalcRxChecksum
+               00446         extern _MACSetWritePtr
+               00447         extern _MACGetArray
+               00448         extern _MACMemCopyAsync
+               00449         extern _MACIsMemCopyDone
+               00450         extern _MACIsTxReady
+               00451         extern _MACPutArray
+               00452         extern _MACFlush
+               00453         extern _IPPutHeader
+               00454 ;--------------------------------------------------------
+               00455 ;       Equates to used internal registers
+               00456 ;--------------------------------------------------------
+  00000FD8     00457 STATUS  equ     0xfd8
+  00000FE1     00458 FSR1L   equ     0xfe1
+  00000FD9     00459 FSR2L   equ     0xfd9
+  00000FE5     00460 POSTDEC1        equ     0xfe5
+  00000FE4     00461 PREINC1 equ     0xfe4
+  00000FDB     00462 PLUSW2  equ     0xfdb
+  00000FF3     00463 PRODL   equ     0xff3
+               00464 
+               00465 
+               00466 ; Internal registers
+               00467 .registers      udata_ovr       0x0000
+               00468 r0x00   res     1
+               00469 r0x01   res     1
+               00470 r0x02   res     1
+               00471 r0x03   res     1
+               00472 r0x04   res     1
+               00473 r0x05   res     1
+               00474 r0x06   res     1
+               00475 r0x07   res     1
+               00476 
+               00477 udata_ICMP_0    udata
+               00478 _ICMPProcess_dwVal_1_1  res     4
+               00479 
+               00480 ;--------------------------------------------------------
+               00481 ; global & static initialisations
+               00482 ;--------------------------------------------------------
+               00483 ; I code from now on!
+               00484 ; ; Starting pCode block
+               00485 S_ICMP__ICMPProcess     code
+0000 00486 _ICMPProcess:
+gpasm-0.13.7 beta               Objects/ICMP.asm3-15-2010  11:43:31          PAGE 10
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00487 ;       .line   132; TCPIP_Stack/ICMP.c void ICMPProcess(NODE_INFO *remote, WORD len)
+0000 CFD9 FFE5 00488         MOVFF   FSR2L, POSTDEC1
+0004 CFE1 FFD9 00489         MOVFF   FSR1L, FSR2L
+0008 C000 FFE5 00490         MOVFF   r0x00, POSTDEC1
+000C C000 FFE5 00491         MOVFF   r0x01, POSTDEC1
+0010 C000 FFE5 00492         MOVFF   r0x02, POSTDEC1
+0014 C000 FFE5 00493         MOVFF   r0x03, POSTDEC1
+0018 C000 FFE5 00494         MOVFF   r0x04, POSTDEC1
+001C C000 FFE5 00495         MOVFF   r0x05, POSTDEC1
+0020 C000 FFE5 00496         MOVFF   r0x06, POSTDEC1
+0024 C000 FFE5 00497         MOVFF   r0x07, POSTDEC1
+0028 0E02      00498         MOVLW   0x02
+002A CFDB F000 00499         MOVFF   PLUSW2, r0x00
+002E 0E03      00500         MOVLW   0x03
+0030 CFDB F000 00501         MOVFF   PLUSW2, r0x01
+0034 0E04      00502         MOVLW   0x04
+0036 CFDB F000 00503         MOVFF   PLUSW2, r0x02
+003A 0E05      00504         MOVLW   0x05
+003C CFDB F000 00505         MOVFF   PLUSW2, r0x03
+0040 0E06      00506         MOVLW   0x06
+0042 CFDB F000 00507         MOVFF   PLUSW2, r0x04
+               00508 ;       .line   137; TCPIP_Stack/ICMP.c MACGetArray((BYTE*)&dwVal, sizeof(dwVal));
+0046 0E00      00509         MOVLW   HIGH(_ICMPProcess_dwVal_1_1)
+0048 6E00      00510         MOVWF   r0x06
+004A 0E00      00511         MOVLW   LOW(_ICMPProcess_dwVal_1_1)
+004C 6E00      00512         MOVWF   r0x05
+004E 0E80      00513         MOVLW   0x80
+0050 6E00      00514         MOVWF   r0x07
+0052 0E00      00515         MOVLW   0x00
+0054 6EE5      00516         MOVWF   POSTDEC1
+0056 0E04      00517         MOVLW   0x04
+0058 6EE5      00518         MOVWF   POSTDEC1
+005A 5000      00519         MOVF    r0x07, W
+005C 6EE5      00520         MOVWF   POSTDEC1
+005E 5000      00521         MOVF    r0x06, W
+0060 6EE5      00522         MOVWF   POSTDEC1
+0062 5000      00523         MOVF    r0x05, W
+0064 6EE5      00524         MOVWF   POSTDEC1
+0066 EC00 F000 00525         CALL    _MACGetArray
+006A 0E05      00526         MOVLW   0x05
+006C 26E1      00527         ADDWF   FSR1L, F
+006E 0000      00528         BANKSEL _ICMPProcess_dwVal_1_1
+               00529 ;       .line   140; TCPIP_Stack/ICMP.c if(dwVal.w[0] == 0x0008u)
+0070 5100      00530         MOVF    _ICMPProcess_dwVal_1_1, W, B
+0072 0A08      00531         XORLW   0x08
+0074 E100      00532         BNZ     _00129_DS_
+0076 0000      00533         BANKSEL (_ICMPProcess_dwVal_1_1 + 1)
+0078 5100      00534         MOVF    (_ICMPProcess_dwVal_1_1 + 1), W, B
+007A E000      00535         BZ      _00130_DS_
+007C 00536 _00129_DS_:
+007C D000      00537         BRA     _00119_DS_
+007E 00538 _00130_DS_:
+               00539 ;       .line   146; TCPIP_Stack/ICMP.c if(MACCalcRxChecksum(0+sizeof(IP_HEADER), len))
+007E 5000      00540         MOVF    r0x04, W
+gpasm-0.13.7 beta               Objects/ICMP.asm3-15-2010  11:43:31          PAGE 11
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0080 6EE5      00541         MOVWF   POSTDEC1
+0082 5000      00542         MOVF    r0x03, W
+0084 6EE5      00543         MOVWF   POSTDEC1
+0086 0E00      00544         MOVLW   0x00
+0088 6EE5      00545         MOVWF   POSTDEC1
+008A 0E14      00546         MOVLW   0x14
+008C 6EE5      00547         MOVWF   POSTDEC1
+008E EC00 F000 00548         CALL    _MACCalcRxChecksum
+0092 6E00      00549         MOVWF   r0x05
+0094 CFF3 F000 00550         MOVFF   PRODL, r0x06
+0098 0E04      00551         MOVLW   0x04
+009A 26E1      00552         ADDWF   FSR1L, F
+009C 5000      00553         MOVF    r0x05, W
+009E 1000      00554         IORWF   r0x06, W
+00A0 E000      00555         BZ      _00106_DS_
+               00556 ;       .line   147; TCPIP_Stack/ICMP.c return;
+00A2 D000      00557         BRA     _00119_DS_
+00A4 00558 _00106_DS_:
+00A4 0000      00559         BANKSEL _ICMPProcess_dwVal_1_1
+               00560 ;       .line   150; TCPIP_Stack/ICMP.c dwVal.v[0] = 0x00;      // Type: 0 (ICMP echo/ping reply)
+00A6 6B00      00561         CLRF    _ICMPProcess_dwVal_1_1, B
+               00562 ;       .line   151; TCPIP_Stack/ICMP.c dwVal.v[2] += 8;        // Subtract 0x0800 from the checksum
+00A8 0E08      00563         MOVLW   0x08
+00AA 0000      00564         BANKSEL (_ICMPProcess_dwVal_1_1 + 2)
+00AC 2500      00565         ADDWF   (_ICMPProcess_dwVal_1_1 + 2), W, B
+00AE 6E00      00566         MOVWF   r0x05
+00B0 5000      00567         MOVF    r0x05, W
+00B2 0000      00568         BANKSEL (_ICMPProcess_dwVal_1_1 + 2)
+00B4 6F00      00569         MOVWF   (_ICMPProcess_dwVal_1_1 + 2), B
+               00570 ;       .line   152; TCPIP_Stack/ICMP.c if(dwVal.v[2] < 8u)
+00B6 C000 F000 00571         MOVFF   (_ICMPProcess_dwVal_1_1 + 2), r0x06
+00BA 6A00      00572         CLRF    r0x07
+00BC 0E00      00573         MOVLW   0x00
+00BE 5C00      00574         SUBWF   r0x07, W
+00C0 E100      00575         BNZ     _00131_DS_
+00C2 0E08      00576         MOVLW   0x08
+00C4 5C00      00577         SUBWF   r0x05, W
+00C6 00578 _00131_DS_:
+00C6 E200      00579         BC      _00111_DS_
+               00580 ;       .line   154; TCPIP_Stack/ICMP.c dwVal.v[3]++;
+00C8 C000 F000 00581         MOVFF   (_ICMPProcess_dwVal_1_1 + 3), r0x05
+00CC 2A00      00582         INCF    r0x05, F
+00CE 5000      00583         MOVF    r0x05, W
+00D0 0000      00584         BANKSEL (_ICMPProcess_dwVal_1_1 + 3)
+00D2 6F00      00585         MOVWF   (_ICMPProcess_dwVal_1_1 + 3), B
+00D4 0000      00586         BANKSEL (_ICMPProcess_dwVal_1_1 + 3)
+               00587 ;       .line   155; TCPIP_Stack/ICMP.c if(dwVal.v[3] == 0u) dwVal.v[2]++;
+00D6 5100      00588         MOVF    (_ICMPProcess_dwVal_1_1 + 3), W, B
+00D8 E100      00589         BNZ     _00111_DS_
+00DA 2A00      00590         INCF    r0x06, F
+00DC 5000      00591         MOVF    r0x06, W
+00DE 0000      00592         BANKSEL (_ICMPProcess_dwVal_1_1 + 2)
+00E0 6F00      00593         MOVWF   (_ICMPProcess_dwVal_1_1 + 2), B
+00E2 00594 _00111_DS_:
+gpasm-0.13.7 beta               Objects/ICMP.asm3-15-2010  11:43:31          PAGE 12
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00595 ;       .line   160; TCPIP_Stack/ICMP.c while(!IPIsTxReady());
+00E2 EC00 F000 00596         CALL    _MACIsTxReady
+00E6 6E00      00597         MOVWF   r0x05
+00E8 5000      00598         MOVF    r0x05, W
+00EA E000      00599         BZ      _00111_DS_
+               00600 ;       .line   165; TCPIP_Stack/ICMP.c MACSetWritePtr(BASE_TX_ADDR + sizeof(ETHER_HEADER));
+00EC 0E1A      00601         MOVLW   0x1a
+00EE 6EE5      00602         MOVWF   POSTDEC1
+00F0 0E19      00603         MOVLW   0x19
+00F2 6EE5      00604         MOVWF   POSTDEC1
+00F4 EC00 F000 00605         CALL    _MACSetWritePtr
+00F8 0E02      00606         MOVLW   0x02
+00FA 26E1      00607         ADDWF   FSR1L, F
+               00608 ;       .line   168; TCPIP_Stack/ICMP.c IPPutHeader(remote, IP_PROT_ICMP, len);
+00FC 5000      00609         MOVF    r0x04, W
+00FE 6EE5      00610         MOVWF   POSTDEC1
+0100 5000      00611         MOVF    r0x03, W
+0102 6EE5      00612         MOVWF   POSTDEC1
+0104 0E01      00613         MOVLW   0x01
+0106 6EE5      00614         MOVWF   POSTDEC1
+0108 5000      00615         MOVF    r0x02, W
+010A 6EE5      00616         MOVWF   POSTDEC1
+010C 5000      00617         MOVF    r0x01, W
+010E 6EE5      00618         MOVWF   POSTDEC1
+0110 5000      00619         MOVF    r0x00, W
+0112 6EE5      00620         MOVWF   POSTDEC1
+0114 EC00 F000 00621         CALL    _IPPutHeader
+0118 0E06      00622         MOVLW   0x06
+011A 26E1      00623         ADDWF   FSR1L, F
+               00624 ;       .line   171; TCPIP_Stack/ICMP.c MACPutArray((BYTE*)&dwVal, sizeof(dwVal));
+011C 0E00      00625         MOVLW   HIGH(_ICMPProcess_dwVal_1_1)
+011E 6E00      00626         MOVWF   r0x01
+0120 0E00      00627         MOVLW   LOW(_ICMPProcess_dwVal_1_1)
+0122 6E00      00628         MOVWF   r0x00
+0124 0E80      00629         MOVLW   0x80
+0126 6E00      00630         MOVWF   r0x02
+0128 0E00      00631         MOVLW   0x00
+012A 6EE5      00632         MOVWF   POSTDEC1
+012C 0E04      00633         MOVLW   0x04
+012E 6EE5      00634         MOVWF   POSTDEC1
+0130 5000      00635         MOVF    r0x02, W
+0132 6EE5      00636         MOVWF   POSTDEC1
+0134 5000      00637         MOVF    r0x01, W
+0136 6EE5      00638         MOVWF   POSTDEC1
+0138 5000      00639         MOVF    r0x00, W
+013A 6EE5      00640         MOVWF   POSTDEC1
+013C EC00 F000 00641         CALL    _MACPutArray
+0140 0E05      00642         MOVLW   0x05
+0142 26E1      00643         ADDWF   FSR1L, F
+               00644 ;       .line   172; TCPIP_Stack/ICMP.c MACMemCopyAsync(-1, -1, len-4);
+0144 0EFC      00645         MOVLW   0xfc
+0146 2600      00646         ADDWF   r0x03, F
+0148 A0D8      00647         BTFSS   STATUS, 0
+014A 0600      00648         DECF    r0x04, F
+gpasm-0.13.7 beta               Objects/ICMP.asm3-15-2010  11:43:31          PAGE 13
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+014C 5000      00649         MOVF    r0x04, W
+014E 6EE5      00650         MOVWF   POSTDEC1
+0150 5000      00651         MOVF    r0x03, W
+0152 6EE5      00652         MOVWF   POSTDEC1
+0154 0EFF      00653         MOVLW   0xff
+0156 6EE5      00654         MOVWF   POSTDEC1
+0158 0EFF      00655         MOVLW   0xff
+015A 6EE5      00656         MOVWF   POSTDEC1
+015C 0EFF      00657         MOVLW   0xff
+015E 6EE5      00658         MOVWF   POSTDEC1
+0160 0EFF      00659         MOVLW   0xff
+0162 6EE5      00660         MOVWF   POSTDEC1
+0164 EC00 F000 00661         CALL    _MACMemCopyAsync
+0168 0E06      00662         MOVLW   0x06
+016A 26E1      00663         ADDWF   FSR1L, F
+016C 00664 _00114_DS_:
+               00665 ;       .line   173; TCPIP_Stack/ICMP.c while(!MACIsMemCopyDone());
+016C EC00 F000 00666         CALL    _MACIsMemCopyDone
+0170 6E00      00667         MOVWF   r0x00
+0172 5000      00668         MOVF    r0x00, W
+0174 E000      00669         BZ      _00114_DS_
+               00670 ;       .line   176; TCPIP_Stack/ICMP.c MACFlush();
+0176 EC00 F000 00671         CALL    _MACFlush
+017A 00672 _00119_DS_:
+017A CFE4 F000 00673         MOVFF   PREINC1, r0x07
+017E CFE4 F000 00674         MOVFF   PREINC1, r0x06
+0182 CFE4 F000 00675         MOVFF   PREINC1, r0x05
+0186 CFE4 F000 00676         MOVFF   PREINC1, r0x04
+018A CFE4 F000 00677         MOVFF   PREINC1, r0x03
+018E CFE4 F000 00678         MOVFF   PREINC1, r0x02
+0192 CFE4 F000 00679         MOVFF   PREINC1, r0x01
+0196 CFE4 F000 00680         MOVFF   PREINC1, r0x00
+019A CFE4 FFD9 00681         MOVFF   PREINC1, FSR2L
+019E 0012      00682         RETURN  
+               00683 
+               00684 
+               00685 
+               00686 ; Statistics:
+               00687 ; code size:      416 (0x01a0) bytes ( 0.32%)
+               00688 ;                 208 (0x00d0) words
+               00689 ; udata size:       4 (0x0004) bytes ( 0.10%)
+               00690 ; access size:      8 (0x0008) bytes
+               00691 
+               00692 
+gpasm-0.13.7 beta               Objects/ICMP.asm3-15-2010  11:43:31          PAGE 14
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+FSR1L                             00000FE1
+FSR2L                             00000FD9
+PLUSW2                            00000FDB
+POSTDEC1                          00000FE5
+PREINC1                           00000FE4
+PRODL                             00000FF3
+STATUS                            00000FD8
+_00106_DS_                        000000A4
+_00111_DS_                        000000E2
+_00114_DS_                        0000016C
+_00119_DS_                        0000017A
+_00129_DS_                        0000007C
+_00130_DS_                        0000007E
+_00131_DS_                        000000C6
+_ADCON0                           00000000
+_ADCON0bits                       00000000
+_ADCON1                           00000000
+_ADCON1bits                       00000000
+_ADCON2                           00000000
+_ADCON2bits                       00000000
+_ADRES                            00000000
+_ADRESH                           00000000
+_ADRESL                           00000000
+_AN0String                        00000000
+_AppConfig                        00000000
+_BAUDCON                          00000000
+_BAUDCON1                         00000000
+_BAUDCON1bits                     00000000
+_BAUDCON2                         00000000
+_BAUDCON2bits                     00000000
+_BAUDCONbits                      00000000
+_BAUDCTL                          00000000
+_BAUDCTL1                         00000000
+_BAUDCTL1bits                     00000000
+_BAUDCTL2                         00000000
+_BAUDCTL2bits                     00000000
+_BAUDCTLbits                      00000000
+_BSR                              00000000
+_CCP1CON                          00000000
+_CCP1CONbits                      00000000
+_CCP2CON                          00000000
+_CCP2CONbits                      00000000
+_CCP3CON                          00000000
+_CCP3CONbits                      00000000
+_CCP4CON                          00000000
+_CCP4CONbits                      00000000
+_CCP5CON                          00000000
+_CCP5CONbits                      00000000
+_CCPR1                            00000000
+_CCPR1H                           00000000
+_CCPR1L                           00000000
+_CCPR2                            00000000
+_CCPR2H                           00000000
+gpasm-0.13.7 beta               Objects/ICMP.asm3-15-2010  11:43:31          PAGE 15
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_CCPR2L                           00000000
+_CCPR3                            00000000
+_CCPR3H                           00000000
+_CCPR3L                           00000000
+_CCPR4                            00000000
+_CCPR4H                           00000000
+_CCPR4L                           00000000
+_CCPR5                            00000000
+_CCPR5H                           00000000
+_CCPR5L                           00000000
+_CMCON                            00000000
+_CMCONbits                        00000000
+_CVRCON                           00000000
+_CVRCONbits                       00000000
+_DDRA                             00000000
+_DDRAbits                         00000000
+_DDRB                             00000000
+_DDRBbits                         00000000
+_DDRC                             00000000
+_DDRCbits                         00000000
+_DDRD                             00000000
+_DDRDbits                         00000000
+_DDRE                             00000000
+_DDREbits                         00000000
+_DDRF                             00000000
+_DDRFbits                         00000000
+_DDRG                             00000000
+_DDRGbits                         00000000
+_DDRH                             00000000
+_DDRHbits                         00000000
+_DDRJ                             00000000
+_DDRJbits                         00000000
+_EBSTCON                          00000000
+_EBSTCONbits                      00000000
+_EBSTCS                           00000000
+_EBSTCSH                          00000000
+_EBSTCSL                          00000000
+_EBSTSD                           00000000
+_ECCP1AS                          00000000
+_ECCP1ASbits                      00000000
+_ECCP1CON                         00000000
+_ECCP1CONbits                     00000000
+_ECCP1DEL                         00000000
+_ECCP1DELbits                     00000000
+_ECCP2AS                          00000000
+_ECCP2ASbits                      00000000
+_ECCP2CON                         00000000
+_ECCP2CONbits                     00000000
+_ECCP2DEL                         00000000
+_ECCP2DELbits                     00000000
+_ECCP3AS                          00000000
+_ECCP3ASbits                      00000000
+_ECCP3CON                         00000000
+_ECCP3CONbits                     00000000
+gpasm-0.13.7 beta               Objects/ICMP.asm3-15-2010  11:43:31          PAGE 16
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_ECCP3DEL                         00000000
+_ECCP3DELbits                     00000000
+_ECON1                            00000000
+_ECON1bits                        00000000
+_ECON2                            00000000
+_ECON2bits                        00000000
+_EDATA                            00000000
+_EDATAbits                        00000000
+_EDMACS                           00000000
+_EDMACSH                          00000000
+_EDMACSL                          00000000
+_EDMADST                          00000000
+_EDMADSTH                         00000000
+_EDMADSTL                         00000000
+_EDMAND                           00000000
+_EDMANDH                          00000000
+_EDMANDL                          00000000
+_EDMAST                           00000000
+_EDMASTH                          00000000
+_EDMASTL                          00000000
+_EECON1                           00000000
+_EECON1bits                       00000000
+_EECON2                           00000000
+_EFLOCON                          00000000
+_EFLOCONbits                      00000000
+_EHT0                             00000000
+_EHT1                             00000000
+_EHT2                             00000000
+_EHT3                             00000000
+_EHT4                             00000000
+_EHT5                             00000000
+_EHT6                             00000000
+_EHT7                             00000000
+_EIE                              00000000
+_EIEbits                          00000000
+_EIR                              00000000
+_EIRbits                          00000000
+_EPAUS                            00000000
+_EPAUSH                           00000000
+_EPAUSL                           00000000
+_EPKTCNT                          00000000
+_EPMCS                            00000000
+_EPMCSH                           00000000
+_EPMCSL                           00000000
+_EPMM0                            00000000
+_EPMM1                            00000000
+_EPMM2                            00000000
+_EPMM3                            00000000
+_EPMM4                            00000000
+_EPMM5                            00000000
+_EPMM6                            00000000
+_EPMM7                            00000000
+_EPMO                             00000000
+_EPMOH                            00000000
+gpasm-0.13.7 beta               Objects/ICMP.asm3-15-2010  11:43:31          PAGE 17
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_EPMOL                            00000000
+_ERDPT                            00000000
+_ERDPTH                           00000000
+_ERDPTL                           00000000
+_ERXFCON                          00000000
+_ERXFCONbits                      00000000
+_ERXND                            00000000
+_ERXNDH                           00000000
+_ERXNDL                           00000000
+_ERXRDPT                          00000000
+_ERXRDPTH                         00000000
+_ERXRDPTL                         00000000
+_ERXST                            00000000
+_ERXSTH                           00000000
+_ERXSTL                           00000000
+_ERXWRPT                          00000000
+_ERXWRPTH                         00000000
+_ERXWRPTL                         00000000
+_ESTAT                            00000000
+_ESTATbits                        00000000
+_ETXND                            00000000
+_ETXNDH                           00000000
+_ETXNDL                           00000000
+_ETXST                            00000000
+_ETXSTH                           00000000
+_ETXSTL                           00000000
+_EWOLIE                           00000000
+_EWOLIEbits                       00000000
+_EWOLIR                           00000000
+_EWOLIRbits                       00000000
+_EWRPT                            00000000
+_EWRPTH                           00000000
+_EWRPTL                           00000000
+_FSR0H                            00000000
+_FSR0L                            00000000
+_FSR1H                            00000000
+_FSR1L                            00000000
+_FSR2H                            00000000
+_FSR2L                            00000000
+_ICMPProcess                      00000000
+_ICMPProcess_dwVal_1_1            00000000
+_INDF0                            00000000
+_INDF1                            00000000
+_INDF2                            00000000
+_INTCON                           00000000
+_INTCON2                          00000000
+_INTCON2bits                      00000000
+_INTCON3                          00000000
+_INTCON3bits                      00000000
+_INTCONbits                       00000000
+_IPPutHeader                      00000000
+_IPR1                             00000000
+_IPR1bits                         00000000
+_IPR2                             00000000
+gpasm-0.13.7 beta               Objects/ICMP.asm3-15-2010  11:43:31          PAGE 18
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_IPR2bits                         00000000
+_IPR3                             00000000
+_IPR3bits                         00000000
+_LATA                             00000000
+_LATAbits                         00000000
+_LATB                             00000000
+_LATBbits                         00000000
+_LATC                             00000000
+_LATCbits                         00000000
+_LATD                             00000000
+_LATDbits                         00000000
+_LATE                             00000000
+_LATEbits                         00000000
+_LATF                             00000000
+_LATFbits                         00000000
+_LATG                             00000000
+_LATGbits                         00000000
+_LATH                             00000000
+_LATHbits                         00000000
+_LATJ                             00000000
+_LATJbits                         00000000
+_LCDText                          00000000
+_MAADR1                           00000000
+_MAADR2                           00000000
+_MAADR3                           00000000
+_MAADR4                           00000000
+_MAADR5                           00000000
+_MAADR6                           00000000
+_MABBIPG                          00000000
+_MACCalcRxChecksum                00000000
+_MACFlush                         00000000
+_MACGetArray                      00000000
+_MACIsMemCopyDone                 00000000
+_MACIsTxReady                     00000000
+_MACLCON1                         00000000
+_MACLCON1bits                     00000000
+_MACLCON2                         00000000
+_MACLCON2bits                     00000000
+_MACMemCopyAsync                  00000000
+_MACON1                           00000000
+_MACON1bits                       00000000
+_MACON2                           00000000
+_MACON2bits                       00000000
+_MACON3                           00000000
+_MACON3bits                       00000000
+_MACON4                           00000000
+_MACON4bits                       00000000
+_MACPutArray                      00000000
+_MACSetWritePtr                   00000000
+_MAIPG                            00000000
+_MAIPGH                           00000000
+_MAIPGL                           00000000
+_MAMXFL                           00000000
+_MAMXFLH                          00000000
+gpasm-0.13.7 beta               Objects/ICMP.asm3-15-2010  11:43:31          PAGE 19
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_MAMXFLL                          00000000
+_MEMCON                           00000000
+_MEMCONbits                       00000000
+_MICMD                            00000000
+_MICMDbits                        00000000
+_MICON                            00000000
+_MICONbits                        00000000
+_MIRD                             00000000
+_MIRDH                            00000000
+_MIRDL                            00000000
+_MIREGADR                         00000000
+_MISTAT                           00000000
+_MISTATbits                       00000000
+_MIWR                             00000000
+_MIWRH                            00000000
+_MIWRL                            00000000
+_OSCCON                           00000000
+_OSCCONbits                       00000000
+_OSCTUNE                          00000000
+_OSCTUNEbits                      00000000
+_PC                               00000000
+_PCL                              00000000
+_PCLATH                           00000000
+_PCLATU                           00000000
+_PIE1                             00000000
+_PIE1bits                         00000000
+_PIE2                             00000000
+_PIE2bits                         00000000
+_PIE3                             00000000
+_PIE3bits                         00000000
+_PIR1                             00000000
+_PIR1bits                         00000000
+_PIR2                             00000000
+_PIR2bits                         00000000
+_PIR3                             00000000
+_PIR3bits                         00000000
+_PLUSW0                           00000000
+_PLUSW1                           00000000
+_PLUSW2                           00000000
+_PORTA                            00000000
+_PORTAbits                        00000000
+_PORTB                            00000000
+_PORTBbits                        00000000
+_PORTC                            00000000
+_PORTCbits                        00000000
+_PORTD                            00000000
+_PORTDbits                        00000000
+_PORTE                            00000000
+_PORTEbits                        00000000
+_PORTF                            00000000
+_PORTFbits                        00000000
+_PORTG                            00000000
+_PORTGbits                        00000000
+_PORTH                            00000000
+gpasm-0.13.7 beta               Objects/ICMP.asm3-15-2010  11:43:31          PAGE 20
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_PORTHbits                        00000000
+_PORTJ                            00000000
+_PORTJbits                        00000000
+_POSTDEC0                         00000000
+_POSTDEC1                         00000000
+_POSTDEC2                         00000000
+_POSTINC0                         00000000
+_POSTINC1                         00000000
+_POSTINC2                         00000000
+_PR2                              00000000
+_PR4                              00000000
+_PREINC0                          00000000
+_PREINC1                          00000000
+_PREINC2                          00000000
+_PROD                             00000000
+_PRODH                            00000000
+_PRODL                            00000000
+_PSPCON                           00000000
+_PSPCONbits                       00000000
+_RCON                             00000000
+_RCONbits                         00000000
+_RCREG                            00000000
+_RCREG1                           00000000
+_RCREG2                           00000000
+_RCSTA                            00000000
+_RCSTA1                           00000000
+_RCSTA1bits                       00000000
+_RCSTA2                           00000000
+_RCSTA2bits                       00000000
+_RCSTAbits                        00000000
+_SPBRG                            00000000
+_SPBRG1                           00000000
+_SPBRG2                           00000000
+_SPBRGH                           00000000
+_SPBRGH1                          00000000
+_SPBRGH2                          00000000
+_SSP1ADD                          00000000
+_SSP1BUF                          00000000
+_SSP1CON1                         00000000
+_SSP1CON1bits                     00000000
+_SSP1CON2                         00000000
+_SSP1CON2bits                     00000000
+_SSP1STAT                         00000000
+_SSP1STATbits                     00000000
+_SSP2ADD                          00000000
+_SSP2BUF                          00000000
+_SSP2CON1                         00000000
+_SSP2CON1bits                     00000000
+_SSP2CON2                         00000000
+_SSP2CON2bits                     00000000
+_SSP2STAT                         00000000
+_SSP2STATbits                     00000000
+_SSPADD                           00000000
+_SSPBUF                           00000000
+gpasm-0.13.7 beta               Objects/ICMP.asm3-15-2010  11:43:31          PAGE 21
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_SSPCON1                          00000000
+_SSPCON1bits                      00000000
+_SSPCON2                          00000000
+_SSPCON2bits                      00000000
+_SSPSTAT                          00000000
+_SSPSTATbits                      00000000
+_STATUS                           00000000
+_STATUSbits                       00000000
+_STKPTR                           00000000
+_STKPTRbits                       00000000
+_T0CON                            00000000
+_T0CONbits                        00000000
+_T1CON                            00000000
+_T1CONbits                        00000000
+_T2CON                            00000000
+_T2CONbits                        00000000
+_T3CON                            00000000
+_T3CONbits                        00000000
+_T4CON                            00000000
+_T4CONbits                        00000000
+_TABLAT                           00000000
+_TBLPTR                           00000000
+_TBLPTRH                          00000000
+_TBLPTRL                          00000000
+_TBLPTRU                          00000000
+_TMR0H                            00000000
+_TMR0L                            00000000
+_TMR1H                            00000000
+_TMR1L                            00000000
+_TMR2                             00000000
+_TMR3H                            00000000
+_TMR3L                            00000000
+_TMR4                             00000000
+_TOS                              00000000
+_TOSH                             00000000
+_TOSL                             00000000
+_TOSU                             00000000
+_TRISA                            00000000
+_TRISAbits                        00000000
+_TRISB                            00000000
+_TRISBbits                        00000000
+_TRISC                            00000000
+_TRISCbits                        00000000
+_TRISD                            00000000
+_TRISDbits                        00000000
+_TRISE                            00000000
+_TRISEbits                        00000000
+_TRISF                            00000000
+_TRISFbits                        00000000
+_TRISG                            00000000
+_TRISGbits                        00000000
+_TRISH                            00000000
+_TRISHbits                        00000000
+_TRISJ                            00000000
+gpasm-0.13.7 beta               Objects/ICMP.asm3-15-2010  11:43:31          PAGE 22
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_TRISJbits                        00000000
+_TXREG                            00000000
+_TXREG1                           00000000
+_TXREG2                           00000000
+_TXSTA                            00000000
+_TXSTA1                           00000000
+_TXSTA1bits                       00000000
+_TXSTA2                           00000000
+_TXSTA2bits                       00000000
+_TXSTAbits                        00000000
+_UDPRxCount                       00000000
+_UDPSocketInfo                    00000000
+_UDPTxCount                       00000000
+_WDTCON                           00000000
+_WDTCONbits                       00000000
+_WREG                             00000000
+__18F97J60                        00000001
+_activeUDPSocket                  00000000
+_stdin                            00000000
+_stdout                           00000000
+r0x00                             00000000
+r0x01                             00000001
+r0x02                             00000002
+r0x03                             00000003
+r0x04                             00000004
+r0x05                             00000005
+r0x06                             00000006
+r0x07                             00000007
+
+
+Errors   :       0
+Warnings :       0 reported,       0 suppressed
+Messages :       0 reported,       0 suppressed
+

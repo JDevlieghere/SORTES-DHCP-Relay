@@ -1,0 +1,1619 @@
+gpasm-0.13.7 beta               Objects/BerkeleyTCPServerDemo.asm12-16-2009  00:32:12         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00001 ;--------------------------------------------------------
+               00002 ; File Created by SDCC : free open source ANSI-C Compiler
+               00003 ; Version 2.9.4 #5582 (Dec  9 2009) (UNIX)
+               00004 ; This file was generated Wed Dec 16 00:32:12 2009
+               00005 ;--------------------------------------------------------
+               00006 ; PIC16 port for the Microchip 16-bit core micros
+               00007 ;--------------------------------------------------------
+               00008         list    p=18f97j60
+               00009 
+               00010         radix dec
+               00011 
+               00012 ;--------------------------------------------------------
+               00013 ; public variables in this module
+               00014 ;--------------------------------------------------------
+               00015         global _BerkeleyTCPServerDemo
+               00016 
+               00017 ;--------------------------------------------------------
+               00018 ; extern variables in this module
+               00019 ;--------------------------------------------------------
+               00020         extern _EBSTCONbits
+               00021         extern _MISTATbits
+               00022         extern _EFLOCONbits
+               00023         extern _MACON1bits
+               00024         extern _MACON2bits
+               00025         extern _MACON3bits
+               00026         extern _MACON4bits
+               00027         extern _MACLCON1bits
+               00028         extern _MACLCON2bits
+               00029         extern _MICONbits
+               00030         extern _MICMDbits
+               00031         extern _EWOLIEbits
+               00032         extern _EWOLIRbits
+               00033         extern _ERXFCONbits
+               00034         extern _EIEbits
+               00035         extern _ESTATbits
+               00036         extern _ECON2bits
+               00037         extern _EIRbits
+               00038         extern _EDATAbits
+               00039         extern _SSP2CON2bits
+               00040         extern _SSP2CON1bits
+               00041         extern _SSP2STATbits
+               00042         extern _ECCP2DELbits
+               00043         extern _ECCP2ASbits
+               00044         extern _ECCP3DELbits
+               00045         extern _ECCP3ASbits
+               00046         extern _RCSTA2bits
+               00047         extern _TXSTA2bits
+               00048         extern _CCP5CONbits
+               00049         extern _CCP4CONbits
+               00050         extern _T4CONbits
+               00051         extern _ECCP1DELbits
+               00052         extern _BAUDCON2bits
+               00053         extern _BAUDCTL2bits
+               00054         extern _BAUDCONbits
+gpasm-0.13.7 beta               Objects/BerkeleyTCPServerDemo.asm12-16-2009  00:32:12         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00055         extern _BAUDCON1bits
+               00056         extern _BAUDCTLbits
+               00057         extern _BAUDCTL1bits
+               00058         extern _PORTAbits
+               00059         extern _PORTBbits
+               00060         extern _PORTCbits
+               00061         extern _PORTDbits
+               00062         extern _PORTEbits
+               00063         extern _PORTFbits
+               00064         extern _PORTGbits
+               00065         extern _PORTHbits
+               00066         extern _PORTJbits
+               00067         extern _LATAbits
+               00068         extern _LATBbits
+               00069         extern _LATCbits
+               00070         extern _LATDbits
+               00071         extern _LATEbits
+               00072         extern _LATFbits
+               00073         extern _LATGbits
+               00074         extern _LATHbits
+               00075         extern _LATJbits
+               00076         extern _DDRAbits
+               00077         extern _TRISAbits
+               00078         extern _DDRBbits
+               00079         extern _TRISBbits
+               00080         extern _DDRCbits
+               00081         extern _TRISCbits
+               00082         extern _DDRDbits
+               00083         extern _TRISDbits
+               00084         extern _DDREbits
+               00085         extern _TRISEbits
+               00086         extern _DDRFbits
+               00087         extern _TRISFbits
+               00088         extern _DDRGbits
+               00089         extern _TRISGbits
+               00090         extern _DDRHbits
+               00091         extern _TRISHbits
+               00092         extern _DDRJbits
+               00093         extern _TRISJbits
+               00094         extern _OSCTUNEbits
+               00095         extern _MEMCONbits
+               00096         extern _PIE1bits
+               00097         extern _PIR1bits
+               00098         extern _IPR1bits
+               00099         extern _PIE2bits
+               00100         extern _PIR2bits
+               00101         extern _IPR2bits
+               00102         extern _PIE3bits
+               00103         extern _PIR3bits
+               00104         extern _IPR3bits
+               00105         extern _EECON1bits
+               00106         extern _RCSTAbits
+               00107         extern _RCSTA1bits
+               00108         extern _TXSTAbits
+gpasm-0.13.7 beta               Objects/BerkeleyTCPServerDemo.asm12-16-2009  00:32:12         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00109         extern _TXSTA1bits
+               00110         extern _PSPCONbits
+               00111         extern _T3CONbits
+               00112         extern _CMCONbits
+               00113         extern _CVRCONbits
+               00114         extern _ECCP1ASbits
+               00115         extern _CCP3CONbits
+               00116         extern _ECCP3CONbits
+               00117         extern _CCP2CONbits
+               00118         extern _ECCP2CONbits
+               00119         extern _CCP1CONbits
+               00120         extern _ECCP1CONbits
+               00121         extern _ADCON2bits
+               00122         extern _ADCON1bits
+               00123         extern _ADCON0bits
+               00124         extern _SSP1CON2bits
+               00125         extern _SSPCON2bits
+               00126         extern _SSP1CON1bits
+               00127         extern _SSPCON1bits
+               00128         extern _SSP1STATbits
+               00129         extern _SSPSTATbits
+               00130         extern _T2CONbits
+               00131         extern _T1CONbits
+               00132         extern _RCONbits
+               00133         extern _WDTCONbits
+               00134         extern _ECON1bits
+               00135         extern _OSCCONbits
+               00136         extern _T0CONbits
+               00137         extern _STATUSbits
+               00138         extern _INTCON3bits
+               00139         extern _INTCON2bits
+               00140         extern _INTCONbits
+               00141         extern _STKPTRbits
+               00142         extern _stdin
+               00143         extern _stdout
+               00144         extern _AppConfig
+               00145         extern _activeUDPSocket
+               00146         extern _UDPSocketInfo
+               00147         extern _UDPTxCount
+               00148         extern _UDPRxCount
+               00149         extern _LCDText
+               00150         extern _MAADR5
+               00151         extern _MAADR6
+               00152         extern _MAADR3
+               00153         extern _MAADR4
+               00154         extern _MAADR1
+               00155         extern _MAADR2
+               00156         extern _EBSTSD
+               00157         extern _EBSTCON
+               00158         extern _EBSTCS
+               00159         extern _EBSTCSL
+               00160         extern _EBSTCSH
+               00161         extern _MISTAT
+               00162         extern _EFLOCON
+gpasm-0.13.7 beta               Objects/BerkeleyTCPServerDemo.asm12-16-2009  00:32:12         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00163         extern _EPAUS
+               00164         extern _EPAUSL
+               00165         extern _EPAUSH
+               00166         extern _MACON1
+               00167         extern _MACON2
+               00168         extern _MACON3
+               00169         extern _MACON4
+               00170         extern _MABBIPG
+               00171         extern _MAIPG
+               00172         extern _MAIPGL
+               00173         extern _MAIPGH
+               00174         extern _MACLCON1
+               00175         extern _MACLCON2
+               00176         extern _MAMXFL
+               00177         extern _MAMXFLL
+               00178         extern _MAMXFLH
+               00179         extern _MICON
+               00180         extern _MICMD
+               00181         extern _MIREGADR
+               00182         extern _MIWR
+               00183         extern _MIWRL
+               00184         extern _MIWRH
+               00185         extern _MIRD
+               00186         extern _MIRDL
+               00187         extern _MIRDH
+               00188         extern _EHT0
+               00189         extern _EHT1
+               00190         extern _EHT2
+               00191         extern _EHT3
+               00192         extern _EHT4
+               00193         extern _EHT5
+               00194         extern _EHT6
+               00195         extern _EHT7
+               00196         extern _EPMM0
+               00197         extern _EPMM1
+               00198         extern _EPMM2
+               00199         extern _EPMM3
+               00200         extern _EPMM4
+               00201         extern _EPMM5
+               00202         extern _EPMM6
+               00203         extern _EPMM7
+               00204         extern _EPMCS
+               00205         extern _EPMCSL
+               00206         extern _EPMCSH
+               00207         extern _EPMO
+               00208         extern _EPMOL
+               00209         extern _EPMOH
+               00210         extern _EWOLIE
+               00211         extern _EWOLIR
+               00212         extern _ERXFCON
+               00213         extern _EPKTCNT
+               00214         extern _EWRPT
+               00215         extern _EWRPTL
+               00216         extern _EWRPTH
+gpasm-0.13.7 beta               Objects/BerkeleyTCPServerDemo.asm12-16-2009  00:32:12         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00217         extern _ETXST
+               00218         extern _ETXSTL
+               00219         extern _ETXSTH
+               00220         extern _ETXND
+               00221         extern _ETXNDL
+               00222         extern _ETXNDH
+               00223         extern _ERXST
+               00224         extern _ERXSTL
+               00225         extern _ERXSTH
+               00226         extern _ERXND
+               00227         extern _ERXNDL
+               00228         extern _ERXNDH
+               00229         extern _ERXRDPT
+               00230         extern _ERXRDPTL
+               00231         extern _ERXRDPTH
+               00232         extern _ERXWRPT
+               00233         extern _ERXWRPTL
+               00234         extern _ERXWRPTH
+               00235         extern _EDMAST
+               00236         extern _EDMASTL
+               00237         extern _EDMASTH
+               00238         extern _EDMAND
+               00239         extern _EDMANDL
+               00240         extern _EDMANDH
+               00241         extern _EDMADST
+               00242         extern _EDMADSTL
+               00243         extern _EDMADSTH
+               00244         extern _EDMACS
+               00245         extern _EDMACSL
+               00246         extern _EDMACSH
+               00247         extern _EIE
+               00248         extern _ESTAT
+               00249         extern _ECON2
+               00250         extern _EIR
+               00251         extern _EDATA
+               00252         extern _SSP2CON2
+               00253         extern _SSP2CON1
+               00254         extern _SSP2STAT
+               00255         extern _SSP2ADD
+               00256         extern _SSP2BUF
+               00257         extern _ECCP2DEL
+               00258         extern _ECCP2AS
+               00259         extern _ECCP3DEL
+               00260         extern _ECCP3AS
+               00261         extern _RCSTA2
+               00262         extern _TXSTA2
+               00263         extern _TXREG2
+               00264         extern _RCREG2
+               00265         extern _SPBRG2
+               00266         extern _CCP5CON
+               00267         extern _CCPR5
+               00268         extern _CCPR5L
+               00269         extern _CCPR5H
+               00270         extern _CCP4CON
+gpasm-0.13.7 beta               Objects/BerkeleyTCPServerDemo.asm12-16-2009  00:32:12         PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00271         extern _CCPR4
+               00272         extern _CCPR4L
+               00273         extern _CCPR4H
+               00274         extern _T4CON
+               00275         extern _PR4
+               00276         extern _TMR4
+               00277         extern _ECCP1DEL
+               00278         extern _ERDPT
+               00279         extern _ERDPTL
+               00280         extern _ERDPTH
+               00281         extern _BAUDCON2
+               00282         extern _BAUDCTL2
+               00283         extern _SPBRGH2
+               00284         extern _BAUDCON
+               00285         extern _BAUDCON1
+               00286         extern _BAUDCTL
+               00287         extern _BAUDCTL1
+               00288         extern _SPBRGH
+               00289         extern _SPBRGH1
+               00290         extern _PORTA
+               00291         extern _PORTB
+               00292         extern _PORTC
+               00293         extern _PORTD
+               00294         extern _PORTE
+               00295         extern _PORTF
+               00296         extern _PORTG
+               00297         extern _PORTH
+               00298         extern _PORTJ
+               00299         extern _LATA
+               00300         extern _LATB
+               00301         extern _LATC
+               00302         extern _LATD
+               00303         extern _LATE
+               00304         extern _LATF
+               00305         extern _LATG
+               00306         extern _LATH
+               00307         extern _LATJ
+               00308         extern _DDRA
+               00309         extern _TRISA
+               00310         extern _DDRB
+               00311         extern _TRISB
+               00312         extern _DDRC
+               00313         extern _TRISC
+               00314         extern _DDRD
+               00315         extern _TRISD
+               00316         extern _DDRE
+               00317         extern _TRISE
+               00318         extern _DDRF
+               00319         extern _TRISF
+               00320         extern _DDRG
+               00321         extern _TRISG
+               00322         extern _DDRH
+               00323         extern _TRISH
+               00324         extern _DDRJ
+gpasm-0.13.7 beta               Objects/BerkeleyTCPServerDemo.asm12-16-2009  00:32:12         PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00325         extern _TRISJ
+               00326         extern _OSCTUNE
+               00327         extern _MEMCON
+               00328         extern _PIE1
+               00329         extern _PIR1
+               00330         extern _IPR1
+               00331         extern _PIE2
+               00332         extern _PIR2
+               00333         extern _IPR2
+               00334         extern _PIE3
+               00335         extern _PIR3
+               00336         extern _IPR3
+               00337         extern _EECON1
+               00338         extern _EECON2
+               00339         extern _RCSTA
+               00340         extern _RCSTA1
+               00341         extern _TXSTA
+               00342         extern _TXSTA1
+               00343         extern _TXREG
+               00344         extern _TXREG1
+               00345         extern _RCREG
+               00346         extern _RCREG1
+               00347         extern _SPBRG
+               00348         extern _SPBRG1
+               00349         extern _PSPCON
+               00350         extern _T3CON
+               00351         extern _TMR3L
+               00352         extern _TMR3H
+               00353         extern _CMCON
+               00354         extern _CVRCON
+               00355         extern _ECCP1AS
+               00356         extern _CCP3CON
+               00357         extern _ECCP3CON
+               00358         extern _CCPR3
+               00359         extern _CCPR3L
+               00360         extern _CCPR3H
+               00361         extern _CCP2CON
+               00362         extern _ECCP2CON
+               00363         extern _CCPR2
+               00364         extern _CCPR2L
+               00365         extern _CCPR2H
+               00366         extern _CCP1CON
+               00367         extern _ECCP1CON
+               00368         extern _CCPR1
+               00369         extern _CCPR1L
+               00370         extern _CCPR1H
+               00371         extern _ADCON2
+               00372         extern _ADCON1
+               00373         extern _ADCON0
+               00374         extern _ADRES
+               00375         extern _ADRESL
+               00376         extern _ADRESH
+               00377         extern _SSP1CON2
+               00378         extern _SSPCON2
+gpasm-0.13.7 beta               Objects/BerkeleyTCPServerDemo.asm12-16-2009  00:32:12         PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00379         extern _SSP1CON1
+               00380         extern _SSPCON1
+               00381         extern _SSP1STAT
+               00382         extern _SSPSTAT
+               00383         extern _SSP1ADD
+               00384         extern _SSPADD
+               00385         extern _SSP1BUF
+               00386         extern _SSPBUF
+               00387         extern _T2CON
+               00388         extern _PR2
+               00389         extern _TMR2
+               00390         extern _T1CON
+               00391         extern _TMR1L
+               00392         extern _TMR1H
+               00393         extern _RCON
+               00394         extern _WDTCON
+               00395         extern _ECON1
+               00396         extern _OSCCON
+               00397         extern _T0CON
+               00398         extern _TMR0L
+               00399         extern _TMR0H
+               00400         extern _STATUS
+               00401         extern _FSR2L
+               00402         extern _FSR2H
+               00403         extern _PLUSW2
+               00404         extern _PREINC2
+               00405         extern _POSTDEC2
+               00406         extern _POSTINC2
+               00407         extern _INDF2
+               00408         extern _BSR
+               00409         extern _FSR1L
+               00410         extern _FSR1H
+               00411         extern _PLUSW1
+               00412         extern _PREINC1
+               00413         extern _POSTDEC1
+               00414         extern _POSTINC1
+               00415         extern _INDF1
+               00416         extern _WREG
+               00417         extern _FSR0L
+               00418         extern _FSR0H
+               00419         extern _PLUSW0
+               00420         extern _PREINC0
+               00421         extern _POSTDEC0
+               00422         extern _POSTINC0
+               00423         extern _INDF0
+               00424         extern _INTCON3
+               00425         extern _INTCON2
+               00426         extern _INTCON
+               00427         extern _PROD
+               00428         extern _PRODL
+               00429         extern _PRODH
+               00430         extern _TABLAT
+               00431         extern _TBLPTR
+               00432         extern _TBLPTRL
+gpasm-0.13.7 beta               Objects/BerkeleyTCPServerDemo.asm12-16-2009  00:32:12         PAGE  9
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00433         extern _TBLPTRH
+               00434         extern _TBLPTRU
+               00435         extern _PC
+               00436         extern _PCL
+               00437         extern _PCLATH
+               00438         extern _PCLATU
+               00439         extern _STKPTR
+               00440         extern _TOS
+               00441         extern _TOSL
+               00442         extern _TOSH
+               00443         extern _TOSU
+               00444         extern _strlen
+               00445         extern _socket
+               00446         extern _bind
+               00447         extern _listen
+               00448         extern _accept
+               00449         extern _send
+               00450         extern _recv
+               00451         extern _closesocket
+               00452 ;--------------------------------------------------------
+               00453 ;       Equates to used internal registers
+               00454 ;--------------------------------------------------------
+  00000FD8     00455 STATUS  equ     0xfd8
+  00000FF9     00456 PCL     equ     0xff9
+  00000FFA     00457 PCLATH  equ     0xffa
+  00000FFB     00458 PCLATU  equ     0xffb
+  00000FE8     00459 WREG    equ     0xfe8
+  00000FE9     00460 FSR0L   equ     0xfe9
+  00000FEA     00461 FSR0H   equ     0xfea
+  00000FE1     00462 FSR1L   equ     0xfe1
+  00000FD9     00463 FSR2L   equ     0xfd9
+  00000FEF     00464 INDF0   equ     0xfef
+  00000FE5     00465 POSTDEC1        equ     0xfe5
+  00000FE4     00466 PREINC1 equ     0xfe4
+  00000FF3     00467 PRODL   equ     0xff3
+               00468 
+               00469 
+               00470         idata
+               00471 _BerkeleyTCPServerDemo_BSDServerState_1_1       db      0x00
+               00472 
+               00473 
+               00474 ; Internal registers
+               00475 .registers      udata_ovr       0x0000
+               00476 r0x00   res     1
+               00477 r0x01   res     1
+               00478 r0x02   res     1
+               00479 r0x03   res     1
+               00480 r0x04   res     1
+               00481 r0x05   res     1
+               00482 r0x06   res     1
+               00483 r0x07   res     1
+               00484 r0x08   res     1
+               00485 r0x09   res     1
+               00486 r0x0a   res     1
+gpasm-0.13.7 beta               Objects/BerkeleyTCPServerDemo.asm12-16-2009  00:32:12         PAGE 10
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00487 r0x0b   res     1
+               00488 r0x0c   res     1
+               00489 
+               00490 udata_BerkeleyTCPServerDemo_0   udata
+               00491 _BerkeleyTCPServerDemo_bsdServerSocket_1_1      res     1
+               00492 
+               00493 udata_BerkeleyTCPServerDemo_1   udata
+               00494 _BerkeleyTCPServerDemo_addrlen_1_1      res     2
+               00495 
+               00496 udata_BerkeleyTCPServerDemo_2   udata
+               00497 _BerkeleyTCPServerDemo_ClientSock_1_1   res     3
+               00498 
+               00499 udata_BerkeleyTCPServerDemo_3   udata
+               00500 _BerkeleyTCPServerDemo_addr_1_1 res     16
+               00501 
+               00502 udata_BerkeleyTCPServerDemo_4   udata
+               00503 _BerkeleyTCPServerDemo_bfr_1_1  res     15
+               00504 
+               00505 udata_BerkeleyTCPServerDemo_5   udata
+               00506 _BerkeleyTCPServerDemo_addRemote_1_1    res     16
+               00507 
+               00508 ;--------------------------------------------------------
+               00509 ; global & static initialisations
+               00510 ;--------------------------------------------------------
+               00511 ; I code from now on!
+               00512 ; ; Starting pCode block
+               00513 S_BerkeleyTCPServerDemo__BerkeleyTCPServerDemo  code
+0000 00514 _BerkeleyTCPServerDemo:
+               00515 ;       .line   86; BerkeleyTCPServerDemo.c     void BerkeleyTCPServerDemo(void)
+0000 CFD9 FFE5 00516         MOVFF   FSR2L, POSTDEC1
+0004 CFE1 FFD9 00517         MOVFF   FSR1L, FSR2L
+0008 C000 FFE5 00518         MOVFF   r0x00, POSTDEC1
+000C C000 FFE5 00519         MOVFF   r0x01, POSTDEC1
+0010 C000 FFE5 00520         MOVFF   r0x02, POSTDEC1
+0014 C000 FFE5 00521         MOVFF   r0x03, POSTDEC1
+0018 C000 FFE5 00522         MOVFF   r0x04, POSTDEC1
+001C C000 FFE5 00523         MOVFF   r0x05, POSTDEC1
+0020 C000 FFE5 00524         MOVFF   r0x06, POSTDEC1
+0024 C000 FFE5 00525         MOVFF   r0x07, POSTDEC1
+0028 C000 FFE5 00526         MOVFF   r0x08, POSTDEC1
+002C C000 FFE5 00527         MOVFF   r0x09, POSTDEC1
+0030 C000 FFE5 00528         MOVFF   r0x0a, POSTDEC1
+               00529 ;       .line   92; BerkeleyTCPServerDemo.c     int addrlen = sizeof(struct sockaddr_in);
+0034 0E10      00530         MOVLW   0x10
+0036 0000      00531         BANKSEL _BerkeleyTCPServerDemo_addrlen_1_1
+0038 6F00      00532         MOVWF   _BerkeleyTCPServerDemo_addrlen_1_1, B
+003A 0000      00533         BANKSEL (_BerkeleyTCPServerDemo_addrlen_1_1 + 1)
+003C 6B00      00534         CLRF    (_BerkeleyTCPServerDemo_addrlen_1_1 + 1), B
+               00535 ;       .line   105; BerkeleyTCPServerDemo.c    switch(BSDServerState)
+003E 0E05      00536         MOVLW   0x05
+0040 0000      00537         BANKSEL _BerkeleyTCPServerDemo_BSDServerState_1_1
+0042 5D00      00538         SUBWF   _BerkeleyTCPServerDemo_BSDServerState_1_1, W, B
+0044 B0D8      00539         BTFSC   STATUS, 0
+0046 D000      00540         BRA     _00135_DS_
+gpasm-0.13.7 beta               Objects/BerkeleyTCPServerDemo.asm12-16-2009  00:32:12         PAGE 11
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0048 C000 FFE5 00541         MOVFF   r0x0b, POSTDEC1
+004C C000 FFE5 00542         MOVFF   r0x0c, POSTDEC1
+0050 6A00      00543         CLRF    r0x0c
+0052 0000      00544         BANKSEL _BerkeleyTCPServerDemo_BSDServerState_1_1
+0054 3500      00545         RLCF    _BerkeleyTCPServerDemo_BSDServerState_1_1, W, B
+0056 3600      00546         RLCF    r0x0c, F
+0058 34E8      00547         RLCF    WREG, W
+005A 3600      00548         RLCF    r0x0c, F
+005C 0BFC      00549         ANDLW   0xfc
+005E 6E00      00550         MOVWF   r0x0b
+0060 0E00      00551         MOVLW   UPPER(_00152_DS_)
+0062 6EFB      00552         MOVWF   PCLATU
+0064 0E00      00553         MOVLW   HIGH(_00152_DS_)
+0066 6EFA      00554         MOVWF   PCLATH
+0068 0E00      00555         MOVLW   LOW(_00152_DS_)
+006A 2600      00556         ADDWF   r0x0b, F
+006C 5000      00557         MOVF    r0x0c, W
+006E 22FA      00558         ADDWFC  PCLATH, F
+0070 B0D8      00559         BTFSC   STATUS, 0
+0072 2AFB      00560         INCF    PCLATU, F
+0074 5000      00561         MOVF    r0x0b, W
+0076 CFE4 F000 00562         MOVFF   PREINC1, r0x0c
+007A CFE4 F000 00563         MOVFF   PREINC1, r0x0b
+007E 6EF9      00564         MOVWF   PCL
+0080 00565 _00152_DS_:
+0080 EF00 F000 00566         GOTO    _00105_DS_
+0084 EF00 F000 00567         GOTO    _00106_DS_
+0088 EF00 F000 00568         GOTO    _00109_DS_
+008C EF00 F000 00569         GOTO    _00112_DS_
+0090 EF00 F000 00570         GOTO    _00148_DS_
+0094 00571 _00105_DS_:
+               00572 ;       .line   110; BerkeleyTCPServerDemo.c    for(i = 0; i < MAX_CLIENT; i++)
+0094 6A00      00573         CLRF    r0x00
+0096 6A00      00574         CLRF    r0x01
+0098 00575 _00131_DS_:
+0098 5000      00576         MOVF    r0x01, W
+009A 0F80      00577         ADDLW   0x80
+009C 0F80      00578         ADDLW   0x80
+009E E100      00579         BNZ     _00153_DS_
+00A0 0E03      00580         MOVLW   0x03
+00A2 5C00      00581         SUBWF   r0x00, W
+00A4 00582 _00153_DS_:
+00A4 E200      00583         BC      _00134_DS_
+               00584 ;       .line   111; BerkeleyTCPServerDemo.c    ClientSock[i] = INVALID_SOCKET;
+00A6 0E00      00585         MOVLW   LOW(_BerkeleyTCPServerDemo_ClientSock_1_1)
+00A8 2400      00586         ADDWF   r0x00, W
+00AA 6E00      00587         MOVWF   r0x02
+00AC 0E00      00588         MOVLW   HIGH(_BerkeleyTCPServerDemo_ClientSock_1_1)
+00AE 2000      00589         ADDWFC  r0x01, W
+00B0 6E00      00590         MOVWF   r0x03
+00B2 C000 FFE9 00591         MOVFF   r0x02, FSR0L
+00B6 C000 FFEA 00592         MOVFF   r0x03, FSR0H
+00BA 0EFE      00593         MOVLW   0xfe
+00BC 6EEF      00594         MOVWF   INDF0
+gpasm-0.13.7 beta               Objects/BerkeleyTCPServerDemo.asm12-16-2009  00:32:12         PAGE 12
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00595 ;       .line   110; BerkeleyTCPServerDemo.c    for(i = 0; i < MAX_CLIENT; i++)
+00BE 2A00      00596         INCF    r0x00, F
+00C0 B0D8      00597         BTFSC   STATUS, 0
+00C2 2A00      00598         INCF    r0x01, F
+00C4 D000      00599         BRA     _00131_DS_
+00C6 00600 _00134_DS_:
+               00601 ;       .line   113; BerkeleyTCPServerDemo.c    BSDServerState = BSD_CREATE_SOCKET;
+00C6 0E01      00602         MOVLW   0x01
+00C8 0000      00603         BANKSEL _BerkeleyTCPServerDemo_BSDServerState_1_1
+00CA 6F00      00604         MOVWF   _BerkeleyTCPServerDemo_BSDServerState_1_1, B
+00CC 00605 _00106_DS_:
+               00606 ;       .line   118; BerkeleyTCPServerDemo.c    bsdServerSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+00CC 0E00      00607         MOVLW   0x00
+00CE 6EE5      00608         MOVWF   POSTDEC1
+00D0 0E06      00609         MOVLW   0x06
+00D2 6EE5      00610         MOVWF   POSTDEC1
+00D4 0E00      00611         MOVLW   0x00
+00D6 6EE5      00612         MOVWF   POSTDEC1
+00D8 0E64      00613         MOVLW   0x64
+00DA 6EE5      00614         MOVWF   POSTDEC1
+00DC 0E00      00615         MOVLW   0x00
+00DE 6EE5      00616         MOVWF   POSTDEC1
+00E0 0E02      00617         MOVLW   0x02
+00E2 6EE5      00618         MOVWF   POSTDEC1
+00E4 EC00 F000 00619         CALL    _socket
+00E8 0000      00620         BANKSEL _BerkeleyTCPServerDemo_bsdServerSocket_1_1
+00EA 6F00      00621         MOVWF   _BerkeleyTCPServerDemo_bsdServerSocket_1_1, B
+00EC 0E06      00622         MOVLW   0x06
+00EE 26E1      00623         ADDWF   FSR1L, F
+00F0 0000      00624         BANKSEL _BerkeleyTCPServerDemo_bsdServerSocket_1_1
+               00625 ;       .line   119; BerkeleyTCPServerDemo.c    if(bsdServerSocket == INVALID_SOCKET)
+00F2 5100      00626         MOVF    _BerkeleyTCPServerDemo_bsdServerSocket_1_1, W, B
+00F4 0AFE      00627         XORLW   0xfe
+00F6 E100      00628         BNZ     _00108_DS_
+               00629 ;       .line   120; BerkeleyTCPServerDemo.c    return;
+00F8 D000      00630         BRA     _00135_DS_
+00FA 00631 _00108_DS_:
+               00632 ;       .line   122; BerkeleyTCPServerDemo.c    BSDServerState = BSD_BIND;
+00FA 0E02      00633         MOVLW   0x02
+00FC 0000      00634         BANKSEL _BerkeleyTCPServerDemo_BSDServerState_1_1
+00FE 6F00      00635         MOVWF   _BerkeleyTCPServerDemo_BSDServerState_1_1, B
+0100 00636 _00109_DS_:
+               00637 ;       .line   127; BerkeleyTCPServerDemo.c    addr.sin_port = PORTNUM;
+0100 0E24      00638         MOVLW   0x24
+0102 0000      00639         BANKSEL (_BerkeleyTCPServerDemo_addr_1_1 + 2)
+0104 6F00      00640         MOVWF   (_BerkeleyTCPServerDemo_addr_1_1 + 2), B
+0106 0E26      00641         MOVLW   0x26
+0108 0000      00642         BANKSEL (_BerkeleyTCPServerDemo_addr_1_1 + 3)
+010A 6F00      00643         MOVWF   (_BerkeleyTCPServerDemo_addr_1_1 + 3), B
+010C 0000      00644         BANKSEL (_BerkeleyTCPServerDemo_addr_1_1 + 4)
+               00645 ;       .line   128; BerkeleyTCPServerDemo.c    addr.sin_addr.S_un.S_addr = IP_ADDR_ANY;
+010E 6B00      00646         CLRF    (_BerkeleyTCPServerDemo_addr_1_1 + 4), B
+0110 0000      00647         BANKSEL (_BerkeleyTCPServerDemo_addr_1_1 + 5)
+0112 6B00      00648         CLRF    (_BerkeleyTCPServerDemo_addr_1_1 + 5), B
+gpasm-0.13.7 beta               Objects/BerkeleyTCPServerDemo.asm12-16-2009  00:32:12         PAGE 13
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0114 0000      00649         BANKSEL (_BerkeleyTCPServerDemo_addr_1_1 + 6)
+0116 6B00      00650         CLRF    (_BerkeleyTCPServerDemo_addr_1_1 + 6), B
+0118 0000      00651         BANKSEL (_BerkeleyTCPServerDemo_addr_1_1 + 7)
+011A 6B00      00652         CLRF    (_BerkeleyTCPServerDemo_addr_1_1 + 7), B
+               00653 ;       .line   129; BerkeleyTCPServerDemo.c    if( bind( bsdServerSocket, (struct sockaddr*)&addr, addrlen ) == SOCKET_ERROR )
+011C 0E00      00654         MOVLW   HIGH(_BerkeleyTCPServerDemo_addr_1_1)
+011E 6E00      00655         MOVWF   r0x01
+0120 0E00      00656         MOVLW   LOW(_BerkeleyTCPServerDemo_addr_1_1)
+0122 6E00      00657         MOVWF   r0x00
+0124 0E80      00658         MOVLW   0x80
+0126 6E00      00659         MOVWF   r0x02
+0128 0E00      00660         MOVLW   0x00
+012A 6EE5      00661         MOVWF   POSTDEC1
+012C 0E10      00662         MOVLW   0x10
+012E 6EE5      00663         MOVWF   POSTDEC1
+0130 5000      00664         MOVF    r0x02, W
+0132 6EE5      00665         MOVWF   POSTDEC1
+0134 5000      00666         MOVF    r0x01, W
+0136 6EE5      00667         MOVWF   POSTDEC1
+0138 5000      00668         MOVF    r0x00, W
+013A 6EE5      00669         MOVWF   POSTDEC1
+013C 0000      00670         BANKSEL _BerkeleyTCPServerDemo_bsdServerSocket_1_1
+013E 5100      00671         MOVF    _BerkeleyTCPServerDemo_bsdServerSocket_1_1, W, B
+0140 6EE5      00672         MOVWF   POSTDEC1
+0142 EC00 F000 00673         CALL    _bind
+0146 6E00      00674         MOVWF   r0x00
+0148 CFF3 F000 00675         MOVFF   PRODL, r0x01
+014C 0E06      00676         MOVLW   0x06
+014E 26E1      00677         ADDWF   FSR1L, F
+0150 5000      00678         MOVF    r0x00, W
+0152 0AFF      00679         XORLW   0xff
+0154 E100      00680         BNZ     _00156_DS_
+0156 5000      00681         MOVF    r0x01, W
+0158 0AFF      00682         XORLW   0xff
+015A E000      00683         BZ      _00157_DS_
+015C 00684 _00156_DS_:
+015C D000      00685         BRA     _00111_DS_
+015E 00686 _00157_DS_:
+               00687 ;       .line   130; BerkeleyTCPServerDemo.c    return;
+015E D000      00688         BRA     _00135_DS_
+0160 00689 _00111_DS_:
+               00690 ;       .line   132; BerkeleyTCPServerDemo.c    BSDServerState = BSD_LISTEN;
+0160 0E03      00691         MOVLW   0x03
+0162 0000      00692         BANKSEL _BerkeleyTCPServerDemo_BSDServerState_1_1
+0164 6F00      00693         MOVWF   _BerkeleyTCPServerDemo_BSDServerState_1_1, B
+0166 00694 _00112_DS_:
+               00695 ;       .line   136; BerkeleyTCPServerDemo.c    if(listen(bsdServerSocket, MAX_CLIENT) == 0)
+0166 0E00      00696         MOVLW   0x00
+0168 6EE5      00697         MOVWF   POSTDEC1
+016A 0E03      00698         MOVLW   0x03
+016C 6EE5      00699         MOVWF   POSTDEC1
+016E 0000      00700         BANKSEL _BerkeleyTCPServerDemo_bsdServerSocket_1_1
+0170 5100      00701         MOVF    _BerkeleyTCPServerDemo_bsdServerSocket_1_1, W, B
+0172 6EE5      00702         MOVWF   POSTDEC1
+gpasm-0.13.7 beta               Objects/BerkeleyTCPServerDemo.asm12-16-2009  00:32:12         PAGE 14
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0174 EC00 F000 00703         CALL    _listen
+0178 6E00      00704         MOVWF   r0x00
+017A CFF3 F000 00705         MOVFF   PRODL, r0x01
+017E 0E03      00706         MOVLW   0x03
+0180 26E1      00707         ADDWF   FSR1L, F
+0182 5000      00708         MOVF    r0x00, W
+0184 1000      00709         IORWF   r0x01, W
+0186 E100      00710         BNZ     _00148_DS_
+               00711 ;       .line   137; BerkeleyTCPServerDemo.c    BSDServerState = BSD_OPERATION;
+0188 0E04      00712         MOVLW   0x04
+018A 0000      00713         BANKSEL _BerkeleyTCPServerDemo_BSDServerState_1_1
+018C 6F00      00714         MOVWF   _BerkeleyTCPServerDemo_BSDServerState_1_1, B
+018E 00715 _00148_DS_:
+               00716 ;       .line   148; BerkeleyTCPServerDemo.c    for(i=0; i<MAX_CLIENT; i++)
+018E 6A00      00717         CLRF    r0x00
+0190 6A00      00718         CLRF    r0x01
+0192 00719 _00125_DS_:
+0192 5000      00720         MOVF    r0x01, W
+0194 0F80      00721         ADDLW   0x80
+0196 0F80      00722         ADDLW   0x80
+0198 E100      00723         BNZ     _00158_DS_
+019A 0E03      00724         MOVLW   0x03
+019C 5C00      00725         SUBWF   r0x00, W
+019E 00726 _00158_DS_:
+019E B0D8      00727         BTFSC   STATUS, 0
+01A0 D000      00728         BRA     _00135_DS_
+               00729 ;       .line   151; BerkeleyTCPServerDemo.c    if(ClientSock[i] == INVALID_SOCKET)
+01A2 0E00      00730         MOVLW   LOW(_BerkeleyTCPServerDemo_ClientSock_1_1)
+01A4 2400      00731         ADDWF   r0x00, W
+01A6 6E00      00732         MOVWF   r0x02
+01A8 0E00      00733         MOVLW   HIGH(_BerkeleyTCPServerDemo_ClientSock_1_1)
+01AA 2000      00734         ADDWFC  r0x01, W
+01AC 6E00      00735         MOVWF   r0x03
+01AE C000 FFE9 00736         MOVFF   r0x02, FSR0L
+01B2 C000 FFEA 00737         MOVFF   r0x03, FSR0H
+01B6 CFEF F000 00738         MOVFF   INDF0, r0x04
+01BA 5000      00739         MOVF    r0x04, W
+01BC 0AFE      00740         XORLW   0xfe
+01BE E100      00741         BNZ     _00117_DS_
+               00742 ;       .line   152; BerkeleyTCPServerDemo.c    ClientSock[i] = accept(bsdServerSocket, (struct sockaddr*)&addRemote, &addrlen);
+01C0 0E00      00743         MOVLW   HIGH(_BerkeleyTCPServerDemo_addRemote_1_1)
+01C2 6E00      00744         MOVWF   r0x05
+01C4 0E00      00745         MOVLW   LOW(_BerkeleyTCPServerDemo_addRemote_1_1)
+01C6 6E00      00746         MOVWF   r0x04
+01C8 0E80      00747         MOVLW   0x80
+01CA 6E00      00748         MOVWF   r0x06
+01CC 0E00      00749         MOVLW   HIGH(_BerkeleyTCPServerDemo_addrlen_1_1)
+01CE 6E00      00750         MOVWF   r0x08
+01D0 0E00      00751         MOVLW   LOW(_BerkeleyTCPServerDemo_addrlen_1_1)
+01D2 6E00      00752         MOVWF   r0x07
+01D4 0E80      00753         MOVLW   0x80
+01D6 6E00      00754         MOVWF   r0x09
+01D8 5000      00755         MOVF    r0x09, W
+01DA 6EE5      00756         MOVWF   POSTDEC1
+gpasm-0.13.7 beta               Objects/BerkeleyTCPServerDemo.asm12-16-2009  00:32:12         PAGE 15
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+01DC 5000      00757         MOVF    r0x08, W
+01DE 6EE5      00758         MOVWF   POSTDEC1
+01E0 5000      00759         MOVF    r0x07, W
+01E2 6EE5      00760         MOVWF   POSTDEC1
+01E4 5000      00761         MOVF    r0x06, W
+01E6 6EE5      00762         MOVWF   POSTDEC1
+01E8 5000      00763         MOVF    r0x05, W
+01EA 6EE5      00764         MOVWF   POSTDEC1
+01EC 5000      00765         MOVF    r0x04, W
+01EE 6EE5      00766         MOVWF   POSTDEC1
+01F0 0000      00767         BANKSEL _BerkeleyTCPServerDemo_bsdServerSocket_1_1
+01F2 5100      00768         MOVF    _BerkeleyTCPServerDemo_bsdServerSocket_1_1, W, B
+01F4 6EE5      00769         MOVWF   POSTDEC1
+01F6 EC00 F000 00770         CALL    _accept
+01FA 6E00      00771         MOVWF   r0x04
+01FC 0E07      00772         MOVLW   0x07
+01FE 26E1      00773         ADDWF   FSR1L, F
+0200 C000 FFE9 00774         MOVFF   r0x02, FSR0L
+0204 C000 FFEA 00775         MOVFF   r0x03, FSR0H
+0208 C000 FFEF 00776         MOVFF   r0x04, INDF0
+020C 00777 _00117_DS_:
+               00778 ;       .line   155; BerkeleyTCPServerDemo.c    if(ClientSock[i] == INVALID_SOCKET)
+020C 0E00      00779         MOVLW   LOW(_BerkeleyTCPServerDemo_ClientSock_1_1)
+020E 2400      00780         ADDWF   r0x00, W
+0210 6E00      00781         MOVWF   r0x02
+0212 0E00      00782         MOVLW   HIGH(_BerkeleyTCPServerDemo_ClientSock_1_1)
+0214 2000      00783         ADDWFC  r0x01, W
+0216 6E00      00784         MOVWF   r0x03
+0218 C000 FFE9 00785         MOVFF   r0x02, FSR0L
+021C C000 FFEA 00786         MOVFF   r0x03, FSR0H
+0220 CFEF F000 00787         MOVFF   INDF0, r0x02
+0224 5000      00788         MOVF    r0x02, W
+0226 0AFE      00789         XORLW   0xfe
+0228 E100      00790         BNZ     _00162_DS_
+022A D000      00791         BRA     _00127_DS_
+022C 00792 _00162_DS_:
+               00793 ;       .line   159; BerkeleyTCPServerDemo.c    length = recv( ClientSock[i], bfr, sizeof(bfr), 0);
+022C 0E00      00794         MOVLW   HIGH(_BerkeleyTCPServerDemo_bfr_1_1)
+022E 6E00      00795         MOVWF   r0x04
+0230 0E00      00796         MOVLW   LOW(_BerkeleyTCPServerDemo_bfr_1_1)
+0232 6E00      00797         MOVWF   r0x03
+0234 0E80      00798         MOVLW   0x80
+0236 6E00      00799         MOVWF   r0x05
+0238 0E00      00800         MOVLW   0x00
+023A 6EE5      00801         MOVWF   POSTDEC1
+023C 0E00      00802         MOVLW   0x00
+023E 6EE5      00803         MOVWF   POSTDEC1
+0240 0E00      00804         MOVLW   0x00
+0242 6EE5      00805         MOVWF   POSTDEC1
+0244 0E0F      00806         MOVLW   0x0f
+0246 6EE5      00807         MOVWF   POSTDEC1
+0248 5000      00808         MOVF    r0x05, W
+024A 6EE5      00809         MOVWF   POSTDEC1
+024C 5000      00810         MOVF    r0x04, W
+gpasm-0.13.7 beta               Objects/BerkeleyTCPServerDemo.asm12-16-2009  00:32:12         PAGE 16
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+024E 6EE5      00811         MOVWF   POSTDEC1
+0250 5000      00812         MOVF    r0x03, W
+0252 6EE5      00813         MOVWF   POSTDEC1
+0254 5000      00814         MOVF    r0x02, W
+0256 6EE5      00815         MOVWF   POSTDEC1
+0258 EC00 F000 00816         CALL    _recv
+025C 6E00      00817         MOVWF   r0x02
+025E CFF3 F000 00818         MOVFF   PRODL, r0x03
+0262 0E08      00819         MOVLW   0x08
+0264 26E1      00820         ADDWF   FSR1L, F
+               00821 ;       .line   161; BerkeleyTCPServerDemo.c    if( length > 0 )
+0266 5000      00822         MOVF    r0x03, W
+0268 0F80      00823         ADDLW   0x80
+026A 0F80      00824         ADDLW   0x80
+026C E100      00825         BNZ     _00163_DS_
+026E 0E01      00826         MOVLW   0x01
+0270 5C00      00827         SUBWF   r0x02, W
+0272 00828 _00163_DS_:
+0272 A0D8      00829         BTFSS   STATUS, 0
+0274 D000      00830         BRA     _00123_DS_
+               00831 ;       .line   163; BerkeleyTCPServerDemo.c    bfr[length] = '\0';
+0276 0E00      00832         MOVLW   LOW(_BerkeleyTCPServerDemo_bfr_1_1)
+0278 2400      00833         ADDWF   r0x02, W
+027A 6E00      00834         MOVWF   r0x04
+027C 0E00      00835         MOVLW   HIGH(_BerkeleyTCPServerDemo_bfr_1_1)
+027E 2000      00836         ADDWFC  r0x03, W
+0280 6E00      00837         MOVWF   r0x05
+0282 C000 FFE9 00838         MOVFF   r0x04, FSR0L
+0286 C000 FFEA 00839         MOVFF   r0x05, FSR0H
+028A 0E00      00840         MOVLW   0x00
+028C 6EEF      00841         MOVWF   INDF0
+               00842 ;       .line   164; BerkeleyTCPServerDemo.c    send(ClientSock[i], bfr, strlen(bfr), 0);
+028E 0E00      00843         MOVLW   LOW(_BerkeleyTCPServerDemo_ClientSock_1_1)
+0290 2400      00844         ADDWF   r0x00, W
+0292 6E00      00845         MOVWF   r0x04
+0294 0E00      00846         MOVLW   HIGH(_BerkeleyTCPServerDemo_ClientSock_1_1)
+0296 2000      00847         ADDWFC  r0x01, W
+0298 6E00      00848         MOVWF   r0x05
+029A C000 FFE9 00849         MOVFF   r0x04, FSR0L
+029E C000 FFEA 00850         MOVFF   r0x05, FSR0H
+02A2 CFEF F000 00851         MOVFF   INDF0, r0x04
+02A6 0E00      00852         MOVLW   HIGH(_BerkeleyTCPServerDemo_bfr_1_1)
+02A8 6E00      00853         MOVWF   r0x06
+02AA 0E00      00854         MOVLW   LOW(_BerkeleyTCPServerDemo_bfr_1_1)
+02AC 6E00      00855         MOVWF   r0x05
+02AE 0E80      00856         MOVLW   0x80
+02B0 6E00      00857         MOVWF   r0x07
+02B2 0E00      00858         MOVLW   HIGH(_BerkeleyTCPServerDemo_bfr_1_1)
+02B4 6E00      00859         MOVWF   r0x09
+02B6 0E00      00860         MOVLW   LOW(_BerkeleyTCPServerDemo_bfr_1_1)
+02B8 6E00      00861         MOVWF   r0x08
+02BA 0E80      00862         MOVLW   0x80
+02BC 6E00      00863         MOVWF   r0x0a
+02BE 5000      00864         MOVF    r0x0a, W
+gpasm-0.13.7 beta               Objects/BerkeleyTCPServerDemo.asm12-16-2009  00:32:12         PAGE 17
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+02C0 6EE5      00865         MOVWF   POSTDEC1
+02C2 5000      00866         MOVF    r0x09, W
+02C4 6EE5      00867         MOVWF   POSTDEC1
+02C6 5000      00868         MOVF    r0x08, W
+02C8 6EE5      00869         MOVWF   POSTDEC1
+02CA EC00 F000 00870         CALL    _strlen
+02CE 6E00      00871         MOVWF   r0x08
+02D0 CFF3 F000 00872         MOVFF   PRODL, r0x09
+02D4 0E03      00873         MOVLW   0x03
+02D6 26E1      00874         ADDWF   FSR1L, F
+02D8 0E00      00875         MOVLW   0x00
+02DA 6EE5      00876         MOVWF   POSTDEC1
+02DC 0E00      00877         MOVLW   0x00
+02DE 6EE5      00878         MOVWF   POSTDEC1
+02E0 5000      00879         MOVF    r0x09, W
+02E2 6EE5      00880         MOVWF   POSTDEC1
+02E4 5000      00881         MOVF    r0x08, W
+02E6 6EE5      00882         MOVWF   POSTDEC1
+02E8 5000      00883         MOVF    r0x07, W
+02EA 6EE5      00884         MOVWF   POSTDEC1
+02EC 5000      00885         MOVF    r0x06, W
+02EE 6EE5      00886         MOVWF   POSTDEC1
+02F0 5000      00887         MOVF    r0x05, W
+02F2 6EE5      00888         MOVWF   POSTDEC1
+02F4 5000      00889         MOVF    r0x04, W
+02F6 6EE5      00890         MOVWF   POSTDEC1
+02F8 EC00 F000 00891         CALL    _send
+02FC 0E08      00892         MOVLW   0x08
+02FE 26E1      00893         ADDWF   FSR1L, F
+0300 D000      00894         BRA     _00127_DS_
+0302 00895 _00123_DS_:
+               00896 ;       .line   166; BerkeleyTCPServerDemo.c    else if( length < 0 )
+0302 80D8      00897         BSF     STATUS, 0
+0304 AE00      00898         BTFSS   r0x03, 7
+0306 90D8      00899         BCF     STATUS, 0
+0308 E300      00900         BNC     _00127_DS_
+               00901 ;       .line   168; BerkeleyTCPServerDemo.c    closesocket( ClientSock[i] );
+030A 0E00      00902         MOVLW   LOW(_BerkeleyTCPServerDemo_ClientSock_1_1)
+030C 2400      00903         ADDWF   r0x00, W
+030E 6E00      00904         MOVWF   r0x02
+0310 0E00      00905         MOVLW   HIGH(_BerkeleyTCPServerDemo_ClientSock_1_1)
+0312 2000      00906         ADDWFC  r0x01, W
+0314 6E00      00907         MOVWF   r0x03
+0316 C000 FFE9 00908         MOVFF   r0x02, FSR0L
+031A C000 FFEA 00909         MOVFF   r0x03, FSR0H
+031E CFEF F000 00910         MOVFF   INDF0, r0x02
+0322 5000      00911         MOVF    r0x02, W
+0324 6EE5      00912         MOVWF   POSTDEC1
+0326 EC00 F000 00913         CALL    _closesocket
+032A 2AE1      00914         INCF    FSR1L, F
+               00915 ;       .line   169; BerkeleyTCPServerDemo.c    ClientSock[i] = INVALID_SOCKET;
+032C 0E00      00916         MOVLW   LOW(_BerkeleyTCPServerDemo_ClientSock_1_1)
+032E 2400      00917         ADDWF   r0x00, W
+0330 6E00      00918         MOVWF   r0x02
+gpasm-0.13.7 beta               Objects/BerkeleyTCPServerDemo.asm12-16-2009  00:32:12         PAGE 18
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0332 0E00      00919         MOVLW   HIGH(_BerkeleyTCPServerDemo_ClientSock_1_1)
+0334 2000      00920         ADDWFC  r0x01, W
+0336 6E00      00921         MOVWF   r0x03
+0338 C000 FFE9 00922         MOVFF   r0x02, FSR0L
+033C C000 FFEA 00923         MOVFF   r0x03, FSR0H
+0340 0EFE      00924         MOVLW   0xfe
+0342 6EEF      00925         MOVWF   INDF0
+0344 00926 _00127_DS_:
+               00927 ;       .line   148; BerkeleyTCPServerDemo.c    for(i=0; i<MAX_CLIENT; i++)
+0344 2A00      00928         INCF    r0x00, F
+0346 B0D8      00929         BTFSC   STATUS, 0
+0348 2A00      00930         INCF    r0x01, F
+               00931 ;       .line   175; BerkeleyTCPServerDemo.c    return;
+034A D000      00932         BRA     _00125_DS_
+034C 00933 _00135_DS_:
+               00934 ;       .line   177; BerkeleyTCPServerDemo.c    return;
+034C CFE4 F000 00935         MOVFF   PREINC1, r0x0a
+0350 CFE4 F000 00936         MOVFF   PREINC1, r0x09
+0354 CFE4 F000 00937         MOVFF   PREINC1, r0x08
+0358 CFE4 F000 00938         MOVFF   PREINC1, r0x07
+035C CFE4 F000 00939         MOVFF   PREINC1, r0x06
+0360 CFE4 F000 00940         MOVFF   PREINC1, r0x05
+0364 CFE4 F000 00941         MOVFF   PREINC1, r0x04
+0368 CFE4 F000 00942         MOVFF   PREINC1, r0x03
+036C CFE4 F000 00943         MOVFF   PREINC1, r0x02
+0370 CFE4 F000 00944         MOVFF   PREINC1, r0x01
+0374 CFE4 F000 00945         MOVFF   PREINC1, r0x00
+0378 CFE4 FFD9 00946         MOVFF   PREINC1, FSR2L
+037C 0012      00947         RETURN  
+               00948 
+               00949 
+               00950 
+               00951 ; Statistics:
+               00952 ; code size:      894 (0x037e) bytes ( 0.68%)
+               00953 ;                 447 (0x01bf) words
+               00954 ; udata size:      53 (0x0035) bytes ( 1.38%)
+               00955 ; access size:     13 (0x000d) bytes
+               00956 
+               00957 
+gpasm-0.13.7 beta               Objects/BerkeleyTCPServerDemo.asm12-16-2009  00:32:12         PAGE 19
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+FSR0H                             00000FEA
+FSR0L                             00000FE9
+FSR1L                             00000FE1
+FSR2L                             00000FD9
+INDF0                             00000FEF
+PCL                               00000FF9
+PCLATH                            00000FFA
+PCLATU                            00000FFB
+POSTDEC1                          00000FE5
+PREINC1                           00000FE4
+PRODL                             00000FF3
+STATUS                            00000FD8
+WREG                              00000FE8
+_00105_DS_                        00000094
+_00106_DS_                        000000CC
+_00108_DS_                        000000FA
+_00109_DS_                        00000100
+_00111_DS_                        00000160
+_00112_DS_                        00000166
+_00117_DS_                        0000020C
+_00123_DS_                        00000302
+_00125_DS_                        00000192
+_00127_DS_                        00000344
+_00131_DS_                        00000098
+_00134_DS_                        000000C6
+_00135_DS_                        0000034C
+_00148_DS_                        0000018E
+_00152_DS_                        00000080
+_00153_DS_                        000000A4
+_00156_DS_                        0000015C
+_00157_DS_                        0000015E
+_00158_DS_                        0000019E
+_00162_DS_                        0000022C
+_00163_DS_                        00000272
+_ADCON0                           00000000
+_ADCON0bits                       00000000
+_ADCON1                           00000000
+_ADCON1bits                       00000000
+_ADCON2                           00000000
+_ADCON2bits                       00000000
+_ADRES                            00000000
+_ADRESH                           00000000
+_ADRESL                           00000000
+_AppConfig                        00000000
+_BAUDCON                          00000000
+_BAUDCON1                         00000000
+_BAUDCON1bits                     00000000
+_BAUDCON2                         00000000
+_BAUDCON2bits                     00000000
+_BAUDCONbits                      00000000
+_BAUDCTL                          00000000
+_BAUDCTL1                         00000000
+_BAUDCTL1bits                     00000000
+gpasm-0.13.7 beta               Objects/BerkeleyTCPServerDemo.asm12-16-2009  00:32:12         PAGE 20
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_BAUDCTL2                         00000000
+_BAUDCTL2bits                     00000000
+_BAUDCTLbits                      00000000
+_BSR                              00000000
+_BerkeleyTCPServerDemo            00000000
+_BerkeleyTCPServerDemo_BSDServerState_1_1  00000000
+_BerkeleyTCPServerDemo_ClientSock_1_1  00000000
+_BerkeleyTCPServerDemo_addRemote_1_1  00000000
+_BerkeleyTCPServerDemo_addr_1_1   00000000
+_BerkeleyTCPServerDemo_addrlen_1_1  00000000
+_BerkeleyTCPServerDemo_bfr_1_1    00000000
+_BerkeleyTCPServerDemo_bsdServerSocket_1_1  00000000
+_CCP1CON                          00000000
+_CCP1CONbits                      00000000
+_CCP2CON                          00000000
+_CCP2CONbits                      00000000
+_CCP3CON                          00000000
+_CCP3CONbits                      00000000
+_CCP4CON                          00000000
+_CCP4CONbits                      00000000
+_CCP5CON                          00000000
+_CCP5CONbits                      00000000
+_CCPR1                            00000000
+_CCPR1H                           00000000
+_CCPR1L                           00000000
+_CCPR2                            00000000
+_CCPR2H                           00000000
+_CCPR2L                           00000000
+_CCPR3                            00000000
+_CCPR3H                           00000000
+_CCPR3L                           00000000
+_CCPR4                            00000000
+_CCPR4H                           00000000
+_CCPR4L                           00000000
+_CCPR5                            00000000
+_CCPR5H                           00000000
+_CCPR5L                           00000000
+_CMCON                            00000000
+_CMCONbits                        00000000
+_CVRCON                           00000000
+_CVRCONbits                       00000000
+_DDRA                             00000000
+_DDRAbits                         00000000
+_DDRB                             00000000
+_DDRBbits                         00000000
+_DDRC                             00000000
+_DDRCbits                         00000000
+_DDRD                             00000000
+_DDRDbits                         00000000
+_DDRE                             00000000
+_DDREbits                         00000000
+_DDRF                             00000000
+_DDRFbits                         00000000
+_DDRG                             00000000
+gpasm-0.13.7 beta               Objects/BerkeleyTCPServerDemo.asm12-16-2009  00:32:12         PAGE 21
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_DDRGbits                         00000000
+_DDRH                             00000000
+_DDRHbits                         00000000
+_DDRJ                             00000000
+_DDRJbits                         00000000
+_EBSTCON                          00000000
+_EBSTCONbits                      00000000
+_EBSTCS                           00000000
+_EBSTCSH                          00000000
+_EBSTCSL                          00000000
+_EBSTSD                           00000000
+_ECCP1AS                          00000000
+_ECCP1ASbits                      00000000
+_ECCP1CON                         00000000
+_ECCP1CONbits                     00000000
+_ECCP1DEL                         00000000
+_ECCP1DELbits                     00000000
+_ECCP2AS                          00000000
+_ECCP2ASbits                      00000000
+_ECCP2CON                         00000000
+_ECCP2CONbits                     00000000
+_ECCP2DEL                         00000000
+_ECCP2DELbits                     00000000
+_ECCP3AS                          00000000
+_ECCP3ASbits                      00000000
+_ECCP3CON                         00000000
+_ECCP3CONbits                     00000000
+_ECCP3DEL                         00000000
+_ECCP3DELbits                     00000000
+_ECON1                            00000000
+_ECON1bits                        00000000
+_ECON2                            00000000
+_ECON2bits                        00000000
+_EDATA                            00000000
+_EDATAbits                        00000000
+_EDMACS                           00000000
+_EDMACSH                          00000000
+_EDMACSL                          00000000
+_EDMADST                          00000000
+_EDMADSTH                         00000000
+_EDMADSTL                         00000000
+_EDMAND                           00000000
+_EDMANDH                          00000000
+_EDMANDL                          00000000
+_EDMAST                           00000000
+_EDMASTH                          00000000
+_EDMASTL                          00000000
+_EECON1                           00000000
+_EECON1bits                       00000000
+_EECON2                           00000000
+_EFLOCON                          00000000
+_EFLOCONbits                      00000000
+_EHT0                             00000000
+_EHT1                             00000000
+gpasm-0.13.7 beta               Objects/BerkeleyTCPServerDemo.asm12-16-2009  00:32:12         PAGE 22
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_EHT2                             00000000
+_EHT3                             00000000
+_EHT4                             00000000
+_EHT5                             00000000
+_EHT6                             00000000
+_EHT7                             00000000
+_EIE                              00000000
+_EIEbits                          00000000
+_EIR                              00000000
+_EIRbits                          00000000
+_EPAUS                            00000000
+_EPAUSH                           00000000
+_EPAUSL                           00000000
+_EPKTCNT                          00000000
+_EPMCS                            00000000
+_EPMCSH                           00000000
+_EPMCSL                           00000000
+_EPMM0                            00000000
+_EPMM1                            00000000
+_EPMM2                            00000000
+_EPMM3                            00000000
+_EPMM4                            00000000
+_EPMM5                            00000000
+_EPMM6                            00000000
+_EPMM7                            00000000
+_EPMO                             00000000
+_EPMOH                            00000000
+_EPMOL                            00000000
+_ERDPT                            00000000
+_ERDPTH                           00000000
+_ERDPTL                           00000000
+_ERXFCON                          00000000
+_ERXFCONbits                      00000000
+_ERXND                            00000000
+_ERXNDH                           00000000
+_ERXNDL                           00000000
+_ERXRDPT                          00000000
+_ERXRDPTH                         00000000
+_ERXRDPTL                         00000000
+_ERXST                            00000000
+_ERXSTH                           00000000
+_ERXSTL                           00000000
+_ERXWRPT                          00000000
+_ERXWRPTH                         00000000
+_ERXWRPTL                         00000000
+_ESTAT                            00000000
+_ESTATbits                        00000000
+_ETXND                            00000000
+_ETXNDH                           00000000
+_ETXNDL                           00000000
+_ETXST                            00000000
+_ETXSTH                           00000000
+_ETXSTL                           00000000
+_EWOLIE                           00000000
+gpasm-0.13.7 beta               Objects/BerkeleyTCPServerDemo.asm12-16-2009  00:32:12         PAGE 23
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_EWOLIEbits                       00000000
+_EWOLIR                           00000000
+_EWOLIRbits                       00000000
+_EWRPT                            00000000
+_EWRPTH                           00000000
+_EWRPTL                           00000000
+_FSR0H                            00000000
+_FSR0L                            00000000
+_FSR1H                            00000000
+_FSR1L                            00000000
+_FSR2H                            00000000
+_FSR2L                            00000000
+_INDF0                            00000000
+_INDF1                            00000000
+_INDF2                            00000000
+_INTCON                           00000000
+_INTCON2                          00000000
+_INTCON2bits                      00000000
+_INTCON3                          00000000
+_INTCON3bits                      00000000
+_INTCONbits                       00000000
+_IPR1                             00000000
+_IPR1bits                         00000000
+_IPR2                             00000000
+_IPR2bits                         00000000
+_IPR3                             00000000
+_IPR3bits                         00000000
+_LATA                             00000000
+_LATAbits                         00000000
+_LATB                             00000000
+_LATBbits                         00000000
+_LATC                             00000000
+_LATCbits                         00000000
+_LATD                             00000000
+_LATDbits                         00000000
+_LATE                             00000000
+_LATEbits                         00000000
+_LATF                             00000000
+_LATFbits                         00000000
+_LATG                             00000000
+_LATGbits                         00000000
+_LATH                             00000000
+_LATHbits                         00000000
+_LATJ                             00000000
+_LATJbits                         00000000
+_LCDText                          00000000
+_MAADR1                           00000000
+_MAADR2                           00000000
+_MAADR3                           00000000
+_MAADR4                           00000000
+_MAADR5                           00000000
+_MAADR6                           00000000
+_MABBIPG                          00000000
+_MACLCON1                         00000000
+gpasm-0.13.7 beta               Objects/BerkeleyTCPServerDemo.asm12-16-2009  00:32:12         PAGE 24
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_MACLCON1bits                     00000000
+_MACLCON2                         00000000
+_MACLCON2bits                     00000000
+_MACON1                           00000000
+_MACON1bits                       00000000
+_MACON2                           00000000
+_MACON2bits                       00000000
+_MACON3                           00000000
+_MACON3bits                       00000000
+_MACON4                           00000000
+_MACON4bits                       00000000
+_MAIPG                            00000000
+_MAIPGH                           00000000
+_MAIPGL                           00000000
+_MAMXFL                           00000000
+_MAMXFLH                          00000000
+_MAMXFLL                          00000000
+_MEMCON                           00000000
+_MEMCONbits                       00000000
+_MICMD                            00000000
+_MICMDbits                        00000000
+_MICON                            00000000
+_MICONbits                        00000000
+_MIRD                             00000000
+_MIRDH                            00000000
+_MIRDL                            00000000
+_MIREGADR                         00000000
+_MISTAT                           00000000
+_MISTATbits                       00000000
+_MIWR                             00000000
+_MIWRH                            00000000
+_MIWRL                            00000000
+_OSCCON                           00000000
+_OSCCONbits                       00000000
+_OSCTUNE                          00000000
+_OSCTUNEbits                      00000000
+_PC                               00000000
+_PCL                              00000000
+_PCLATH                           00000000
+_PCLATU                           00000000
+_PIE1                             00000000
+_PIE1bits                         00000000
+_PIE2                             00000000
+_PIE2bits                         00000000
+_PIE3                             00000000
+_PIE3bits                         00000000
+_PIR1                             00000000
+_PIR1bits                         00000000
+_PIR2                             00000000
+_PIR2bits                         00000000
+_PIR3                             00000000
+_PIR3bits                         00000000
+_PLUSW0                           00000000
+_PLUSW1                           00000000
+gpasm-0.13.7 beta               Objects/BerkeleyTCPServerDemo.asm12-16-2009  00:32:12         PAGE 25
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_PLUSW2                           00000000
+_PORTA                            00000000
+_PORTAbits                        00000000
+_PORTB                            00000000
+_PORTBbits                        00000000
+_PORTC                            00000000
+_PORTCbits                        00000000
+_PORTD                            00000000
+_PORTDbits                        00000000
+_PORTE                            00000000
+_PORTEbits                        00000000
+_PORTF                            00000000
+_PORTFbits                        00000000
+_PORTG                            00000000
+_PORTGbits                        00000000
+_PORTH                            00000000
+_PORTHbits                        00000000
+_PORTJ                            00000000
+_PORTJbits                        00000000
+_POSTDEC0                         00000000
+_POSTDEC1                         00000000
+_POSTDEC2                         00000000
+_POSTINC0                         00000000
+_POSTINC1                         00000000
+_POSTINC2                         00000000
+_PR2                              00000000
+_PR4                              00000000
+_PREINC0                          00000000
+_PREINC1                          00000000
+_PREINC2                          00000000
+_PROD                             00000000
+_PRODH                            00000000
+_PRODL                            00000000
+_PSPCON                           00000000
+_PSPCONbits                       00000000
+_RCON                             00000000
+_RCONbits                         00000000
+_RCREG                            00000000
+_RCREG1                           00000000
+_RCREG2                           00000000
+_RCSTA                            00000000
+_RCSTA1                           00000000
+_RCSTA1bits                       00000000
+_RCSTA2                           00000000
+_RCSTA2bits                       00000000
+_RCSTAbits                        00000000
+_SPBRG                            00000000
+_SPBRG1                           00000000
+_SPBRG2                           00000000
+_SPBRGH                           00000000
+_SPBRGH1                          00000000
+_SPBRGH2                          00000000
+_SSP1ADD                          00000000
+_SSP1BUF                          00000000
+gpasm-0.13.7 beta               Objects/BerkeleyTCPServerDemo.asm12-16-2009  00:32:12         PAGE 26
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_SSP1CON1                         00000000
+_SSP1CON1bits                     00000000
+_SSP1CON2                         00000000
+_SSP1CON2bits                     00000000
+_SSP1STAT                         00000000
+_SSP1STATbits                     00000000
+_SSP2ADD                          00000000
+_SSP2BUF                          00000000
+_SSP2CON1                         00000000
+_SSP2CON1bits                     00000000
+_SSP2CON2                         00000000
+_SSP2CON2bits                     00000000
+_SSP2STAT                         00000000
+_SSP2STATbits                     00000000
+_SSPADD                           00000000
+_SSPBUF                           00000000
+_SSPCON1                          00000000
+_SSPCON1bits                      00000000
+_SSPCON2                          00000000
+_SSPCON2bits                      00000000
+_SSPSTAT                          00000000
+_SSPSTATbits                      00000000
+_STATUS                           00000000
+_STATUSbits                       00000000
+_STKPTR                           00000000
+_STKPTRbits                       00000000
+_T0CON                            00000000
+_T0CONbits                        00000000
+_T1CON                            00000000
+_T1CONbits                        00000000
+_T2CON                            00000000
+_T2CONbits                        00000000
+_T3CON                            00000000
+_T3CONbits                        00000000
+_T4CON                            00000000
+_T4CONbits                        00000000
+_TABLAT                           00000000
+_TBLPTR                           00000000
+_TBLPTRH                          00000000
+_TBLPTRL                          00000000
+_TBLPTRU                          00000000
+_TMR0H                            00000000
+_TMR0L                            00000000
+_TMR1H                            00000000
+_TMR1L                            00000000
+_TMR2                             00000000
+_TMR3H                            00000000
+_TMR3L                            00000000
+_TMR4                             00000000
+_TOS                              00000000
+_TOSH                             00000000
+_TOSL                             00000000
+_TOSU                             00000000
+_TRISA                            00000000
+gpasm-0.13.7 beta               Objects/BerkeleyTCPServerDemo.asm12-16-2009  00:32:12         PAGE 27
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_TRISAbits                        00000000
+_TRISB                            00000000
+_TRISBbits                        00000000
+_TRISC                            00000000
+_TRISCbits                        00000000
+_TRISD                            00000000
+_TRISDbits                        00000000
+_TRISE                            00000000
+_TRISEbits                        00000000
+_TRISF                            00000000
+_TRISFbits                        00000000
+_TRISG                            00000000
+_TRISGbits                        00000000
+_TRISH                            00000000
+_TRISHbits                        00000000
+_TRISJ                            00000000
+_TRISJbits                        00000000
+_TXREG                            00000000
+_TXREG1                           00000000
+_TXREG2                           00000000
+_TXSTA                            00000000
+_TXSTA1                           00000000
+_TXSTA1bits                       00000000
+_TXSTA2                           00000000
+_TXSTA2bits                       00000000
+_TXSTAbits                        00000000
+_UDPRxCount                       00000000
+_UDPSocketInfo                    00000000
+_UDPTxCount                       00000000
+_WDTCON                           00000000
+_WDTCONbits                       00000000
+_WREG                             00000000
+__18F97J60                        00000001
+_accept                           00000000
+_activeUDPSocket                  00000000
+_bind                             00000000
+_closesocket                      00000000
+_listen                           00000000
+_recv                             00000000
+_send                             00000000
+_socket                           00000000
+_stdin                            00000000
+_stdout                           00000000
+_strlen                           00000000
+r0x00                             00000000
+r0x01                             00000001
+r0x02                             00000002
+r0x03                             00000003
+r0x04                             00000004
+r0x05                             00000005
+r0x06                             00000006
+r0x07                             00000007
+r0x08                             00000008
+r0x09                             00000009
+gpasm-0.13.7 beta               Objects/BerkeleyTCPServerDemo.asm12-16-2009  00:32:12         PAGE 28
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+r0x0a                             0000000A
+r0x0b                             0000000B
+r0x0c                             0000000C
+
+
+Errors   :       0
+Warnings :       0 reported,       0 suppressed
+Messages :       0 reported,       0 suppressed
+

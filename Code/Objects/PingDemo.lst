@@ -1,0 +1,1458 @@
+gpasm-0.13.7 beta               Objects/PingDemo.asm12-15-2009  23:56:59         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00001 ;--------------------------------------------------------
+               00002 ; File Created by SDCC : free open source ANSI-C Compiler
+               00003 ; Version 2.9.4 #5582 (Dec  9 2009) (UNIX)
+               00004 ; This file was generated Tue Dec 15 23:56:59 2009
+               00005 ;--------------------------------------------------------
+               00006 ; PIC16 port for the Microchip 16-bit core micros
+               00007 ;--------------------------------------------------------
+               00008         list    p=18f97j60
+               00009 
+               00010         radix dec
+               00011 
+               00012 ;--------------------------------------------------------
+               00013 ; public variables in this module
+               00014 ;--------------------------------------------------------
+               00015         global _PingDemo
+               00016 
+               00017 ;--------------------------------------------------------
+               00018 ; extern variables in this module
+               00019 ;--------------------------------------------------------
+               00020         extern _EBSTCONbits
+               00021         extern _MISTATbits
+               00022         extern _EFLOCONbits
+               00023         extern _MACON1bits
+               00024         extern _MACON2bits
+               00025         extern _MACON3bits
+               00026         extern _MACON4bits
+               00027         extern _MACLCON1bits
+               00028         extern _MACLCON2bits
+               00029         extern _MICONbits
+               00030         extern _MICMDbits
+               00031         extern _EWOLIEbits
+               00032         extern _EWOLIRbits
+               00033         extern _ERXFCONbits
+               00034         extern _EIEbits
+               00035         extern _ESTATbits
+               00036         extern _ECON2bits
+               00037         extern _EIRbits
+               00038         extern _EDATAbits
+               00039         extern _SSP2CON2bits
+               00040         extern _SSP2CON1bits
+               00041         extern _SSP2STATbits
+               00042         extern _ECCP2DELbits
+               00043         extern _ECCP2ASbits
+               00044         extern _ECCP3DELbits
+               00045         extern _ECCP3ASbits
+               00046         extern _RCSTA2bits
+               00047         extern _TXSTA2bits
+               00048         extern _CCP5CONbits
+               00049         extern _CCP4CONbits
+               00050         extern _T4CONbits
+               00051         extern _ECCP1DELbits
+               00052         extern _BAUDCON2bits
+               00053         extern _BAUDCTL2bits
+               00054         extern _BAUDCONbits
+gpasm-0.13.7 beta               Objects/PingDemo.asm12-15-2009  23:56:59         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00055         extern _BAUDCON1bits
+               00056         extern _BAUDCTLbits
+               00057         extern _BAUDCTL1bits
+               00058         extern _PORTAbits
+               00059         extern _PORTBbits
+               00060         extern _PORTCbits
+               00061         extern _PORTDbits
+               00062         extern _PORTEbits
+               00063         extern _PORTFbits
+               00064         extern _PORTGbits
+               00065         extern _PORTHbits
+               00066         extern _PORTJbits
+               00067         extern _LATAbits
+               00068         extern _LATBbits
+               00069         extern _LATCbits
+               00070         extern _LATDbits
+               00071         extern _LATEbits
+               00072         extern _LATFbits
+               00073         extern _LATGbits
+               00074         extern _LATHbits
+               00075         extern _LATJbits
+               00076         extern _DDRAbits
+               00077         extern _TRISAbits
+               00078         extern _DDRBbits
+               00079         extern _TRISBbits
+               00080         extern _DDRCbits
+               00081         extern _TRISCbits
+               00082         extern _DDRDbits
+               00083         extern _TRISDbits
+               00084         extern _DDREbits
+               00085         extern _TRISEbits
+               00086         extern _DDRFbits
+               00087         extern _TRISFbits
+               00088         extern _DDRGbits
+               00089         extern _TRISGbits
+               00090         extern _DDRHbits
+               00091         extern _TRISHbits
+               00092         extern _DDRJbits
+               00093         extern _TRISJbits
+               00094         extern _OSCTUNEbits
+               00095         extern _MEMCONbits
+               00096         extern _PIE1bits
+               00097         extern _PIR1bits
+               00098         extern _IPR1bits
+               00099         extern _PIE2bits
+               00100         extern _PIR2bits
+               00101         extern _IPR2bits
+               00102         extern _PIE3bits
+               00103         extern _PIR3bits
+               00104         extern _IPR3bits
+               00105         extern _EECON1bits
+               00106         extern _RCSTAbits
+               00107         extern _RCSTA1bits
+               00108         extern _TXSTAbits
+gpasm-0.13.7 beta               Objects/PingDemo.asm12-15-2009  23:56:59         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00109         extern _TXSTA1bits
+               00110         extern _PSPCONbits
+               00111         extern _T3CONbits
+               00112         extern _CMCONbits
+               00113         extern _CVRCONbits
+               00114         extern _ECCP1ASbits
+               00115         extern _CCP3CONbits
+               00116         extern _ECCP3CONbits
+               00117         extern _CCP2CONbits
+               00118         extern _ECCP2CONbits
+               00119         extern _CCP1CONbits
+               00120         extern _ECCP1CONbits
+               00121         extern _ADCON2bits
+               00122         extern _ADCON1bits
+               00123         extern _ADCON0bits
+               00124         extern _SSP1CON2bits
+               00125         extern _SSPCON2bits
+               00126         extern _SSP1CON1bits
+               00127         extern _SSPCON1bits
+               00128         extern _SSP1STATbits
+               00129         extern _SSPSTATbits
+               00130         extern _T2CONbits
+               00131         extern _T1CONbits
+               00132         extern _RCONbits
+               00133         extern _WDTCONbits
+               00134         extern _ECON1bits
+               00135         extern _OSCCONbits
+               00136         extern _T0CONbits
+               00137         extern _STATUSbits
+               00138         extern _INTCON3bits
+               00139         extern _INTCON2bits
+               00140         extern _INTCONbits
+               00141         extern _STKPTRbits
+               00142         extern _stdin
+               00143         extern _stdout
+               00144         extern _AppConfig
+               00145         extern _activeUDPSocket
+               00146         extern _UDPSocketInfo
+               00147         extern _UDPTxCount
+               00148         extern _UDPRxCount
+               00149         extern _LCDText
+               00150         extern _AN0String
+               00151         extern _MAADR5
+               00152         extern _MAADR6
+               00153         extern _MAADR3
+               00154         extern _MAADR4
+               00155         extern _MAADR1
+               00156         extern _MAADR2
+               00157         extern _EBSTSD
+               00158         extern _EBSTCON
+               00159         extern _EBSTCS
+               00160         extern _EBSTCSL
+               00161         extern _EBSTCSH
+               00162         extern _MISTAT
+gpasm-0.13.7 beta               Objects/PingDemo.asm12-15-2009  23:56:59         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00163         extern _EFLOCON
+               00164         extern _EPAUS
+               00165         extern _EPAUSL
+               00166         extern _EPAUSH
+               00167         extern _MACON1
+               00168         extern _MACON2
+               00169         extern _MACON3
+               00170         extern _MACON4
+               00171         extern _MABBIPG
+               00172         extern _MAIPG
+               00173         extern _MAIPGL
+               00174         extern _MAIPGH
+               00175         extern _MACLCON1
+               00176         extern _MACLCON2
+               00177         extern _MAMXFL
+               00178         extern _MAMXFLL
+               00179         extern _MAMXFLH
+               00180         extern _MICON
+               00181         extern _MICMD
+               00182         extern _MIREGADR
+               00183         extern _MIWR
+               00184         extern _MIWRL
+               00185         extern _MIWRH
+               00186         extern _MIRD
+               00187         extern _MIRDL
+               00188         extern _MIRDH
+               00189         extern _EHT0
+               00190         extern _EHT1
+               00191         extern _EHT2
+               00192         extern _EHT3
+               00193         extern _EHT4
+               00194         extern _EHT5
+               00195         extern _EHT6
+               00196         extern _EHT7
+               00197         extern _EPMM0
+               00198         extern _EPMM1
+               00199         extern _EPMM2
+               00200         extern _EPMM3
+               00201         extern _EPMM4
+               00202         extern _EPMM5
+               00203         extern _EPMM6
+               00204         extern _EPMM7
+               00205         extern _EPMCS
+               00206         extern _EPMCSL
+               00207         extern _EPMCSH
+               00208         extern _EPMO
+               00209         extern _EPMOL
+               00210         extern _EPMOH
+               00211         extern _EWOLIE
+               00212         extern _EWOLIR
+               00213         extern _ERXFCON
+               00214         extern _EPKTCNT
+               00215         extern _EWRPT
+               00216         extern _EWRPTL
+gpasm-0.13.7 beta               Objects/PingDemo.asm12-15-2009  23:56:59         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00217         extern _EWRPTH
+               00218         extern _ETXST
+               00219         extern _ETXSTL
+               00220         extern _ETXSTH
+               00221         extern _ETXND
+               00222         extern _ETXNDL
+               00223         extern _ETXNDH
+               00224         extern _ERXST
+               00225         extern _ERXSTL
+               00226         extern _ERXSTH
+               00227         extern _ERXND
+               00228         extern _ERXNDL
+               00229         extern _ERXNDH
+               00230         extern _ERXRDPT
+               00231         extern _ERXRDPTL
+               00232         extern _ERXRDPTH
+               00233         extern _ERXWRPT
+               00234         extern _ERXWRPTL
+               00235         extern _ERXWRPTH
+               00236         extern _EDMAST
+               00237         extern _EDMASTL
+               00238         extern _EDMASTH
+               00239         extern _EDMAND
+               00240         extern _EDMANDL
+               00241         extern _EDMANDH
+               00242         extern _EDMADST
+               00243         extern _EDMADSTL
+               00244         extern _EDMADSTH
+               00245         extern _EDMACS
+               00246         extern _EDMACSL
+               00247         extern _EDMACSH
+               00248         extern _EIE
+               00249         extern _ESTAT
+               00250         extern _ECON2
+               00251         extern _EIR
+               00252         extern _EDATA
+               00253         extern _SSP2CON2
+               00254         extern _SSP2CON1
+               00255         extern _SSP2STAT
+               00256         extern _SSP2ADD
+               00257         extern _SSP2BUF
+               00258         extern _ECCP2DEL
+               00259         extern _ECCP2AS
+               00260         extern _ECCP3DEL
+               00261         extern _ECCP3AS
+               00262         extern _RCSTA2
+               00263         extern _TXSTA2
+               00264         extern _TXREG2
+               00265         extern _RCREG2
+               00266         extern _SPBRG2
+               00267         extern _CCP5CON
+               00268         extern _CCPR5
+               00269         extern _CCPR5L
+               00270         extern _CCPR5H
+gpasm-0.13.7 beta               Objects/PingDemo.asm12-15-2009  23:56:59         PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00271         extern _CCP4CON
+               00272         extern _CCPR4
+               00273         extern _CCPR4L
+               00274         extern _CCPR4H
+               00275         extern _T4CON
+               00276         extern _PR4
+               00277         extern _TMR4
+               00278         extern _ECCP1DEL
+               00279         extern _ERDPT
+               00280         extern _ERDPTL
+               00281         extern _ERDPTH
+               00282         extern _BAUDCON2
+               00283         extern _BAUDCTL2
+               00284         extern _SPBRGH2
+               00285         extern _BAUDCON
+               00286         extern _BAUDCON1
+               00287         extern _BAUDCTL
+               00288         extern _BAUDCTL1
+               00289         extern _SPBRGH
+               00290         extern _SPBRGH1
+               00291         extern _PORTA
+               00292         extern _PORTB
+               00293         extern _PORTC
+               00294         extern _PORTD
+               00295         extern _PORTE
+               00296         extern _PORTF
+               00297         extern _PORTG
+               00298         extern _PORTH
+               00299         extern _PORTJ
+               00300         extern _LATA
+               00301         extern _LATB
+               00302         extern _LATC
+               00303         extern _LATD
+               00304         extern _LATE
+               00305         extern _LATF
+               00306         extern _LATG
+               00307         extern _LATH
+               00308         extern _LATJ
+               00309         extern _DDRA
+               00310         extern _TRISA
+               00311         extern _DDRB
+               00312         extern _TRISB
+               00313         extern _DDRC
+               00314         extern _TRISC
+               00315         extern _DDRD
+               00316         extern _TRISD
+               00317         extern _DDRE
+               00318         extern _TRISE
+               00319         extern _DDRF
+               00320         extern _TRISF
+               00321         extern _DDRG
+               00322         extern _TRISG
+               00323         extern _DDRH
+               00324         extern _TRISH
+gpasm-0.13.7 beta               Objects/PingDemo.asm12-15-2009  23:56:59         PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00325         extern _DDRJ
+               00326         extern _TRISJ
+               00327         extern _OSCTUNE
+               00328         extern _MEMCON
+               00329         extern _PIE1
+               00330         extern _PIR1
+               00331         extern _IPR1
+               00332         extern _PIE2
+               00333         extern _PIR2
+               00334         extern _IPR2
+               00335         extern _PIE3
+               00336         extern _PIR3
+               00337         extern _IPR3
+               00338         extern _EECON1
+               00339         extern _EECON2
+               00340         extern _RCSTA
+               00341         extern _RCSTA1
+               00342         extern _TXSTA
+               00343         extern _TXSTA1
+               00344         extern _TXREG
+               00345         extern _TXREG1
+               00346         extern _RCREG
+               00347         extern _RCREG1
+               00348         extern _SPBRG
+               00349         extern _SPBRG1
+               00350         extern _PSPCON
+               00351         extern _T3CON
+               00352         extern _TMR3L
+               00353         extern _TMR3H
+               00354         extern _CMCON
+               00355         extern _CVRCON
+               00356         extern _ECCP1AS
+               00357         extern _CCP3CON
+               00358         extern _ECCP3CON
+               00359         extern _CCPR3
+               00360         extern _CCPR3L
+               00361         extern _CCPR3H
+               00362         extern _CCP2CON
+               00363         extern _ECCP2CON
+               00364         extern _CCPR2
+               00365         extern _CCPR2L
+               00366         extern _CCPR2H
+               00367         extern _CCP1CON
+               00368         extern _ECCP1CON
+               00369         extern _CCPR1
+               00370         extern _CCPR1L
+               00371         extern _CCPR1H
+               00372         extern _ADCON2
+               00373         extern _ADCON1
+               00374         extern _ADCON0
+               00375         extern _ADRES
+               00376         extern _ADRESL
+               00377         extern _ADRESH
+               00378         extern _SSP1CON2
+gpasm-0.13.7 beta               Objects/PingDemo.asm12-15-2009  23:56:59         PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00379         extern _SSPCON2
+               00380         extern _SSP1CON1
+               00381         extern _SSPCON1
+               00382         extern _SSP1STAT
+               00383         extern _SSPSTAT
+               00384         extern _SSP1ADD
+               00385         extern _SSPADD
+               00386         extern _SSP1BUF
+               00387         extern _SSPBUF
+               00388         extern _T2CON
+               00389         extern _PR2
+               00390         extern _TMR2
+               00391         extern _T1CON
+               00392         extern _TMR1L
+               00393         extern _TMR1H
+               00394         extern _RCON
+               00395         extern _WDTCON
+               00396         extern _ECON1
+               00397         extern _OSCCON
+               00398         extern _T0CON
+               00399         extern _TMR0L
+               00400         extern _TMR0H
+               00401         extern _STATUS
+               00402         extern _FSR2L
+               00403         extern _FSR2H
+               00404         extern _PLUSW2
+               00405         extern _PREINC2
+               00406         extern _POSTDEC2
+               00407         extern _POSTINC2
+               00408         extern _INDF2
+               00409         extern _BSR
+               00410         extern _FSR1L
+               00411         extern _FSR1H
+               00412         extern _PLUSW1
+               00413         extern _PREINC1
+               00414         extern _POSTDEC1
+               00415         extern _POSTINC1
+               00416         extern _INDF1
+               00417         extern _WREG
+               00418         extern _FSR0L
+               00419         extern _FSR0H
+               00420         extern _PLUSW0
+               00421         extern _PREINC0
+               00422         extern _POSTDEC0
+               00423         extern _POSTINC0
+               00424         extern _INDF0
+               00425         extern _INTCON3
+               00426         extern _INTCON2
+               00427         extern _INTCON
+               00428         extern _PROD
+               00429         extern _PRODL
+               00430         extern _PRODH
+               00431         extern _TABLAT
+               00432         extern _TBLPTR
+gpasm-0.13.7 beta               Objects/PingDemo.asm12-15-2009  23:56:59         PAGE  9
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00433         extern _TBLPTRL
+               00434         extern _TBLPTRH
+               00435         extern _TBLPTRU
+               00436         extern _PC
+               00437         extern _PCL
+               00438         extern _PCLATH
+               00439         extern _PCLATU
+               00440         extern _STKPTR
+               00441         extern _TOS
+               00442         extern _TOSL
+               00443         extern _TOSH
+               00444         extern _TOSU
+               00445         extern _uitoa
+               00446         extern _strcat
+               00447         extern _memcpy
+               00448         extern _TickGet
+               00449         extern _TickConvertToMilliseconds
+               00450         extern _LCDUpdate
+               00451         extern _ICMPBeginUsage
+               00452         extern _ICMPSendPing
+               00453         extern _ICMPGetReply
+               00454         extern _ICMPEndUsage
+               00455 ;--------------------------------------------------------
+               00456 ;       Equates to used internal registers
+               00457 ;--------------------------------------------------------
+  00000FD8     00458 STATUS  equ     0xfd8
+  00000FE9     00459 FSR0L   equ     0xfe9
+  00000FE1     00460 FSR1L   equ     0xfe1
+  00000FD9     00461 FSR2L   equ     0xfd9
+  00000FE5     00462 POSTDEC1        equ     0xfe5
+  00000FE4     00463 PREINC1 equ     0xfe4
+  00000FF3     00464 PRODL   equ     0xff3
+  00000FF4     00465 PRODH   equ     0xff4
+               00466 
+               00467 
+               00468         idata
+               00469 _PingDemo_PingState_1_1 db      0x00
+               00470 
+               00471 
+               00472 ; Internal registers
+               00473 .registers      udata_ovr       0x0000
+               00474 r0x00   res     1
+               00475 r0x01   res     1
+               00476 r0x02   res     1
+               00477 r0x03   res     1
+               00478 r0x04   res     1
+               00479 r0x05   res     1
+               00480 r0x06   res     1
+               00481 
+               00482 udata_PingDemo_0        udata
+               00483 _PingDemo_Timer_1_1     res     4
+               00484 
+               00485 ;--------------------------------------------------------
+               00486 ; global & static initialisations
+gpasm-0.13.7 beta               Objects/PingDemo.asm12-15-2009  23:56:59         PAGE 10
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00487 ;--------------------------------------------------------
+               00488 ; I code from now on!
+               00489 ; ; Starting pCode block
+               00490 S_PingDemo__PingDemo    code
+0000 00491 _PingDemo:
+               00492 ;       .line   97; PingDemo.c  void PingDemo(void)
+0000 CFD9 FFE5 00493         MOVFF   FSR2L, POSTDEC1
+0004 CFE1 FFD9 00494         MOVFF   FSR1L, FSR2L
+0008 C000 FFE5 00495         MOVFF   r0x00, POSTDEC1
+000C C000 FFE5 00496         MOVFF   r0x01, POSTDEC1
+0010 C000 FFE5 00497         MOVFF   r0x02, POSTDEC1
+0014 C000 FFE5 00498         MOVFF   r0x03, POSTDEC1
+0018 C000 FFE5 00499         MOVFF   r0x04, POSTDEC1
+001C C000 FFE5 00500         MOVFF   r0x05, POSTDEC1
+0020 C000 FFE5 00501         MOVFF   r0x06, POSTDEC1
+0024 0000      00502         BANKSEL _PingDemo_PingState_1_1
+               00503 ;       .line   107; PingDemo.c switch(PingState)
+0026 5100      00504         MOVF    _PingDemo_PingState_1_1, W, B
+0028 E000      00505         BZ      _00105_DS_
+002A 00506 _00134_DS_:
+002A 0000      00507         BANKSEL _PingDemo_PingState_1_1
+002C 5100      00508         MOVF    _PingDemo_PingState_1_1, W, B
+002E 0A01      00509         XORLW   0x01
+0030 E100      00510         BNZ     _00136_DS_
+0032 D000      00511         BRA     _00112_DS_
+0034 00512 _00136_DS_:
+0034 D000      00513         BRA     _00123_DS_
+0036 00514 _00105_DS_:
+               00515 ;       .line   111; PingDemo.c if(BUTTON0_IO == 0u)
+0036 B600      00516         BTFSC   _PORTBbits, 3
+0038 D000      00517         BRA     _00123_DS_
+               00518 ;       .line   114; PingDemo.c if(TickGet() - Timer > 1ul*TICK_SECOND)
+003A EC00 F000 00519         CALL    _TickGet
+003E 6E00      00520         MOVWF   r0x00
+0040 CFF3 F000 00521         MOVFF   PRODL, r0x01
+0044 CFF4 F000 00522         MOVFF   PRODH, r0x02
+0048 CFE9 F000 00523         MOVFF   FSR0L, r0x03
+004C 0000      00524         BANKSEL _PingDemo_Timer_1_1
+004E 5100      00525         MOVF    _PingDemo_Timer_1_1, W, B
+0050 5E00      00526         SUBWF   r0x00, F
+0052 0000      00527         BANKSEL (_PingDemo_Timer_1_1 + 1)
+0054 5100      00528         MOVF    (_PingDemo_Timer_1_1 + 1), W, B
+0056 5A00      00529         SUBWFB  r0x01, F
+0058 0000      00530         BANKSEL (_PingDemo_Timer_1_1 + 2)
+005A 5100      00531         MOVF    (_PingDemo_Timer_1_1 + 2), W, B
+005C 5A00      00532         SUBWFB  r0x02, F
+005E 0000      00533         BANKSEL (_PingDemo_Timer_1_1 + 3)
+0060 5100      00534         MOVF    (_PingDemo_Timer_1_1 + 3), W, B
+0062 5A00      00535         SUBWFB  r0x03, F
+0064 0E00      00536         MOVLW   0x00
+0066 5C00      00537         SUBWF   r0x03, W
+0068 E100      00538         BNZ     _00137_DS_
+006A 0E00      00539         MOVLW   0x00
+006C 5C00      00540         SUBWF   r0x02, W
+gpasm-0.13.7 beta               Objects/PingDemo.asm12-15-2009  23:56:59         PAGE 11
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+006E E100      00541         BNZ     _00137_DS_
+0070 0E9E      00542         MOVLW   0x9e
+0072 5C00      00543         SUBWF   r0x01, W
+0074 E100      00544         BNZ     _00137_DS_
+0076 0EF3      00545         MOVLW   0xf3
+0078 5C00      00546         SUBWF   r0x00, W
+007A 00547 _00137_DS_:
+007A A0D8      00548         BTFSS   STATUS, 0
+007C D000      00549         BRA     _00123_DS_
+               00550 ;       .line   117; PingDemo.c if(!ICMPBeginUsage())
+007E EC00 F000 00551         CALL    _ICMPBeginUsage
+0082 6E00      00552         MOVWF   r0x00
+0084 5000      00553         MOVF    r0x00, W
+0086 B4D8      00554         BTFSC   STATUS, 2
+0088 D000      00555         BRA     _00123_DS_
+               00556 ;       .line   121; PingDemo.c Timer = TickGet();
+008A EC00 F000 00557         CALL    _TickGet
+008E 0000      00558         BANKSEL _PingDemo_Timer_1_1
+0090 6F00      00559         MOVWF   _PingDemo_Timer_1_1, B
+0092 CFF3 F000 00560         MOVFF   PRODL, (_PingDemo_Timer_1_1 + 1)
+0096 CFF4 F000 00561         MOVFF   PRODH, (_PingDemo_Timer_1_1 + 2)
+009A CFE9 F000 00562         MOVFF   FSR0L, (_PingDemo_Timer_1_1 + 3)
+009E 0000      00563         BANKSEL (_AppConfig + 11)
+               00564 ;       .line   127; PingDemo.c ICMPSendPing(AppConfig.MyGateway.Val);
+00A0 5100      00565         MOVF    (_AppConfig + 11), W, B
+00A2 6EE5      00566         MOVWF   POSTDEC1
+00A4 0000      00567         BANKSEL (_AppConfig + 10)
+00A6 5100      00568         MOVF    (_AppConfig + 10), W, B
+00A8 6EE5      00569         MOVWF   POSTDEC1
+00AA 0000      00570         BANKSEL (_AppConfig + 9)
+00AC 5100      00571         MOVF    (_AppConfig + 9), W, B
+00AE 6EE5      00572         MOVWF   POSTDEC1
+00B0 0000      00573         BANKSEL (_AppConfig + 8)
+00B2 5100      00574         MOVF    (_AppConfig + 8), W, B
+00B4 6EE5      00575         MOVWF   POSTDEC1
+00B6 EC00 F000 00576         CALL    _ICMPSendPing
+00BA 0E04      00577         MOVLW   0x04
+00BC 26E1      00578         ADDWF   FSR1L, F
+               00579 ;       .line   129; PingDemo.c PingState = SM_GET_ICMP_RESPONSE;
+00BE 0E01      00580         MOVLW   0x01
+00C0 0000      00581         BANKSEL _PingDemo_PingState_1_1
+00C2 6F00      00582         MOVWF   _PingDemo_PingState_1_1, B
+               00583 ;       .line   132; PingDemo.c break;
+00C4 D000      00584         BRA     _00123_DS_
+00C6 00585 _00112_DS_:
+               00586 ;       .line   136; PingDemo.c ret = ICMPGetReply();                                   
+00C6 EC00 F000 00587         CALL    _ICMPGetReply
+00CA 6E00      00588         MOVWF   r0x00
+00CC CFF3 F000 00589         MOVFF   PRODL, r0x01
+00D0 CFF4 F000 00590         MOVFF   PRODH, r0x02
+00D4 CFE9 F000 00591         MOVFF   FSR0L, r0x03
+               00592 ;       .line   137; PingDemo.c if(ret == -2)
+00D8 5000      00593         MOVF    r0x00, W
+00DA 0AFE      00594         XORLW   0xfe
+gpasm-0.13.7 beta               Objects/PingDemo.asm12-15-2009  23:56:59         PAGE 12
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+00DC E100      00595         BNZ     _00139_DS_
+00DE 5000      00596         MOVF    r0x01, W
+00E0 0AFF      00597         XORLW   0xff
+00E2 E100      00598         BNZ     _00139_DS_
+00E4 5000      00599         MOVF    r0x02, W
+00E6 0AFF      00600         XORLW   0xff
+00E8 E100      00601         BNZ     _00139_DS_
+00EA 5000      00602         MOVF    r0x03, W
+00EC 0AFF      00603         XORLW   0xff
+00EE E100      00604         BNZ     _00139_DS_
+00F0 D000      00605         BRA     _00123_DS_
+00F2 00606 _00139_DS_:
+               00607 ;       .line   142; PingDemo.c else if(ret == -1)
+00F2 5000      00608         MOVF    r0x00, W
+00F4 0AFF      00609         XORLW   0xff
+00F6 E100      00610         BNZ     _00140_DS_
+00F8 5000      00611         MOVF    r0x01, W
+00FA 0AFF      00612         XORLW   0xff
+00FC E100      00613         BNZ     _00140_DS_
+00FE 5000      00614         MOVF    r0x02, W
+0100 0AFF      00615         XORLW   0xff
+0102 E100      00616         BNZ     _00140_DS_
+0104 5000      00617         MOVF    r0x03, W
+0106 0AFF      00618         XORLW   0xff
+0108 E000      00619         BZ      _00141_DS_
+010A 00620 _00140_DS_:
+010A D000      00621         BRA     _00117_DS_
+010C 00622 _00141_DS_:
+               00623 ;       .line   147; PingDemo.c memcpy((void*)&LCDText[16], (void *)"Ping timed out", 15); //ML
+010C 0E00      00624         MOVLW   HIGH(_LCDText + 16)
+010E 6E00      00625         MOVWF   r0x05
+0110 0E00      00626         MOVLW   LOW(_LCDText + 16)
+0112 6E00      00627         MOVWF   r0x04
+0114 0E80      00628         MOVLW   0x80
+0116 6E00      00629         MOVWF   r0x06
+0118 0E00      00630         MOVLW   0x00
+011A 6EE5      00631         MOVWF   POSTDEC1
+011C 0E0F      00632         MOVLW   0x0f
+011E 6EE5      00633         MOVWF   POSTDEC1
+0120 0E00      00634         MOVLW   UPPER(__str_0)
+0122 6EE5      00635         MOVWF   POSTDEC1
+0124 0E00      00636         MOVLW   HIGH(__str_0)
+0126 6EE5      00637         MOVWF   POSTDEC1
+0128 0E00      00638         MOVLW   LOW(__str_0)
+012A 6EE5      00639         MOVWF   POSTDEC1
+012C 5000      00640         MOVF    r0x06, W
+012E 6EE5      00641         MOVWF   POSTDEC1
+0130 5000      00642         MOVF    r0x05, W
+0132 6EE5      00643         MOVWF   POSTDEC1
+0134 5000      00644         MOVF    r0x04, W
+0136 6EE5      00645         MOVWF   POSTDEC1
+0138 EC00 F000 00646         CALL    _memcpy
+013C 0E08      00647         MOVLW   0x08
+013E 26E1      00648         ADDWF   FSR1L, F
+gpasm-0.13.7 beta               Objects/PingDemo.asm12-15-2009  23:56:59         PAGE 13
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00649 ;       .line   148; PingDemo.c LCDUpdate();
+0140 EC00 F000 00650         CALL    _LCDUpdate
+0144 0000      00651         BANKSEL _PingDemo_PingState_1_1
+               00652 ;       .line   150; PingDemo.c PingState = SM_HOME;
+0146 6B00      00653         CLRF    _PingDemo_PingState_1_1, B
+0148 D000      00654         BRA     _00121_DS_
+014A 00655 _00117_DS_:
+               00656 ;       .line   152; PingDemo.c else if(ret == -3)
+014A 5000      00657         MOVF    r0x00, W
+014C 0AFD      00658         XORLW   0xfd
+014E E100      00659         BNZ     _00142_DS_
+0150 5000      00660         MOVF    r0x01, W
+0152 0AFF      00661         XORLW   0xff
+0154 E100      00662         BNZ     _00142_DS_
+0156 5000      00663         MOVF    r0x02, W
+0158 0AFF      00664         XORLW   0xff
+015A E100      00665         BNZ     _00142_DS_
+015C 5000      00666         MOVF    r0x03, W
+015E 0AFF      00667         XORLW   0xff
+0160 E000      00668         BZ      _00143_DS_
+0162 00669 _00142_DS_:
+0162 D000      00670         BRA     _00114_DS_
+0164 00671 _00143_DS_:
+               00672 ;       .line   157; PingDemo.c memcpy((void*)&LCDText[16], ( void *)"Can't resolve IP", 16);
+0164 0E00      00673         MOVLW   HIGH(_LCDText + 16)
+0166 6E00      00674         MOVWF   r0x05
+0168 0E00      00675         MOVLW   LOW(_LCDText + 16)
+016A 6E00      00676         MOVWF   r0x04
+016C 0E80      00677         MOVLW   0x80
+016E 6E00      00678         MOVWF   r0x06
+0170 0E00      00679         MOVLW   0x00
+0172 6EE5      00680         MOVWF   POSTDEC1
+0174 0E10      00681         MOVLW   0x10
+0176 6EE5      00682         MOVWF   POSTDEC1
+0178 0E00      00683         MOVLW   UPPER(__str_1)
+017A 6EE5      00684         MOVWF   POSTDEC1
+017C 0E00      00685         MOVLW   HIGH(__str_1)
+017E 6EE5      00686         MOVWF   POSTDEC1
+0180 0E00      00687         MOVLW   LOW(__str_1)
+0182 6EE5      00688         MOVWF   POSTDEC1
+0184 5000      00689         MOVF    r0x06, W
+0186 6EE5      00690         MOVWF   POSTDEC1
+0188 5000      00691         MOVF    r0x05, W
+018A 6EE5      00692         MOVWF   POSTDEC1
+018C 5000      00693         MOVF    r0x04, W
+018E 6EE5      00694         MOVWF   POSTDEC1
+0190 EC00 F000 00695         CALL    _memcpy
+0194 0E08      00696         MOVLW   0x08
+0196 26E1      00697         ADDWF   FSR1L, F
+               00698 ;       .line   158; PingDemo.c LCDUpdate();
+0198 EC00 F000 00699         CALL    _LCDUpdate
+019C 0000      00700         BANKSEL _PingDemo_PingState_1_1
+               00701 ;       .line   160; PingDemo.c PingState = SM_HOME;
+019E 6B00      00702         CLRF    _PingDemo_PingState_1_1, B
+gpasm-0.13.7 beta               Objects/PingDemo.asm12-15-2009  23:56:59         PAGE 14
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+01A0 D000      00703         BRA     _00121_DS_
+01A2 00704 _00114_DS_:
+               00705 ;       .line   167; PingDemo.c memcpy((void*)&LCDText[16], ( void *)"Reply: ", 7);
+01A2 0E00      00706         MOVLW   HIGH(_LCDText + 16)
+01A4 6E00      00707         MOVWF   r0x05
+01A6 0E00      00708         MOVLW   LOW(_LCDText + 16)
+01A8 6E00      00709         MOVWF   r0x04
+01AA 0E80      00710         MOVLW   0x80
+01AC 6E00      00711         MOVWF   r0x06
+01AE 0E00      00712         MOVLW   0x00
+01B0 6EE5      00713         MOVWF   POSTDEC1
+01B2 0E07      00714         MOVLW   0x07
+01B4 6EE5      00715         MOVWF   POSTDEC1
+01B6 0E00      00716         MOVLW   UPPER(__str_2)
+01B8 6EE5      00717         MOVWF   POSTDEC1
+01BA 0E00      00718         MOVLW   HIGH(__str_2)
+01BC 6EE5      00719         MOVWF   POSTDEC1
+01BE 0E00      00720         MOVLW   LOW(__str_2)
+01C0 6EE5      00721         MOVWF   POSTDEC1
+01C2 5000      00722         MOVF    r0x06, W
+01C4 6EE5      00723         MOVWF   POSTDEC1
+01C6 5000      00724         MOVF    r0x05, W
+01C8 6EE5      00725         MOVWF   POSTDEC1
+01CA 5000      00726         MOVF    r0x04, W
+01CC 6EE5      00727         MOVWF   POSTDEC1
+01CE EC00 F000 00728         CALL    _memcpy
+01D2 0E08      00729         MOVLW   0x08
+01D4 26E1      00730         ADDWF   FSR1L, F
+               00731 ;       .line   169; PingDemo.c uitoa((WORD)TickConvertToMilliseconds((DWORD)ret), &LCDText[16+7],10);
+01D6 5000      00732         MOVF    r0x03, W
+01D8 6EE5      00733         MOVWF   POSTDEC1
+01DA 5000      00734         MOVF    r0x02, W
+01DC 6EE5      00735         MOVWF   POSTDEC1
+01DE 5000      00736         MOVF    r0x01, W
+01E0 6EE5      00737         MOVWF   POSTDEC1
+01E2 5000      00738         MOVF    r0x00, W
+01E4 6EE5      00739         MOVWF   POSTDEC1
+01E6 EC00 F000 00740         CALL    _TickConvertToMilliseconds
+01EA 6E00      00741         MOVWF   r0x00
+01EC CFF3 F000 00742         MOVFF   PRODL, r0x01
+01F0 CFF4 F000 00743         MOVFF   PRODH, r0x02
+01F4 CFE9 F000 00744         MOVFF   FSR0L, r0x03
+01F8 0E04      00745         MOVLW   0x04
+01FA 26E1      00746         ADDWF   FSR1L, F
+01FC 0E0A      00747         MOVLW   0x0a
+01FE 6EE5      00748         MOVWF   POSTDEC1
+0200 0E00      00749         MOVLW   HIGH(_LCDText + 23)
+0202 6EE5      00750         MOVWF   POSTDEC1
+0204 0E00      00751         MOVLW   LOW(_LCDText + 23)
+0206 6EE5      00752         MOVWF   POSTDEC1
+0208 5000      00753         MOVF    r0x01, W
+020A 6EE5      00754         MOVWF   POSTDEC1
+020C 5000      00755         MOVF    r0x00, W
+020E 6EE5      00756         MOVWF   POSTDEC1
+gpasm-0.13.7 beta               Objects/PingDemo.asm12-15-2009  23:56:59         PAGE 15
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0210 EC00 F000 00757         CALL    _uitoa
+0214 0E05      00758         MOVLW   0x05
+0216 26E1      00759         ADDWF   FSR1L, F
+               00760 ;       .line   171; PingDemo.c strcat((char*)&LCDText[16+7], ( char*)"ms");
+0218 0E00      00761         MOVLW   HIGH(_LCDText + 23)
+021A 6E00      00762         MOVWF   r0x01
+021C 0E00      00763         MOVLW   LOW(_LCDText + 23)
+021E 6E00      00764         MOVWF   r0x00
+0220 0E80      00765         MOVLW   0x80
+0222 6E00      00766         MOVWF   r0x02
+0224 0E00      00767         MOVLW   UPPER(__str_3)
+0226 6EE5      00768         MOVWF   POSTDEC1
+0228 0E00      00769         MOVLW   HIGH(__str_3)
+022A 6EE5      00770         MOVWF   POSTDEC1
+022C 0E00      00771         MOVLW   LOW(__str_3)
+022E 6EE5      00772         MOVWF   POSTDEC1
+0230 5000      00773         MOVF    r0x02, W
+0232 6EE5      00774         MOVWF   POSTDEC1
+0234 5000      00775         MOVF    r0x01, W
+0236 6EE5      00776         MOVWF   POSTDEC1
+0238 5000      00777         MOVF    r0x00, W
+023A 6EE5      00778         MOVWF   POSTDEC1
+023C EC00 F000 00779         CALL    _strcat
+0240 0E06      00780         MOVLW   0x06
+0242 26E1      00781         ADDWF   FSR1L, F
+               00782 ;       .line   172; PingDemo.c LCDUpdate();
+0244 EC00 F000 00783         CALL    _LCDUpdate
+0248 0000      00784         BANKSEL _PingDemo_PingState_1_1
+               00785 ;       .line   174; PingDemo.c PingState = SM_HOME;
+024A 6B00      00786         CLRF    _PingDemo_PingState_1_1, B
+024C 00787 _00121_DS_:
+               00788 ;       .line   178; PingDemo.c ICMPEndUsage();
+024C EC00 F000 00789         CALL    _ICMPEndUsage
+0250 00790 _00123_DS_:
+               00791 ;       .line   180; PingDemo.c }
+0250 CFE4 F000 00792         MOVFF   PREINC1, r0x06
+0254 CFE4 F000 00793         MOVFF   PREINC1, r0x05
+0258 CFE4 F000 00794         MOVFF   PREINC1, r0x04
+025C CFE4 F000 00795         MOVFF   PREINC1, r0x03
+0260 CFE4 F000 00796         MOVFF   PREINC1, r0x02
+0264 CFE4 F000 00797         MOVFF   PREINC1, r0x01
+0268 CFE4 F000 00798         MOVFF   PREINC1, r0x00
+026C CFE4 FFD9 00799         MOVFF   PREINC1, FSR2L
+0270 0012      00800         RETURN  
+               00801 
+               00802 ; ; Starting pCode block
+0272 00803 __str_0:
+0272 6950 676E 00804         DB      0x50, 0x69, 0x6e, 0x67, 0x20, 0x74, 0x69, 0x6d, 0x65, 0x64, 0x20, 0x6f
+     7420 6D69 
+     6465 6F20 
+027E 7475 0000 00805         DB      0x75, 0x74, 0x00
+               00806 ; ; Starting pCode block
+0282 00807 __str_1:
+0282 6143 276E 00808         DB      0x43, 0x61, 0x6e, 0x27, 0x74, 0x20, 0x72, 0x65, 0x73, 0x6f, 0x6c, 0x76
+gpasm-0.13.7 beta               Objects/PingDemo.asm12-15-2009  23:56:59         PAGE 16
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+     2074 6572 
+     6F73 766C 
+028E 2065 5049 00809         DB      0x65, 0x20, 0x49, 0x50, 0x00
+     0000      
+               00810 ; ; Starting pCode block
+0294 00811 __str_2:
+0294 6552 6C70 00812         DB      0x52, 0x65, 0x70, 0x6c, 0x79, 0x3a, 0x20, 0x00
+     3A79 0020 
+               00813 ; ; Starting pCode block
+029C 00814 __str_3:
+029C 736D 0000 00815         DB      0x6d, 0x73, 0x00
+               00816 
+               00817 
+               00818 ; Statistics:
+               00819 ; code size:      638 (0x027e) bytes ( 0.49%)
+               00820 ;                 319 (0x013f) words
+               00821 ; udata size:       4 (0x0004) bytes ( 0.10%)
+               00822 ; access size:      7 (0x0007) bytes
+               00823 
+               00824 
+gpasm-0.13.7 beta               Objects/PingDemo.asm12-15-2009  23:56:59         PAGE 17
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+FSR0L                             00000FE9
+FSR1L                             00000FE1
+FSR2L                             00000FD9
+POSTDEC1                          00000FE5
+PREINC1                           00000FE4
+PRODH                             00000FF4
+PRODL                             00000FF3
+STATUS                            00000FD8
+_00105_DS_                        00000036
+_00112_DS_                        000000C6
+_00114_DS_                        000001A2
+_00117_DS_                        0000014A
+_00121_DS_                        0000024C
+_00123_DS_                        00000250
+_00134_DS_                        0000002A
+_00136_DS_                        00000034
+_00137_DS_                        0000007A
+_00139_DS_                        000000F2
+_00140_DS_                        0000010A
+_00141_DS_                        0000010C
+_00142_DS_                        00000162
+_00143_DS_                        00000164
+_ADCON0                           00000000
+_ADCON0bits                       00000000
+_ADCON1                           00000000
+_ADCON1bits                       00000000
+_ADCON2                           00000000
+_ADCON2bits                       00000000
+_ADRES                            00000000
+_ADRESH                           00000000
+_ADRESL                           00000000
+_AN0String                        00000000
+_AppConfig                        00000000
+_BAUDCON                          00000000
+_BAUDCON1                         00000000
+_BAUDCON1bits                     00000000
+_BAUDCON2                         00000000
+_BAUDCON2bits                     00000000
+_BAUDCONbits                      00000000
+_BAUDCTL                          00000000
+_BAUDCTL1                         00000000
+_BAUDCTL1bits                     00000000
+_BAUDCTL2                         00000000
+_BAUDCTL2bits                     00000000
+_BAUDCTLbits                      00000000
+_BSR                              00000000
+_CCP1CON                          00000000
+_CCP1CONbits                      00000000
+_CCP2CON                          00000000
+_CCP2CONbits                      00000000
+_CCP3CON                          00000000
+_CCP3CONbits                      00000000
+_CCP4CON                          00000000
+gpasm-0.13.7 beta               Objects/PingDemo.asm12-15-2009  23:56:59         PAGE 18
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_CCP4CONbits                      00000000
+_CCP5CON                          00000000
+_CCP5CONbits                      00000000
+_CCPR1                            00000000
+_CCPR1H                           00000000
+_CCPR1L                           00000000
+_CCPR2                            00000000
+_CCPR2H                           00000000
+_CCPR2L                           00000000
+_CCPR3                            00000000
+_CCPR3H                           00000000
+_CCPR3L                           00000000
+_CCPR4                            00000000
+_CCPR4H                           00000000
+_CCPR4L                           00000000
+_CCPR5                            00000000
+_CCPR5H                           00000000
+_CCPR5L                           00000000
+_CMCON                            00000000
+_CMCONbits                        00000000
+_CVRCON                           00000000
+_CVRCONbits                       00000000
+_DDRA                             00000000
+_DDRAbits                         00000000
+_DDRB                             00000000
+_DDRBbits                         00000000
+_DDRC                             00000000
+_DDRCbits                         00000000
+_DDRD                             00000000
+_DDRDbits                         00000000
+_DDRE                             00000000
+_DDREbits                         00000000
+_DDRF                             00000000
+_DDRFbits                         00000000
+_DDRG                             00000000
+_DDRGbits                         00000000
+_DDRH                             00000000
+_DDRHbits                         00000000
+_DDRJ                             00000000
+_DDRJbits                         00000000
+_EBSTCON                          00000000
+_EBSTCONbits                      00000000
+_EBSTCS                           00000000
+_EBSTCSH                          00000000
+_EBSTCSL                          00000000
+_EBSTSD                           00000000
+_ECCP1AS                          00000000
+_ECCP1ASbits                      00000000
+_ECCP1CON                         00000000
+_ECCP1CONbits                     00000000
+_ECCP1DEL                         00000000
+_ECCP1DELbits                     00000000
+_ECCP2AS                          00000000
+_ECCP2ASbits                      00000000
+gpasm-0.13.7 beta               Objects/PingDemo.asm12-15-2009  23:56:59         PAGE 19
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_ECCP2CON                         00000000
+_ECCP2CONbits                     00000000
+_ECCP2DEL                         00000000
+_ECCP2DELbits                     00000000
+_ECCP3AS                          00000000
+_ECCP3ASbits                      00000000
+_ECCP3CON                         00000000
+_ECCP3CONbits                     00000000
+_ECCP3DEL                         00000000
+_ECCP3DELbits                     00000000
+_ECON1                            00000000
+_ECON1bits                        00000000
+_ECON2                            00000000
+_ECON2bits                        00000000
+_EDATA                            00000000
+_EDATAbits                        00000000
+_EDMACS                           00000000
+_EDMACSH                          00000000
+_EDMACSL                          00000000
+_EDMADST                          00000000
+_EDMADSTH                         00000000
+_EDMADSTL                         00000000
+_EDMAND                           00000000
+_EDMANDH                          00000000
+_EDMANDL                          00000000
+_EDMAST                           00000000
+_EDMASTH                          00000000
+_EDMASTL                          00000000
+_EECON1                           00000000
+_EECON1bits                       00000000
+_EECON2                           00000000
+_EFLOCON                          00000000
+_EFLOCONbits                      00000000
+_EHT0                             00000000
+_EHT1                             00000000
+_EHT2                             00000000
+_EHT3                             00000000
+_EHT4                             00000000
+_EHT5                             00000000
+_EHT6                             00000000
+_EHT7                             00000000
+_EIE                              00000000
+_EIEbits                          00000000
+_EIR                              00000000
+_EIRbits                          00000000
+_EPAUS                            00000000
+_EPAUSH                           00000000
+_EPAUSL                           00000000
+_EPKTCNT                          00000000
+_EPMCS                            00000000
+_EPMCSH                           00000000
+_EPMCSL                           00000000
+_EPMM0                            00000000
+_EPMM1                            00000000
+gpasm-0.13.7 beta               Objects/PingDemo.asm12-15-2009  23:56:59         PAGE 20
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_EPMM2                            00000000
+_EPMM3                            00000000
+_EPMM4                            00000000
+_EPMM5                            00000000
+_EPMM6                            00000000
+_EPMM7                            00000000
+_EPMO                             00000000
+_EPMOH                            00000000
+_EPMOL                            00000000
+_ERDPT                            00000000
+_ERDPTH                           00000000
+_ERDPTL                           00000000
+_ERXFCON                          00000000
+_ERXFCONbits                      00000000
+_ERXND                            00000000
+_ERXNDH                           00000000
+_ERXNDL                           00000000
+_ERXRDPT                          00000000
+_ERXRDPTH                         00000000
+_ERXRDPTL                         00000000
+_ERXST                            00000000
+_ERXSTH                           00000000
+_ERXSTL                           00000000
+_ERXWRPT                          00000000
+_ERXWRPTH                         00000000
+_ERXWRPTL                         00000000
+_ESTAT                            00000000
+_ESTATbits                        00000000
+_ETXND                            00000000
+_ETXNDH                           00000000
+_ETXNDL                           00000000
+_ETXST                            00000000
+_ETXSTH                           00000000
+_ETXSTL                           00000000
+_EWOLIE                           00000000
+_EWOLIEbits                       00000000
+_EWOLIR                           00000000
+_EWOLIRbits                       00000000
+_EWRPT                            00000000
+_EWRPTH                           00000000
+_EWRPTL                           00000000
+_FSR0H                            00000000
+_FSR0L                            00000000
+_FSR1H                            00000000
+_FSR1L                            00000000
+_FSR2H                            00000000
+_FSR2L                            00000000
+_ICMPBeginUsage                   00000000
+_ICMPEndUsage                     00000000
+_ICMPGetReply                     00000000
+_ICMPSendPing                     00000000
+_INDF0                            00000000
+_INDF1                            00000000
+_INDF2                            00000000
+gpasm-0.13.7 beta               Objects/PingDemo.asm12-15-2009  23:56:59         PAGE 21
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_INTCON                           00000000
+_INTCON2                          00000000
+_INTCON2bits                      00000000
+_INTCON3                          00000000
+_INTCON3bits                      00000000
+_INTCONbits                       00000000
+_IPR1                             00000000
+_IPR1bits                         00000000
+_IPR2                             00000000
+_IPR2bits                         00000000
+_IPR3                             00000000
+_IPR3bits                         00000000
+_LATA                             00000000
+_LATAbits                         00000000
+_LATB                             00000000
+_LATBbits                         00000000
+_LATC                             00000000
+_LATCbits                         00000000
+_LATD                             00000000
+_LATDbits                         00000000
+_LATE                             00000000
+_LATEbits                         00000000
+_LATF                             00000000
+_LATFbits                         00000000
+_LATG                             00000000
+_LATGbits                         00000000
+_LATH                             00000000
+_LATHbits                         00000000
+_LATJ                             00000000
+_LATJbits                         00000000
+_LCDText                          00000000
+_LCDUpdate                        00000000
+_MAADR1                           00000000
+_MAADR2                           00000000
+_MAADR3                           00000000
+_MAADR4                           00000000
+_MAADR5                           00000000
+_MAADR6                           00000000
+_MABBIPG                          00000000
+_MACLCON1                         00000000
+_MACLCON1bits                     00000000
+_MACLCON2                         00000000
+_MACLCON2bits                     00000000
+_MACON1                           00000000
+_MACON1bits                       00000000
+_MACON2                           00000000
+_MACON2bits                       00000000
+_MACON3                           00000000
+_MACON3bits                       00000000
+_MACON4                           00000000
+_MACON4bits                       00000000
+_MAIPG                            00000000
+_MAIPGH                           00000000
+_MAIPGL                           00000000
+gpasm-0.13.7 beta               Objects/PingDemo.asm12-15-2009  23:56:59         PAGE 22
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_MAMXFL                           00000000
+_MAMXFLH                          00000000
+_MAMXFLL                          00000000
+_MEMCON                           00000000
+_MEMCONbits                       00000000
+_MICMD                            00000000
+_MICMDbits                        00000000
+_MICON                            00000000
+_MICONbits                        00000000
+_MIRD                             00000000
+_MIRDH                            00000000
+_MIRDL                            00000000
+_MIREGADR                         00000000
+_MISTAT                           00000000
+_MISTATbits                       00000000
+_MIWR                             00000000
+_MIWRH                            00000000
+_MIWRL                            00000000
+_OSCCON                           00000000
+_OSCCONbits                       00000000
+_OSCTUNE                          00000000
+_OSCTUNEbits                      00000000
+_PC                               00000000
+_PCL                              00000000
+_PCLATH                           00000000
+_PCLATU                           00000000
+_PIE1                             00000000
+_PIE1bits                         00000000
+_PIE2                             00000000
+_PIE2bits                         00000000
+_PIE3                             00000000
+_PIE3bits                         00000000
+_PIR1                             00000000
+_PIR1bits                         00000000
+_PIR2                             00000000
+_PIR2bits                         00000000
+_PIR3                             00000000
+_PIR3bits                         00000000
+_PLUSW0                           00000000
+_PLUSW1                           00000000
+_PLUSW2                           00000000
+_PORTA                            00000000
+_PORTAbits                        00000000
+_PORTB                            00000000
+_PORTBbits                        00000000
+_PORTC                            00000000
+_PORTCbits                        00000000
+_PORTD                            00000000
+_PORTDbits                        00000000
+_PORTE                            00000000
+_PORTEbits                        00000000
+_PORTF                            00000000
+_PORTFbits                        00000000
+_PORTG                            00000000
+gpasm-0.13.7 beta               Objects/PingDemo.asm12-15-2009  23:56:59         PAGE 23
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_PORTGbits                        00000000
+_PORTH                            00000000
+_PORTHbits                        00000000
+_PORTJ                            00000000
+_PORTJbits                        00000000
+_POSTDEC0                         00000000
+_POSTDEC1                         00000000
+_POSTDEC2                         00000000
+_POSTINC0                         00000000
+_POSTINC1                         00000000
+_POSTINC2                         00000000
+_PR2                              00000000
+_PR4                              00000000
+_PREINC0                          00000000
+_PREINC1                          00000000
+_PREINC2                          00000000
+_PROD                             00000000
+_PRODH                            00000000
+_PRODL                            00000000
+_PSPCON                           00000000
+_PSPCONbits                       00000000
+_PingDemo                         00000000
+_PingDemo_PingState_1_1           00000000
+_PingDemo_Timer_1_1               00000000
+_RCON                             00000000
+_RCONbits                         00000000
+_RCREG                            00000000
+_RCREG1                           00000000
+_RCREG2                           00000000
+_RCSTA                            00000000
+_RCSTA1                           00000000
+_RCSTA1bits                       00000000
+_RCSTA2                           00000000
+_RCSTA2bits                       00000000
+_RCSTAbits                        00000000
+_SPBRG                            00000000
+_SPBRG1                           00000000
+_SPBRG2                           00000000
+_SPBRGH                           00000000
+_SPBRGH1                          00000000
+_SPBRGH2                          00000000
+_SSP1ADD                          00000000
+_SSP1BUF                          00000000
+_SSP1CON1                         00000000
+_SSP1CON1bits                     00000000
+_SSP1CON2                         00000000
+_SSP1CON2bits                     00000000
+_SSP1STAT                         00000000
+_SSP1STATbits                     00000000
+_SSP2ADD                          00000000
+_SSP2BUF                          00000000
+_SSP2CON1                         00000000
+_SSP2CON1bits                     00000000
+_SSP2CON2                         00000000
+gpasm-0.13.7 beta               Objects/PingDemo.asm12-15-2009  23:56:59         PAGE 24
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_SSP2CON2bits                     00000000
+_SSP2STAT                         00000000
+_SSP2STATbits                     00000000
+_SSPADD                           00000000
+_SSPBUF                           00000000
+_SSPCON1                          00000000
+_SSPCON1bits                      00000000
+_SSPCON2                          00000000
+_SSPCON2bits                      00000000
+_SSPSTAT                          00000000
+_SSPSTATbits                      00000000
+_STATUS                           00000000
+_STATUSbits                       00000000
+_STKPTR                           00000000
+_STKPTRbits                       00000000
+_T0CON                            00000000
+_T0CONbits                        00000000
+_T1CON                            00000000
+_T1CONbits                        00000000
+_T2CON                            00000000
+_T2CONbits                        00000000
+_T3CON                            00000000
+_T3CONbits                        00000000
+_T4CON                            00000000
+_T4CONbits                        00000000
+_TABLAT                           00000000
+_TBLPTR                           00000000
+_TBLPTRH                          00000000
+_TBLPTRL                          00000000
+_TBLPTRU                          00000000
+_TMR0H                            00000000
+_TMR0L                            00000000
+_TMR1H                            00000000
+_TMR1L                            00000000
+_TMR2                             00000000
+_TMR3H                            00000000
+_TMR3L                            00000000
+_TMR4                             00000000
+_TOS                              00000000
+_TOSH                             00000000
+_TOSL                             00000000
+_TOSU                             00000000
+_TRISA                            00000000
+_TRISAbits                        00000000
+_TRISB                            00000000
+_TRISBbits                        00000000
+_TRISC                            00000000
+_TRISCbits                        00000000
+_TRISD                            00000000
+_TRISDbits                        00000000
+_TRISE                            00000000
+_TRISEbits                        00000000
+_TRISF                            00000000
+_TRISFbits                        00000000
+gpasm-0.13.7 beta               Objects/PingDemo.asm12-15-2009  23:56:59         PAGE 25
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_TRISG                            00000000
+_TRISGbits                        00000000
+_TRISH                            00000000
+_TRISHbits                        00000000
+_TRISJ                            00000000
+_TRISJbits                        00000000
+_TXREG                            00000000
+_TXREG1                           00000000
+_TXREG2                           00000000
+_TXSTA                            00000000
+_TXSTA1                           00000000
+_TXSTA1bits                       00000000
+_TXSTA2                           00000000
+_TXSTA2bits                       00000000
+_TXSTAbits                        00000000
+_TickConvertToMilliseconds        00000000
+_TickGet                          00000000
+_UDPRxCount                       00000000
+_UDPSocketInfo                    00000000
+_UDPTxCount                       00000000
+_WDTCON                           00000000
+_WDTCONbits                       00000000
+_WREG                             00000000
+__18F97J60                        00000001
+__str_0                           00000272
+__str_1                           00000282
+__str_2                           00000294
+__str_3                           0000029C
+_activeUDPSocket                  00000000
+_memcpy                           00000000
+_stdin                            00000000
+_stdout                           00000000
+_strcat                           00000000
+_uitoa                            00000000
+r0x00                             00000000
+r0x01                             00000001
+r0x02                             00000002
+r0x03                             00000003
+r0x04                             00000004
+r0x05                             00000005
+r0x06                             00000006
+
+
+Errors   :       0
+Warnings :       0 reported,       0 suppressed
+Messages :       0 reported,       0 suppressed
+

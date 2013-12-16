@@ -1,0 +1,1995 @@
+gpasm-0.13.7 beta               Objects/BerkeleyUDPClientDemo.asm12-16-2009  00:27:12         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00001 ;--------------------------------------------------------
+               00002 ; File Created by SDCC : free open source ANSI-C Compiler
+               00003 ; Version 2.9.4 #5582 (Dec  9 2009) (UNIX)
+               00004 ; This file was generated Wed Dec 16 00:27:12 2009
+               00005 ;--------------------------------------------------------
+               00006 ; PIC16 port for the Microchip 16-bit core micros
+               00007 ;--------------------------------------------------------
+               00008         list    p=18f97j60
+               00009 
+               00010         radix dec
+               00011 
+               00012 ;--------------------------------------------------------
+               00013 ; public variables in this module
+               00014 ;--------------------------------------------------------
+               00015         global _BerkeleyUDPClientDemo
+               00016         global _BerkeleySNTPGetUTCSeconds
+               00017 
+               00018 ;--------------------------------------------------------
+               00019 ; extern variables in this module
+               00020 ;--------------------------------------------------------
+               00021         extern _EBSTCONbits
+               00022         extern _MISTATbits
+               00023         extern _EFLOCONbits
+               00024         extern _MACON1bits
+               00025         extern _MACON2bits
+               00026         extern _MACON3bits
+               00027         extern _MACON4bits
+               00028         extern _MACLCON1bits
+               00029         extern _MACLCON2bits
+               00030         extern _MICONbits
+               00031         extern _MICMDbits
+               00032         extern _EWOLIEbits
+               00033         extern _EWOLIRbits
+               00034         extern _ERXFCONbits
+               00035         extern _EIEbits
+               00036         extern _ESTATbits
+               00037         extern _ECON2bits
+               00038         extern _EIRbits
+               00039         extern _EDATAbits
+               00040         extern _SSP2CON2bits
+               00041         extern _SSP2CON1bits
+               00042         extern _SSP2STATbits
+               00043         extern _ECCP2DELbits
+               00044         extern _ECCP2ASbits
+               00045         extern _ECCP3DELbits
+               00046         extern _ECCP3ASbits
+               00047         extern _RCSTA2bits
+               00048         extern _TXSTA2bits
+               00049         extern _CCP5CONbits
+               00050         extern _CCP4CONbits
+               00051         extern _T4CONbits
+               00052         extern _ECCP1DELbits
+               00053         extern _BAUDCON2bits
+               00054         extern _BAUDCTL2bits
+gpasm-0.13.7 beta               Objects/BerkeleyUDPClientDemo.asm12-16-2009  00:27:12         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00055         extern _BAUDCONbits
+               00056         extern _BAUDCON1bits
+               00057         extern _BAUDCTLbits
+               00058         extern _BAUDCTL1bits
+               00059         extern _PORTAbits
+               00060         extern _PORTBbits
+               00061         extern _PORTCbits
+               00062         extern _PORTDbits
+               00063         extern _PORTEbits
+               00064         extern _PORTFbits
+               00065         extern _PORTGbits
+               00066         extern _PORTHbits
+               00067         extern _PORTJbits
+               00068         extern _LATAbits
+               00069         extern _LATBbits
+               00070         extern _LATCbits
+               00071         extern _LATDbits
+               00072         extern _LATEbits
+               00073         extern _LATFbits
+               00074         extern _LATGbits
+               00075         extern _LATHbits
+               00076         extern _LATJbits
+               00077         extern _DDRAbits
+               00078         extern _TRISAbits
+               00079         extern _DDRBbits
+               00080         extern _TRISBbits
+               00081         extern _DDRCbits
+               00082         extern _TRISCbits
+               00083         extern _DDRDbits
+               00084         extern _TRISDbits
+               00085         extern _DDREbits
+               00086         extern _TRISEbits
+               00087         extern _DDRFbits
+               00088         extern _TRISFbits
+               00089         extern _DDRGbits
+               00090         extern _TRISGbits
+               00091         extern _DDRHbits
+               00092         extern _TRISHbits
+               00093         extern _DDRJbits
+               00094         extern _TRISJbits
+               00095         extern _OSCTUNEbits
+               00096         extern _MEMCONbits
+               00097         extern _PIE1bits
+               00098         extern _PIR1bits
+               00099         extern _IPR1bits
+               00100         extern _PIE2bits
+               00101         extern _PIR2bits
+               00102         extern _IPR2bits
+               00103         extern _PIE3bits
+               00104         extern _PIR3bits
+               00105         extern _IPR3bits
+               00106         extern _EECON1bits
+               00107         extern _RCSTAbits
+               00108         extern _RCSTA1bits
+gpasm-0.13.7 beta               Objects/BerkeleyUDPClientDemo.asm12-16-2009  00:27:12         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00109         extern _TXSTAbits
+               00110         extern _TXSTA1bits
+               00111         extern _PSPCONbits
+               00112         extern _T3CONbits
+               00113         extern _CMCONbits
+               00114         extern _CVRCONbits
+               00115         extern _ECCP1ASbits
+               00116         extern _CCP3CONbits
+               00117         extern _ECCP3CONbits
+               00118         extern _CCP2CONbits
+               00119         extern _ECCP2CONbits
+               00120         extern _CCP1CONbits
+               00121         extern _ECCP1CONbits
+               00122         extern _ADCON2bits
+               00123         extern _ADCON1bits
+               00124         extern _ADCON0bits
+               00125         extern _SSP1CON2bits
+               00126         extern _SSPCON2bits
+               00127         extern _SSP1CON1bits
+               00128         extern _SSPCON1bits
+               00129         extern _SSP1STATbits
+               00130         extern _SSPSTATbits
+               00131         extern _T2CONbits
+               00132         extern _T1CONbits
+               00133         extern _RCONbits
+               00134         extern _WDTCONbits
+               00135         extern _ECON1bits
+               00136         extern _OSCCONbits
+               00137         extern _T0CONbits
+               00138         extern _STATUSbits
+               00139         extern _INTCON3bits
+               00140         extern _INTCON2bits
+               00141         extern _INTCONbits
+               00142         extern _STKPTRbits
+               00143         extern _stdin
+               00144         extern _stdout
+               00145         extern _AppConfig
+               00146         extern _activeUDPSocket
+               00147         extern _UDPSocketInfo
+               00148         extern _UDPTxCount
+               00149         extern _UDPRxCount
+               00150         extern _LCDText
+               00151         extern _MAADR5
+               00152         extern _MAADR6
+               00153         extern _MAADR3
+               00154         extern _MAADR4
+               00155         extern _MAADR1
+               00156         extern _MAADR2
+               00157         extern _EBSTSD
+               00158         extern _EBSTCON
+               00159         extern _EBSTCS
+               00160         extern _EBSTCSL
+               00161         extern _EBSTCSH
+               00162         extern _MISTAT
+gpasm-0.13.7 beta               Objects/BerkeleyUDPClientDemo.asm12-16-2009  00:27:12         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00163         extern _EFLOCON
+               00164         extern _EPAUS
+               00165         extern _EPAUSL
+               00166         extern _EPAUSH
+               00167         extern _MACON1
+               00168         extern _MACON2
+               00169         extern _MACON3
+               00170         extern _MACON4
+               00171         extern _MABBIPG
+               00172         extern _MAIPG
+               00173         extern _MAIPGL
+               00174         extern _MAIPGH
+               00175         extern _MACLCON1
+               00176         extern _MACLCON2
+               00177         extern _MAMXFL
+               00178         extern _MAMXFLL
+               00179         extern _MAMXFLH
+               00180         extern _MICON
+               00181         extern _MICMD
+               00182         extern _MIREGADR
+               00183         extern _MIWR
+               00184         extern _MIWRL
+               00185         extern _MIWRH
+               00186         extern _MIRD
+               00187         extern _MIRDL
+               00188         extern _MIRDH
+               00189         extern _EHT0
+               00190         extern _EHT1
+               00191         extern _EHT2
+               00192         extern _EHT3
+               00193         extern _EHT4
+               00194         extern _EHT5
+               00195         extern _EHT6
+               00196         extern _EHT7
+               00197         extern _EPMM0
+               00198         extern _EPMM1
+               00199         extern _EPMM2
+               00200         extern _EPMM3
+               00201         extern _EPMM4
+               00202         extern _EPMM5
+               00203         extern _EPMM6
+               00204         extern _EPMM7
+               00205         extern _EPMCS
+               00206         extern _EPMCSL
+               00207         extern _EPMCSH
+               00208         extern _EPMO
+               00209         extern _EPMOL
+               00210         extern _EPMOH
+               00211         extern _EWOLIE
+               00212         extern _EWOLIR
+               00213         extern _ERXFCON
+               00214         extern _EPKTCNT
+               00215         extern _EWRPT
+               00216         extern _EWRPTL
+gpasm-0.13.7 beta               Objects/BerkeleyUDPClientDemo.asm12-16-2009  00:27:12         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00217         extern _EWRPTH
+               00218         extern _ETXST
+               00219         extern _ETXSTL
+               00220         extern _ETXSTH
+               00221         extern _ETXND
+               00222         extern _ETXNDL
+               00223         extern _ETXNDH
+               00224         extern _ERXST
+               00225         extern _ERXSTL
+               00226         extern _ERXSTH
+               00227         extern _ERXND
+               00228         extern _ERXNDL
+               00229         extern _ERXNDH
+               00230         extern _ERXRDPT
+               00231         extern _ERXRDPTL
+               00232         extern _ERXRDPTH
+               00233         extern _ERXWRPT
+               00234         extern _ERXWRPTL
+               00235         extern _ERXWRPTH
+               00236         extern _EDMAST
+               00237         extern _EDMASTL
+               00238         extern _EDMASTH
+               00239         extern _EDMAND
+               00240         extern _EDMANDL
+               00241         extern _EDMANDH
+               00242         extern _EDMADST
+               00243         extern _EDMADSTL
+               00244         extern _EDMADSTH
+               00245         extern _EDMACS
+               00246         extern _EDMACSL
+               00247         extern _EDMACSH
+               00248         extern _EIE
+               00249         extern _ESTAT
+               00250         extern _ECON2
+               00251         extern _EIR
+               00252         extern _EDATA
+               00253         extern _SSP2CON2
+               00254         extern _SSP2CON1
+               00255         extern _SSP2STAT
+               00256         extern _SSP2ADD
+               00257         extern _SSP2BUF
+               00258         extern _ECCP2DEL
+               00259         extern _ECCP2AS
+               00260         extern _ECCP3DEL
+               00261         extern _ECCP3AS
+               00262         extern _RCSTA2
+               00263         extern _TXSTA2
+               00264         extern _TXREG2
+               00265         extern _RCREG2
+               00266         extern _SPBRG2
+               00267         extern _CCP5CON
+               00268         extern _CCPR5
+               00269         extern _CCPR5L
+               00270         extern _CCPR5H
+gpasm-0.13.7 beta               Objects/BerkeleyUDPClientDemo.asm12-16-2009  00:27:12         PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00271         extern _CCP4CON
+               00272         extern _CCPR4
+               00273         extern _CCPR4L
+               00274         extern _CCPR4H
+               00275         extern _T4CON
+               00276         extern _PR4
+               00277         extern _TMR4
+               00278         extern _ECCP1DEL
+               00279         extern _ERDPT
+               00280         extern _ERDPTL
+               00281         extern _ERDPTH
+               00282         extern _BAUDCON2
+               00283         extern _BAUDCTL2
+               00284         extern _SPBRGH2
+               00285         extern _BAUDCON
+               00286         extern _BAUDCON1
+               00287         extern _BAUDCTL
+               00288         extern _BAUDCTL1
+               00289         extern _SPBRGH
+               00290         extern _SPBRGH1
+               00291         extern _PORTA
+               00292         extern _PORTB
+               00293         extern _PORTC
+               00294         extern _PORTD
+               00295         extern _PORTE
+               00296         extern _PORTF
+               00297         extern _PORTG
+               00298         extern _PORTH
+               00299         extern _PORTJ
+               00300         extern _LATA
+               00301         extern _LATB
+               00302         extern _LATC
+               00303         extern _LATD
+               00304         extern _LATE
+               00305         extern _LATF
+               00306         extern _LATG
+               00307         extern _LATH
+               00308         extern _LATJ
+               00309         extern _DDRA
+               00310         extern _TRISA
+               00311         extern _DDRB
+               00312         extern _TRISB
+               00313         extern _DDRC
+               00314         extern _TRISC
+               00315         extern _DDRD
+               00316         extern _TRISD
+               00317         extern _DDRE
+               00318         extern _TRISE
+               00319         extern _DDRF
+               00320         extern _TRISF
+               00321         extern _DDRG
+               00322         extern _TRISG
+               00323         extern _DDRH
+               00324         extern _TRISH
+gpasm-0.13.7 beta               Objects/BerkeleyUDPClientDemo.asm12-16-2009  00:27:12         PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00325         extern _DDRJ
+               00326         extern _TRISJ
+               00327         extern _OSCTUNE
+               00328         extern _MEMCON
+               00329         extern _PIE1
+               00330         extern _PIR1
+               00331         extern _IPR1
+               00332         extern _PIE2
+               00333         extern _PIR2
+               00334         extern _IPR2
+               00335         extern _PIE3
+               00336         extern _PIR3
+               00337         extern _IPR3
+               00338         extern _EECON1
+               00339         extern _EECON2
+               00340         extern _RCSTA
+               00341         extern _RCSTA1
+               00342         extern _TXSTA
+               00343         extern _TXSTA1
+               00344         extern _TXREG
+               00345         extern _TXREG1
+               00346         extern _RCREG
+               00347         extern _RCREG1
+               00348         extern _SPBRG
+               00349         extern _SPBRG1
+               00350         extern _PSPCON
+               00351         extern _T3CON
+               00352         extern _TMR3L
+               00353         extern _TMR3H
+               00354         extern _CMCON
+               00355         extern _CVRCON
+               00356         extern _ECCP1AS
+               00357         extern _CCP3CON
+               00358         extern _ECCP3CON
+               00359         extern _CCPR3
+               00360         extern _CCPR3L
+               00361         extern _CCPR3H
+               00362         extern _CCP2CON
+               00363         extern _ECCP2CON
+               00364         extern _CCPR2
+               00365         extern _CCPR2L
+               00366         extern _CCPR2H
+               00367         extern _CCP1CON
+               00368         extern _ECCP1CON
+               00369         extern _CCPR1
+               00370         extern _CCPR1L
+               00371         extern _CCPR1H
+               00372         extern _ADCON2
+               00373         extern _ADCON1
+               00374         extern _ADCON0
+               00375         extern _ADRES
+               00376         extern _ADRESL
+               00377         extern _ADRESH
+               00378         extern _SSP1CON2
+gpasm-0.13.7 beta               Objects/BerkeleyUDPClientDemo.asm12-16-2009  00:27:12         PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00379         extern _SSPCON2
+               00380         extern _SSP1CON1
+               00381         extern _SSPCON1
+               00382         extern _SSP1STAT
+               00383         extern _SSPSTAT
+               00384         extern _SSP1ADD
+               00385         extern _SSPADD
+               00386         extern _SSP1BUF
+               00387         extern _SSPBUF
+               00388         extern _T2CON
+               00389         extern _PR2
+               00390         extern _TMR2
+               00391         extern _T1CON
+               00392         extern _TMR1L
+               00393         extern _TMR1H
+               00394         extern _RCON
+               00395         extern _WDTCON
+               00396         extern _ECON1
+               00397         extern _OSCCON
+               00398         extern _T0CON
+               00399         extern _TMR0L
+               00400         extern _TMR0H
+               00401         extern _STATUS
+               00402         extern _FSR2L
+               00403         extern _FSR2H
+               00404         extern _PLUSW2
+               00405         extern _PREINC2
+               00406         extern _POSTDEC2
+               00407         extern _POSTINC2
+               00408         extern _INDF2
+               00409         extern _BSR
+               00410         extern _FSR1L
+               00411         extern _FSR1H
+               00412         extern _PLUSW1
+               00413         extern _PREINC1
+               00414         extern _POSTDEC1
+               00415         extern _POSTINC1
+               00416         extern _INDF1
+               00417         extern _WREG
+               00418         extern _FSR0L
+               00419         extern _FSR0H
+               00420         extern _PLUSW0
+               00421         extern _PREINC0
+               00422         extern _POSTDEC0
+               00423         extern _POSTINC0
+               00424         extern _INDF0
+               00425         extern _INTCON3
+               00426         extern _INTCON2
+               00427         extern _INTCON
+               00428         extern _PROD
+               00429         extern _PRODL
+               00430         extern _PRODH
+               00431         extern _TABLAT
+               00432         extern _TBLPTR
+gpasm-0.13.7 beta               Objects/BerkeleyUDPClientDemo.asm12-16-2009  00:27:12         PAGE  9
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00433         extern _TBLPTRL
+               00434         extern _TBLPTRH
+               00435         extern _TBLPTRU
+               00436         extern _PC
+               00437         extern _PCL
+               00438         extern _PCLATH
+               00439         extern _PCLATU
+               00440         extern _STKPTR
+               00441         extern _TOS
+               00442         extern _TOSL
+               00443         extern _TOSH
+               00444         extern _TOSU
+               00445         extern _memset
+               00446         extern _swapl
+               00447         extern _TickGet
+               00448         extern _TickGetDiv64K
+               00449         extern _socket
+               00450         extern _sendto
+               00451         extern _recvfrom
+               00452         extern _closesocket
+               00453         extern _DNSBeginUsage
+               00454         extern _DNSResolve
+               00455         extern _DNSIsResolved
+               00456         extern _DNSEndUsage
+               00457 ;--------------------------------------------------------
+               00458 ;       Equates to used internal registers
+               00459 ;--------------------------------------------------------
+  00000FD8     00460 STATUS  equ     0xfd8
+  00000FF9     00461 PCL     equ     0xff9
+  00000FFA     00462 PCLATH  equ     0xffa
+  00000FFB     00463 PCLATU  equ     0xffb
+  00000FE8     00464 WREG    equ     0xfe8
+  00000FE9     00465 FSR0L   equ     0xfe9
+  00000FE1     00466 FSR1L   equ     0xfe1
+  00000FD9     00467 FSR2L   equ     0xfd9
+  00000FE5     00468 POSTDEC1        equ     0xfe5
+  00000FE4     00469 PREINC1 equ     0xfe4
+  00000FF3     00470 PRODL   equ     0xff3
+  00000FF4     00471 PRODH   equ     0xff4
+               00472 
+               00473 
+               00474         idata
+               00475 _dwSNTPSeconds  db      0x00, 0x00, 0x00, 0x00
+               00476 _dwLastUpdateTick       db      0x00, 0x00, 0x00, 0x00
+               00477 _BerkeleyUDPClientDemo_SNTPState_1_1    db      0x00
+               00478 
+               00479 
+               00480 ; Internal registers
+               00481 .registers      udata_ovr       0x0000
+               00482 r0x00   res     1
+               00483 r0x01   res     1
+               00484 r0x02   res     1
+               00485 r0x03   res     1
+               00486 r0x04   res     1
+gpasm-0.13.7 beta               Objects/BerkeleyUDPClientDemo.asm12-16-2009  00:27:12         PAGE 10
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00487 r0x05   res     1
+               00488 r0x06   res     1
+               00489 r0x07   res     1
+               00490 r0x08   res     1
+               00491 r0x09   res     1
+               00492 r0x0a   res     1
+               00493 
+               00494 udata_BerkeleyUDPClientDemo_0   udata
+               00495 _BerkeleyUDPClientDemo_dwServerIP_1_1   res     4
+               00496 
+               00497 udata_BerkeleyUDPClientDemo_1   udata
+               00498 _BerkeleyUDPClientDemo_dwTimer_1_1      res     4
+               00499 
+               00500 udata_BerkeleyUDPClientDemo_2   udata
+               00501 _BerkeleyUDPClientDemo_bsdUdpClient_1_1 res     1
+               00502 
+               00503 udata_BerkeleyUDPClientDemo_3   udata
+               00504 _BerkeleyUDPClientDemo_udpaddr_1_1      res     16
+               00505 
+               00506 udata_BerkeleyUDPClientDemo_4   udata
+               00507 _BerkeleyUDPClientDemo_addrlen_1_1      res     2
+               00508 
+               00509 udata_BerkeleyUDPClientDemo_5   udata
+               00510 _BerkeleyUDPClientDemo_pkt_1_1  res     48
+               00511 
+               00512 ;--------------------------------------------------------
+               00513 ; global & static initialisations
+               00514 ;--------------------------------------------------------
+               00515 ; I code from now on!
+               00516 ; ; Starting pCode block
+               00517 S_BerkeleyUDPClientDemo__BerkeleySNTPGetUTCSeconds      code
+0000 00518 _BerkeleySNTPGetUTCSeconds:
+               00519 ;       .line   331; BerkeleyUDPClientDemo.c    DWORD BerkeleySNTPGetUTCSeconds(void)
+0000 CFD9 FFE5 00520         MOVFF   FSR2L, POSTDEC1
+0004 CFE1 FFD9 00521         MOVFF   FSR1L, FSR2L
+0008 C000 FFE5 00522         MOVFF   r0x00, POSTDEC1
+000C C000 FFE5 00523         MOVFF   r0x01, POSTDEC1
+0010 C000 FFE5 00524         MOVFF   r0x02, POSTDEC1
+0014 C000 FFE5 00525         MOVFF   r0x03, POSTDEC1
+0018 C000 FFE5 00526         MOVFF   r0x04, POSTDEC1
+001C C000 FFE5 00527         MOVFF   r0x05, POSTDEC1
+0020 C000 FFE5 00528         MOVFF   r0x06, POSTDEC1
+0024 C000 FFE5 00529         MOVFF   r0x07, POSTDEC1
+               00530 ;       .line   338; BerkeleyUDPClientDemo.c    dwTick = TickGet();
+0028 EC00 F000 00531         CALL    _TickGet
+002C 6E00      00532         MOVWF   r0x00
+002E CFF3 F000 00533         MOVFF   PRODL, r0x01
+0032 CFF4 F000 00534         MOVFF   PRODH, r0x02
+0036 CFE9 F000 00535         MOVFF   FSR0L, r0x03
+003A 0000      00536         BANKSEL _dwLastUpdateTick
+               00537 ;       .line   339; BerkeleyUDPClientDemo.c    dwTickDelta = dwTick - dwLastUpdateTick;
+003C 5100      00538         MOVF    _dwLastUpdateTick, W, B
+003E 5C00      00539         SUBWF   r0x00, W
+0040 6E00      00540         MOVWF   r0x04
+gpasm-0.13.7 beta               Objects/BerkeleyUDPClientDemo.asm12-16-2009  00:27:12         PAGE 11
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0042 0000      00541         BANKSEL (_dwLastUpdateTick + 1)
+0044 5100      00542         MOVF    (_dwLastUpdateTick + 1), W, B
+0046 5800      00543         SUBWFB  r0x01, W
+0048 6E00      00544         MOVWF   r0x05
+004A 0000      00545         BANKSEL (_dwLastUpdateTick + 2)
+004C 5100      00546         MOVF    (_dwLastUpdateTick + 2), W, B
+004E 5800      00547         SUBWFB  r0x02, W
+0050 6E00      00548         MOVWF   r0x06
+0052 0000      00549         BANKSEL (_dwLastUpdateTick + 3)
+0054 5100      00550         MOVF    (_dwLastUpdateTick + 3), W, B
+0056 5800      00551         SUBWFB  r0x03, W
+0058 6E00      00552         MOVWF   r0x07
+005A 00553 _00164_DS_:
+               00554 ;       .line   340; BerkeleyUDPClientDemo.c    while(dwTickDelta > TICK_SECOND)
+005A 0E00      00555         MOVLW   0x00
+005C 5C00      00556         SUBWF   r0x07, W
+005E E100      00557         BNZ     _00172_DS_
+0060 0E00      00558         MOVLW   0x00
+0062 5C00      00559         SUBWF   r0x06, W
+0064 E100      00560         BNZ     _00172_DS_
+0066 0E9E      00561         MOVLW   0x9e
+0068 5C00      00562         SUBWF   r0x05, W
+006A E100      00563         BNZ     _00172_DS_
+006C 0EF3      00564         MOVLW   0xf3
+006E 5C00      00565         SUBWF   r0x04, W
+0070 00566 _00172_DS_:
+0070 E300      00567         BNC     _00166_DS_
+0072 0000      00568         BANKSEL _dwSNTPSeconds
+               00569 ;       .line   342; BerkeleyUDPClientDemo.c    dwSNTPSeconds++;
+0074 2B00      00570         INCF    _dwSNTPSeconds, F, B
+0076 E300      00571         BNC     _10164_DS_
+0078 0000      00572         BANKSEL (_dwSNTPSeconds + 1)
+007A 2B00      00573         INCF    (_dwSNTPSeconds + 1), F, B
+007C 00574 _10164_DS_:
+007C E300      00575         BNC     _20165_DS_
+007E 0000      00576         BANKSEL (_dwSNTPSeconds + 2)
+0080 2B00      00577         INCF    (_dwSNTPSeconds + 2), F, B
+0082 00578 _20165_DS_:
+0082 E300      00579         BNC     _30166_DS_
+0084 0000      00580         BANKSEL (_dwSNTPSeconds + 3)
+0086 2B00      00581         INCF    (_dwSNTPSeconds + 3), F, B
+0088 00582 _30166_DS_:
+               00583 ;       .line   343; BerkeleyUDPClientDemo.c    dwTickDelta -= TICK_SECOND;
+0088 0E0E      00584         MOVLW   0x0e
+008A 2600      00585         ADDWF   r0x04, F
+008C 0E61      00586         MOVLW   0x61
+008E 2200      00587         ADDWFC  r0x05, F
+0090 0EFF      00588         MOVLW   0xff
+0092 2200      00589         ADDWFC  r0x06, F
+0094 0EFF      00590         MOVLW   0xff
+0096 2200      00591         ADDWFC  r0x07, F
+0098 D000      00592         BRA     _00164_DS_
+009A 00593 _00166_DS_:
+               00594 ;       .line   347; BerkeleyUDPClientDemo.c    dwLastUpdateTick = dwTick - dwTickDelta;
+gpasm-0.13.7 beta               Objects/BerkeleyUDPClientDemo.asm12-16-2009  00:27:12         PAGE 12
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+009A 5000      00595         MOVF    r0x04, W
+009C 5C00      00596         SUBWF   r0x00, W
+009E 0000      00597         BANKSEL _dwLastUpdateTick
+00A0 6F00      00598         MOVWF   _dwLastUpdateTick, B
+00A2 5000      00599         MOVF    r0x05, W
+00A4 5800      00600         SUBWFB  r0x01, W
+00A6 0000      00601         BANKSEL (_dwLastUpdateTick + 1)
+00A8 6F00      00602         MOVWF   (_dwLastUpdateTick + 1), B
+00AA 5000      00603         MOVF    r0x06, W
+00AC 5800      00604         SUBWFB  r0x02, W
+00AE 0000      00605         BANKSEL (_dwLastUpdateTick + 2)
+00B0 6F00      00606         MOVWF   (_dwLastUpdateTick + 2), B
+00B2 5000      00607         MOVF    r0x07, W
+00B4 5800      00608         SUBWFB  r0x03, W
+00B6 0000      00609         BANKSEL (_dwLastUpdateTick + 3)
+00B8 6F00      00610         MOVWF   (_dwLastUpdateTick + 3), B
+               00611 ;       .line   349; BerkeleyUDPClientDemo.c    return dwSNTPSeconds;
+00BA C000 FFE9 00612         MOVFF   (_dwSNTPSeconds + 3), FSR0L
+00BE C000 FFF4 00613         MOVFF   (_dwSNTPSeconds + 2), PRODH
+00C2 C000 FFF3 00614         MOVFF   (_dwSNTPSeconds + 1), PRODL
+00C6 0000      00615         BANKSEL _dwSNTPSeconds
+00C8 5100      00616         MOVF    _dwSNTPSeconds, W, B
+00CA CFE4 F000 00617         MOVFF   PREINC1, r0x07
+00CE CFE4 F000 00618         MOVFF   PREINC1, r0x06
+00D2 CFE4 F000 00619         MOVFF   PREINC1, r0x05
+00D6 CFE4 F000 00620         MOVFF   PREINC1, r0x04
+00DA CFE4 F000 00621         MOVFF   PREINC1, r0x03
+00DE CFE4 F000 00622         MOVFF   PREINC1, r0x02
+00E2 CFE4 F000 00623         MOVFF   PREINC1, r0x01
+00E6 CFE4 F000 00624         MOVFF   PREINC1, r0x00
+00EA CFE4 FFD9 00625         MOVFF   PREINC1, FSR2L
+00EE 0012      00626         RETURN  
+               00627 
+               00628 ; ; Starting pCode block
+               00629 S_BerkeleyUDPClientDemo__BerkeleyUDPClientDemo  code
+0000 00630 _BerkeleyUDPClientDemo:
+               00631 ;       .line   159; BerkeleyUDPClientDemo.c    void BerkeleyUDPClientDemo(void)
+0000 CFD9 FFE5 00632         MOVFF   FSR2L, POSTDEC1
+0004 CFE1 FFD9 00633         MOVFF   FSR1L, FSR2L
+0008 C000 FFE5 00634         MOVFF   r0x00, POSTDEC1
+000C C000 FFE5 00635         MOVFF   r0x01, POSTDEC1
+0010 C000 FFE5 00636         MOVFF   r0x02, POSTDEC1
+0014 C000 FFE5 00637         MOVFF   r0x03, POSTDEC1
+0018 C000 FFE5 00638         MOVFF   r0x04, POSTDEC1
+001C C000 FFE5 00639         MOVFF   r0x05, POSTDEC1
+0020 C000 FFE5 00640         MOVFF   r0x06, POSTDEC1
+0024 C000 FFE5 00641         MOVFF   r0x07, POSTDEC1
+0028 C000 FFE5 00642         MOVFF   r0x08, POSTDEC1
+               00643 ;       .line   167; BerkeleyUDPClientDemo.c    int                             addrlen = sizeof(struct sockaddr_in);
+002C 0E10      00644         MOVLW   0x10
+002E 0000      00645         BANKSEL _BerkeleyUDPClientDemo_addrlen_1_1
+0030 6F00      00646         MOVWF   _BerkeleyUDPClientDemo_addrlen_1_1, B
+0032 0000      00647         BANKSEL (_BerkeleyUDPClientDemo_addrlen_1_1 + 1)
+0034 6B00      00648         CLRF    (_BerkeleyUDPClientDemo_addrlen_1_1 + 1), B
+gpasm-0.13.7 beta               Objects/BerkeleyUDPClientDemo.asm12-16-2009  00:27:12         PAGE 13
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00649 ;       .line   181; BerkeleyUDPClientDemo.c    switch(SNTPState)
+0036 0E07      00650         MOVLW   0x07
+0038 0000      00651         BANKSEL _BerkeleyUDPClientDemo_SNTPState_1_1
+003A 5D00      00652         SUBWF   _BerkeleyUDPClientDemo_SNTPState_1_1, W, B
+003C B0D8      00653         BTFSC   STATUS, 0
+003E EF00 F000 00654         GOTO    _00135_DS_
+0042 C000 FFE5 00655         MOVFF   r0x09, POSTDEC1
+0046 C000 FFE5 00656         MOVFF   r0x0a, POSTDEC1
+004A 6A00      00657         CLRF    r0x0a
+004C 0000      00658         BANKSEL _BerkeleyUDPClientDemo_SNTPState_1_1
+004E 3500      00659         RLCF    _BerkeleyUDPClientDemo_SNTPState_1_1, W, B
+0050 3600      00660         RLCF    r0x0a, F
+0052 34E8      00661         RLCF    WREG, W
+0054 3600      00662         RLCF    r0x0a, F
+0056 0BFC      00663         ANDLW   0xfc
+0058 6E00      00664         MOVWF   r0x09
+005A 0E00      00665         MOVLW   UPPER(_00150_DS_)
+005C 6EFB      00666         MOVWF   PCLATU
+005E 0E00      00667         MOVLW   HIGH(_00150_DS_)
+0060 6EFA      00668         MOVWF   PCLATH
+0062 0E00      00669         MOVLW   LOW(_00150_DS_)
+0064 2600      00670         ADDWF   r0x09, F
+0066 5000      00671         MOVF    r0x0a, W
+0068 22FA      00672         ADDWFC  PCLATH, F
+006A B0D8      00673         BTFSC   STATUS, 0
+006C 2AFB      00674         INCF    PCLATU, F
+006E 5000      00675         MOVF    r0x09, W
+0070 CFE4 F000 00676         MOVFF   PREINC1, r0x0a
+0074 CFE4 F000 00677         MOVFF   PREINC1, r0x09
+0078 6EF9      00678         MOVWF   PCL
+007A 00679 _00150_DS_:
+007A EF00 F000 00680         GOTO    _00105_DS_
+007E EF00 F000 00681         GOTO    _00108_DS_
+0082 EF00 F000 00682         GOTO    _00115_DS_
+0086 EF00 F000 00683         GOTO    _00118_DS_
+008A EF00 F000 00684         GOTO    _00121_DS_
+008E EF00 F000 00685         GOTO    _00128_DS_
+0092 EF00 F000 00686         GOTO    _00131_DS_
+0096 00687 _00105_DS_:
+               00688 ;       .line   185; BerkeleyUDPClientDemo.c    if(!DNSBeginUsage())
+0096 EC00 F000 00689         CALL    _DNSBeginUsage
+009A 6E00      00690         MOVWF   r0x00
+009C 5000      00691         MOVF    r0x00, W
+009E B4D8      00692         BTFSC   STATUS, 2
+00A0 EF00 F000 00693         GOTO    _00135_DS_
+               00694 ;       .line   190; BerkeleyUDPClientDemo.c    DNSResolve(( BYTE*)NTP_SERVER, DNS_TYPE_A);
+00A4 0E01      00695         MOVLW   0x01
+00A6 6EE5      00696         MOVWF   POSTDEC1
+00A8 0E00      00697         MOVLW   UPPER(__str_0)
+00AA 6EE5      00698         MOVWF   POSTDEC1
+00AC 0E00      00699         MOVLW   HIGH(__str_0)
+00AE 6EE5      00700         MOVWF   POSTDEC1
+00B0 0E00      00701         MOVLW   LOW(__str_0)
+00B2 6EE5      00702         MOVWF   POSTDEC1
+gpasm-0.13.7 beta               Objects/BerkeleyUDPClientDemo.asm12-16-2009  00:27:12         PAGE 14
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+00B4 EC00 F000 00703         CALL    _DNSResolve
+00B8 0E04      00704         MOVLW   0x04
+00BA 26E1      00705         ADDWF   FSR1L, F
+               00706 ;       .line   191; BerkeleyUDPClientDemo.c    dwTimer = TickGet();
+00BC EC00 F000 00707         CALL    _TickGet
+00C0 0000      00708         BANKSEL _BerkeleyUDPClientDemo_dwTimer_1_1
+00C2 6F00      00709         MOVWF   _BerkeleyUDPClientDemo_dwTimer_1_1, B
+00C4 CFF3 F000 00710         MOVFF   PRODL, (_BerkeleyUDPClientDemo_dwTimer_1_1 + 1)
+00C8 CFF4 F000 00711         MOVFF   PRODH, (_BerkeleyUDPClientDemo_dwTimer_1_1 + 2)
+00CC CFE9 F000 00712         MOVFF   FSR0L, (_BerkeleyUDPClientDemo_dwTimer_1_1 + 3)
+               00713 ;       .line   192; BerkeleyUDPClientDemo.c    SNTPState = SM_NAME_RESOLVE;
+00D0 0E01      00714         MOVLW   0x01
+00D2 0000      00715         BANKSEL _BerkeleyUDPClientDemo_SNTPState_1_1
+00D4 6F00      00716         MOVWF   _BerkeleyUDPClientDemo_SNTPState_1_1, B
+               00717 ;       .line   193; BerkeleyUDPClientDemo.c    break;
+00D6 EF00 F000 00718         GOTO    _00135_DS_
+00DA 00719 _00108_DS_:
+               00720 ;       .line   197; BerkeleyUDPClientDemo.c    if(!DNSIsResolved((IP_ADDR*)&dwServerIP)) 
+00DA 0E00      00721         MOVLW   HIGH(_BerkeleyUDPClientDemo_dwServerIP_1_1)
+00DC 6E00      00722         MOVWF   r0x01
+00DE 0E00      00723         MOVLW   LOW(_BerkeleyUDPClientDemo_dwServerIP_1_1)
+00E0 6E00      00724         MOVWF   r0x00
+00E2 0E80      00725         MOVLW   0x80
+00E4 6E00      00726         MOVWF   r0x02
+00E6 5000      00727         MOVF    r0x02, W
+00E8 6EE5      00728         MOVWF   POSTDEC1
+00EA 5000      00729         MOVF    r0x01, W
+00EC 6EE5      00730         MOVWF   POSTDEC1
+00EE 5000      00731         MOVF    r0x00, W
+00F0 6EE5      00732         MOVWF   POSTDEC1
+00F2 EC00 F000 00733         CALL    _DNSIsResolved
+00F6 6E00      00734         MOVWF   r0x00
+00F8 0E03      00735         MOVLW   0x03
+00FA 26E1      00736         ADDWF   FSR1L, F
+00FC 5000      00737         MOVF    r0x00, W
+00FE E100      00738         BNZ     _00112_DS_
+               00739 ;       .line   199; BerkeleyUDPClientDemo.c    if((TickGet() - dwTimer) > (5 * TICK_SECOND)) 
+0100 EC00 F000 00740         CALL    _TickGet
+0104 6E00      00741         MOVWF   r0x00
+0106 CFF3 F000 00742         MOVFF   PRODL, r0x01
+010A CFF4 F000 00743         MOVFF   PRODH, r0x02
+010E CFE9 F000 00744         MOVFF   FSR0L, r0x03
+0112 0000      00745         BANKSEL _BerkeleyUDPClientDemo_dwTimer_1_1
+0114 5100      00746         MOVF    _BerkeleyUDPClientDemo_dwTimer_1_1, W, B
+0116 5E00      00747         SUBWF   r0x00, F
+0118 0000      00748         BANKSEL (_BerkeleyUDPClientDemo_dwTimer_1_1 + 1)
+011A 5100      00749         MOVF    (_BerkeleyUDPClientDemo_dwTimer_1_1 + 1), W, B
+011C 5A00      00750         SUBWFB  r0x01, F
+011E 0000      00751         BANKSEL (_BerkeleyUDPClientDemo_dwTimer_1_1 + 2)
+0120 5100      00752         MOVF    (_BerkeleyUDPClientDemo_dwTimer_1_1 + 2), W, B
+0122 5A00      00753         SUBWFB  r0x02, F
+0124 0000      00754         BANKSEL (_BerkeleyUDPClientDemo_dwTimer_1_1 + 3)
+0126 5100      00755         MOVF    (_BerkeleyUDPClientDemo_dwTimer_1_1 + 3), W, B
+0128 5A00      00756         SUBWFB  r0x03, F
+gpasm-0.13.7 beta               Objects/BerkeleyUDPClientDemo.asm12-16-2009  00:27:12         PAGE 15
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+012A 0E00      00757         MOVLW   0x00
+012C 5C00      00758         SUBWF   r0x03, W
+012E E100      00759         BNZ     _00151_DS_
+0130 0E03      00760         MOVLW   0x03
+0132 5C00      00761         SUBWF   r0x02, W
+0134 E100      00762         BNZ     _00151_DS_
+0136 0E1A      00763         MOVLW   0x1a
+0138 5C00      00764         SUBWF   r0x01, W
+013A E100      00765         BNZ     _00151_DS_
+013C 0EBB      00766         MOVLW   0xbb
+013E 5C00      00767         SUBWF   r0x00, W
+0140 00768 _00151_DS_:
+0140 A0D8      00769         BTFSS   STATUS, 0
+0142 EF00 F000 00770         GOTO    _00135_DS_
+               00771 ;       .line   201; BerkeleyUDPClientDemo.c    DNSEndUsage();
+0146 EC00 F000 00772         CALL    _DNSEndUsage
+               00773 ;       .line   202; BerkeleyUDPClientDemo.c    dwTimer = TickGetDiv64K();
+014A EC00 F000 00774         CALL    _TickGetDiv64K
+014E 0000      00775         BANKSEL _BerkeleyUDPClientDemo_dwTimer_1_1
+0150 6F00      00776         MOVWF   _BerkeleyUDPClientDemo_dwTimer_1_1, B
+0152 CFF3 F000 00777         MOVFF   PRODL, (_BerkeleyUDPClientDemo_dwTimer_1_1 + 1)
+0156 CFF4 F000 00778         MOVFF   PRODH, (_BerkeleyUDPClientDemo_dwTimer_1_1 + 2)
+015A CFE9 F000 00779         MOVFF   FSR0L, (_BerkeleyUDPClientDemo_dwTimer_1_1 + 3)
+               00780 ;       .line   203; BerkeleyUDPClientDemo.c    SNTPState = SM_SHORT_WAIT;
+015E 0E05      00781         MOVLW   0x05
+0160 0000      00782         BANKSEL _BerkeleyUDPClientDemo_SNTPState_1_1
+0162 6F00      00783         MOVWF   _BerkeleyUDPClientDemo_SNTPState_1_1, B
+               00784 ;       .line   205; BerkeleyUDPClientDemo.c    break;
+0164 EF00 F000 00785         GOTO    _00135_DS_
+0168 00786 _00112_DS_:
+               00787 ;       .line   209; BerkeleyUDPClientDemo.c    if(!DNSEndUsage())
+0168 EC00 F000 00788         CALL    _DNSEndUsage
+016C 6E00      00789         MOVWF   r0x00
+016E 5000      00790         MOVF    r0x00, W
+0170 E100      00791         BNZ     _00114_DS_
+               00792 ;       .line   213; BerkeleyUDPClientDemo.c    dwTimer = TickGetDiv64K();
+0172 EC00 F000 00793         CALL    _TickGetDiv64K
+0176 0000      00794         BANKSEL _BerkeleyUDPClientDemo_dwTimer_1_1
+0178 6F00      00795         MOVWF   _BerkeleyUDPClientDemo_dwTimer_1_1, B
+017A CFF3 F000 00796         MOVFF   PRODL, (_BerkeleyUDPClientDemo_dwTimer_1_1 + 1)
+017E CFF4 F000 00797         MOVFF   PRODH, (_BerkeleyUDPClientDemo_dwTimer_1_1 + 2)
+0182 CFE9 F000 00798         MOVFF   FSR0L, (_BerkeleyUDPClientDemo_dwTimer_1_1 + 3)
+               00799 ;       .line   214; BerkeleyUDPClientDemo.c    SNTPState = SM_SHORT_WAIT;
+0186 0E05      00800         MOVLW   0x05
+0188 0000      00801         BANKSEL _BerkeleyUDPClientDemo_SNTPState_1_1
+018A 6F00      00802         MOVWF   _BerkeleyUDPClientDemo_SNTPState_1_1, B
+               00803 ;       .line   215; BerkeleyUDPClientDemo.c    break;
+018C D000      00804         BRA     _00135_DS_
+018E 00805 _00114_DS_:
+               00806 ;       .line   218; BerkeleyUDPClientDemo.c    SNTPState = SM_CREATE_SOCKET;
+018E 0E02      00807         MOVLW   0x02
+0190 0000      00808         BANKSEL _BerkeleyUDPClientDemo_SNTPState_1_1
+0192 6F00      00809         MOVWF   _BerkeleyUDPClientDemo_SNTPState_1_1, B
+0194 00810 _00115_DS_:
+gpasm-0.13.7 beta               Objects/BerkeleyUDPClientDemo.asm12-16-2009  00:27:12         PAGE 16
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00811 ;       .line   222; BerkeleyUDPClientDemo.c    bsdUdpClient = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+0194 0E00      00812         MOVLW   0x00
+0196 6EE5      00813         MOVWF   POSTDEC1
+0198 0E11      00814         MOVLW   0x11
+019A 6EE5      00815         MOVWF   POSTDEC1
+019C 0E00      00816         MOVLW   0x00
+019E 6EE5      00817         MOVWF   POSTDEC1
+01A0 0E6E      00818         MOVLW   0x6e
+01A2 6EE5      00819         MOVWF   POSTDEC1
+01A4 0E00      00820         MOVLW   0x00
+01A6 6EE5      00821         MOVWF   POSTDEC1
+01A8 0E02      00822         MOVLW   0x02
+01AA 6EE5      00823         MOVWF   POSTDEC1
+01AC EC00 F000 00824         CALL    _socket
+01B0 0000      00825         BANKSEL _BerkeleyUDPClientDemo_bsdUdpClient_1_1
+01B2 6F00      00826         MOVWF   _BerkeleyUDPClientDemo_bsdUdpClient_1_1, B
+01B4 0E06      00827         MOVLW   0x06
+01B6 26E1      00828         ADDWF   FSR1L, F
+01B8 0000      00829         BANKSEL _BerkeleyUDPClientDemo_bsdUdpClient_1_1
+               00830 ;       .line   223; BerkeleyUDPClientDemo.c    if(bsdUdpClient == INVALID_SOCKET)
+01BA 5100      00831         MOVF    _BerkeleyUDPClientDemo_bsdUdpClient_1_1, W, B
+01BC 0AFE      00832         XORLW   0xfe
+01BE E100      00833         BNZ     _00117_DS_
+               00834 ;       .line   224; BerkeleyUDPClientDemo.c    return;
+01C0 D000      00835         BRA     _00135_DS_
+01C2 00836 _00117_DS_:
+               00837 ;       .line   239; BerkeleyUDPClientDemo.c    SNTPState = SM_UDP_SEND;
+01C2 0E03      00838         MOVLW   0x03
+01C4 0000      00839         BANKSEL _BerkeleyUDPClientDemo_SNTPState_1_1
+01C6 6F00      00840         MOVWF   _BerkeleyUDPClientDemo_SNTPState_1_1, B
+01C8 00841 _00118_DS_:
+               00842 ;       .line   244; BerkeleyUDPClientDemo.c    memset(&pkt, 0, sizeof(pkt));
+01C8 0E00      00843         MOVLW   0x00
+01CA 6EE5      00844         MOVWF   POSTDEC1
+01CC 0E30      00845         MOVLW   0x30
+01CE 6EE5      00846         MOVWF   POSTDEC1
+01D0 0E00      00847         MOVLW   0x00
+01D2 6EE5      00848         MOVWF   POSTDEC1
+01D4 0E00      00849         MOVLW   HIGH(_BerkeleyUDPClientDemo_pkt_1_1)
+01D6 6EE5      00850         MOVWF   POSTDEC1
+01D8 0E00      00851         MOVLW   LOW(_BerkeleyUDPClientDemo_pkt_1_1)
+01DA 6EE5      00852         MOVWF   POSTDEC1
+01DC EC00 F000 00853         CALL    _memset
+01E0 0E05      00854         MOVLW   0x05
+01E2 26E1      00855         ADDWF   FSR1L, F
+01E4 0000      00856         BANKSEL _BerkeleyUDPClientDemo_pkt_1_1
+               00857 ;       .line   245; BerkeleyUDPClientDemo.c    pkt.flags.versionNumber = 3;    // NTP Version 3
+01E6 5100      00858         MOVF    _BerkeleyUDPClientDemo_pkt_1_1, W, B
+01E8 0BC7      00859         ANDLW   0xc7
+01EA 0918      00860         IORLW   0x18
+01EC 0000      00861         BANKSEL _BerkeleyUDPClientDemo_pkt_1_1
+01EE 6F00      00862         MOVWF   _BerkeleyUDPClientDemo_pkt_1_1, B
+01F0 0000      00863         BANKSEL _BerkeleyUDPClientDemo_pkt_1_1
+               00864 ;       .line   246; BerkeleyUDPClientDemo.c    pkt.flags.mode = 3;                             // NTP Client
+gpasm-0.13.7 beta               Objects/BerkeleyUDPClientDemo.asm12-16-2009  00:27:12         PAGE 17
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+01F2 5100      00865         MOVF    _BerkeleyUDPClientDemo_pkt_1_1, W, B
+01F4 0BF8      00866         ANDLW   0xf8
+01F6 0903      00867         IORLW   0x03
+01F8 0000      00868         BANKSEL _BerkeleyUDPClientDemo_pkt_1_1
+01FA 6F00      00869         MOVWF   _BerkeleyUDPClientDemo_pkt_1_1, B
+               00870 ;       .line   247; BerkeleyUDPClientDemo.c    pkt.orig_ts_secs = swapl(NTP_EPOCH);
+01FC 0E83      00871         MOVLW   0x83
+01FE 6EE5      00872         MOVWF   POSTDEC1
+0200 0EAA      00873         MOVLW   0xaa
+0202 6EE5      00874         MOVWF   POSTDEC1
+0204 0E7E      00875         MOVLW   0x7e
+0206 6EE5      00876         MOVWF   POSTDEC1
+0208 0E80      00877         MOVLW   0x80
+020A 6EE5      00878         MOVWF   POSTDEC1
+020C EC00 F000 00879         CALL    _swapl
+0210 6E00      00880         MOVWF   r0x00
+0212 CFF3 F000 00881         MOVFF   PRODL, r0x01
+0216 CFF4 F000 00882         MOVFF   PRODH, r0x02
+021A CFE9 F000 00883         MOVFF   FSR0L, r0x03
+021E 0E04      00884         MOVLW   0x04
+0220 26E1      00885         ADDWF   FSR1L, F
+0222 5000      00886         MOVF    r0x00, W
+0224 0000      00887         BANKSEL (_BerkeleyUDPClientDemo_pkt_1_1 + 24)
+0226 6F00      00888         MOVWF   (_BerkeleyUDPClientDemo_pkt_1_1 + 24), B
+0228 5000      00889         MOVF    r0x01, W
+022A 0000      00890         BANKSEL (_BerkeleyUDPClientDemo_pkt_1_1 + 25)
+022C 6F00      00891         MOVWF   (_BerkeleyUDPClientDemo_pkt_1_1 + 25), B
+022E 5000      00892         MOVF    r0x02, W
+0230 0000      00893         BANKSEL (_BerkeleyUDPClientDemo_pkt_1_1 + 26)
+0232 6F00      00894         MOVWF   (_BerkeleyUDPClientDemo_pkt_1_1 + 26), B
+0234 5000      00895         MOVF    r0x03, W
+0236 0000      00896         BANKSEL (_BerkeleyUDPClientDemo_pkt_1_1 + 27)
+0238 6F00      00897         MOVWF   (_BerkeleyUDPClientDemo_pkt_1_1 + 27), B
+               00898 ;       .line   248; BerkeleyUDPClientDemo.c    udpaddr.sin_port = NTP_SERVER_PORT;
+023A 0E7B      00899         MOVLW   0x7b
+023C 0000      00900         BANKSEL (_BerkeleyUDPClientDemo_udpaddr_1_1 + 2)
+023E 6F00      00901         MOVWF   (_BerkeleyUDPClientDemo_udpaddr_1_1 + 2), B
+0240 0000      00902         BANKSEL (_BerkeleyUDPClientDemo_udpaddr_1_1 + 3)
+0242 6B00      00903         CLRF    (_BerkeleyUDPClientDemo_udpaddr_1_1 + 3), B
+0244 0000      00904         BANKSEL _BerkeleyUDPClientDemo_dwServerIP_1_1
+               00905 ;       .line   249; BerkeleyUDPClientDemo.c    udpaddr.sin_addr.S_un.S_addr = dwServerIP;
+0246 5100      00906         MOVF    _BerkeleyUDPClientDemo_dwServerIP_1_1, W, B
+0248 0000      00907         BANKSEL (_BerkeleyUDPClientDemo_udpaddr_1_1 + 4)
+024A 6F00      00908         MOVWF   (_BerkeleyUDPClientDemo_udpaddr_1_1 + 4), B
+024C 0000      00909         BANKSEL (_BerkeleyUDPClientDemo_dwServerIP_1_1 + 1)
+024E 5100      00910         MOVF    (_BerkeleyUDPClientDemo_dwServerIP_1_1 + 1), W, B
+0250 0000      00911         BANKSEL (_BerkeleyUDPClientDemo_udpaddr_1_1 + 5)
+0252 6F00      00912         MOVWF   (_BerkeleyUDPClientDemo_udpaddr_1_1 + 5), B
+0254 0000      00913         BANKSEL (_BerkeleyUDPClientDemo_dwServerIP_1_1 + 2)
+0256 5100      00914         MOVF    (_BerkeleyUDPClientDemo_dwServerIP_1_1 + 2), W, B
+0258 0000      00915         BANKSEL (_BerkeleyUDPClientDemo_udpaddr_1_1 + 6)
+025A 6F00      00916         MOVWF   (_BerkeleyUDPClientDemo_udpaddr_1_1 + 6), B
+025C 0000      00917         BANKSEL (_BerkeleyUDPClientDemo_dwServerIP_1_1 + 3)
+025E 5100      00918         MOVF    (_BerkeleyUDPClientDemo_dwServerIP_1_1 + 3), W, B
+gpasm-0.13.7 beta               Objects/BerkeleyUDPClientDemo.asm12-16-2009  00:27:12         PAGE 18
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0260 0000      00919         BANKSEL (_BerkeleyUDPClientDemo_udpaddr_1_1 + 7)
+0262 6F00      00920         MOVWF   (_BerkeleyUDPClientDemo_udpaddr_1_1 + 7), B
+               00921 ;       .line   250; BerkeleyUDPClientDemo.c    if(sendto(bsdUdpClient, (const char*)&pkt, sizeof(pkt), 0, (struct sockaddr*)&udpaddr, addrlen)>0)
+0264 0E00      00922         MOVLW   HIGH(_BerkeleyUDPClientDemo_pkt_1_1)
+0266 6E00      00923         MOVWF   r0x01
+0268 0E00      00924         MOVLW   LOW(_BerkeleyUDPClientDemo_pkt_1_1)
+026A 6E00      00925         MOVWF   r0x00
+026C 0E80      00926         MOVLW   0x80
+026E 6E00      00927         MOVWF   r0x02
+0270 0E00      00928         MOVLW   HIGH(_BerkeleyUDPClientDemo_udpaddr_1_1)
+0272 6E00      00929         MOVWF   r0x04
+0274 0E00      00930         MOVLW   LOW(_BerkeleyUDPClientDemo_udpaddr_1_1)
+0276 6E00      00931         MOVWF   r0x03
+0278 0E80      00932         MOVLW   0x80
+027A 6E00      00933         MOVWF   r0x05
+027C 0E00      00934         MOVLW   0x00
+027E 6EE5      00935         MOVWF   POSTDEC1
+0280 0E10      00936         MOVLW   0x10
+0282 6EE5      00937         MOVWF   POSTDEC1
+0284 5000      00938         MOVF    r0x05, W
+0286 6EE5      00939         MOVWF   POSTDEC1
+0288 5000      00940         MOVF    r0x04, W
+028A 6EE5      00941         MOVWF   POSTDEC1
+028C 5000      00942         MOVF    r0x03, W
+028E 6EE5      00943         MOVWF   POSTDEC1
+0290 0E00      00944         MOVLW   0x00
+0292 6EE5      00945         MOVWF   POSTDEC1
+0294 0E00      00946         MOVLW   0x00
+0296 6EE5      00947         MOVWF   POSTDEC1
+0298 0E00      00948         MOVLW   0x00
+029A 6EE5      00949         MOVWF   POSTDEC1
+029C 0E30      00950         MOVLW   0x30
+029E 6EE5      00951         MOVWF   POSTDEC1
+02A0 5000      00952         MOVF    r0x02, W
+02A2 6EE5      00953         MOVWF   POSTDEC1
+02A4 5000      00954         MOVF    r0x01, W
+02A6 6EE5      00955         MOVWF   POSTDEC1
+02A8 5000      00956         MOVF    r0x00, W
+02AA 6EE5      00957         MOVWF   POSTDEC1
+02AC 0000      00958         BANKSEL _BerkeleyUDPClientDemo_bsdUdpClient_1_1
+02AE 5100      00959         MOVF    _BerkeleyUDPClientDemo_bsdUdpClient_1_1, W, B
+02B0 6EE5      00960         MOVWF   POSTDEC1
+02B2 EC00 F000 00961         CALL    _sendto
+02B6 6E00      00962         MOVWF   r0x00
+02B8 CFF3 F000 00963         MOVFF   PRODL, r0x01
+02BC 0E0D      00964         MOVLW   0x0d
+02BE 26E1      00965         ADDWF   FSR1L, F
+02C0 5000      00966         MOVF    r0x01, W
+02C2 0F80      00967         ADDLW   0x80
+02C4 0F80      00968         ADDLW   0x80
+02C6 E100      00969         BNZ     _00154_DS_
+02C8 0E01      00970         MOVLW   0x01
+02CA 5C00      00971         SUBWF   r0x00, W
+02CC 00972 _00154_DS_:
+gpasm-0.13.7 beta               Objects/BerkeleyUDPClientDemo.asm12-16-2009  00:27:12         PAGE 19
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+02CC A0D8      00973         BTFSS   STATUS, 0
+02CE D000      00974         BRA     _00135_DS_
+               00975 ;       .line   252; BerkeleyUDPClientDemo.c    dwTimer = TickGet();
+02D0 EC00 F000 00976         CALL    _TickGet
+02D4 0000      00977         BANKSEL _BerkeleyUDPClientDemo_dwTimer_1_1
+02D6 6F00      00978         MOVWF   _BerkeleyUDPClientDemo_dwTimer_1_1, B
+02D8 CFF3 F000 00979         MOVFF   PRODL, (_BerkeleyUDPClientDemo_dwTimer_1_1 + 1)
+02DC CFF4 F000 00980         MOVFF   PRODH, (_BerkeleyUDPClientDemo_dwTimer_1_1 + 2)
+02E0 CFE9 F000 00981         MOVFF   FSR0L, (_BerkeleyUDPClientDemo_dwTimer_1_1 + 3)
+               00982 ;       .line   253; BerkeleyUDPClientDemo.c    SNTPState = SM_UDP_RECV;
+02E4 0E04      00983         MOVLW   0x04
+02E6 0000      00984         BANKSEL _BerkeleyUDPClientDemo_SNTPState_1_1
+02E8 6F00      00985         MOVWF   _BerkeleyUDPClientDemo_SNTPState_1_1, B
+               00986 ;       .line   255; BerkeleyUDPClientDemo.c    break;
+02EA D000      00987         BRA     _00135_DS_
+02EC 00988 _00121_DS_:
+               00989 ;       .line   259; BerkeleyUDPClientDemo.c    i = recvfrom(bsdUdpClient, (char*)&pkt, sizeof(pkt), 0, (struct sockaddr*)&udpaddr, &addrlen);
+02EC 0E00      00990         MOVLW   HIGH(_BerkeleyUDPClientDemo_pkt_1_1)
+02EE 6E00      00991         MOVWF   r0x01
+02F0 0E00      00992         MOVLW   LOW(_BerkeleyUDPClientDemo_pkt_1_1)
+02F2 6E00      00993         MOVWF   r0x00
+02F4 0E80      00994         MOVLW   0x80
+02F6 6E00      00995         MOVWF   r0x02
+02F8 0E00      00996         MOVLW   HIGH(_BerkeleyUDPClientDemo_udpaddr_1_1)
+02FA 6E00      00997         MOVWF   r0x04
+02FC 0E00      00998         MOVLW   LOW(_BerkeleyUDPClientDemo_udpaddr_1_1)
+02FE 6E00      00999         MOVWF   r0x03
+0300 0E80      01000         MOVLW   0x80
+0302 6E00      01001         MOVWF   r0x05
+0304 0E00      01002         MOVLW   HIGH(_BerkeleyUDPClientDemo_addrlen_1_1)
+0306 6E00      01003         MOVWF   r0x07
+0308 0E00      01004         MOVLW   LOW(_BerkeleyUDPClientDemo_addrlen_1_1)
+030A 6E00      01005         MOVWF   r0x06
+030C 0E80      01006         MOVLW   0x80
+030E 6E00      01007         MOVWF   r0x08
+0310 5000      01008         MOVF    r0x08, W
+0312 6EE5      01009         MOVWF   POSTDEC1
+0314 5000      01010         MOVF    r0x07, W
+0316 6EE5      01011         MOVWF   POSTDEC1
+0318 5000      01012         MOVF    r0x06, W
+031A 6EE5      01013         MOVWF   POSTDEC1
+031C 5000      01014         MOVF    r0x05, W
+031E 6EE5      01015         MOVWF   POSTDEC1
+0320 5000      01016         MOVF    r0x04, W
+0322 6EE5      01017         MOVWF   POSTDEC1
+0324 5000      01018         MOVF    r0x03, W
+0326 6EE5      01019         MOVWF   POSTDEC1
+0328 0E00      01020         MOVLW   0x00
+032A 6EE5      01021         MOVWF   POSTDEC1
+032C 0E00      01022         MOVLW   0x00
+032E 6EE5      01023         MOVWF   POSTDEC1
+0330 0E00      01024         MOVLW   0x00
+0332 6EE5      01025         MOVWF   POSTDEC1
+0334 0E30      01026         MOVLW   0x30
+gpasm-0.13.7 beta               Objects/BerkeleyUDPClientDemo.asm12-16-2009  00:27:12         PAGE 20
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0336 6EE5      01027         MOVWF   POSTDEC1
+0338 5000      01028         MOVF    r0x02, W
+033A 6EE5      01029         MOVWF   POSTDEC1
+033C 5000      01030         MOVF    r0x01, W
+033E 6EE5      01031         MOVWF   POSTDEC1
+0340 5000      01032         MOVF    r0x00, W
+0342 6EE5      01033         MOVWF   POSTDEC1
+0344 0000      01034         BANKSEL _BerkeleyUDPClientDemo_bsdUdpClient_1_1
+0346 5100      01035         MOVF    _BerkeleyUDPClientDemo_bsdUdpClient_1_1, W, B
+0348 6EE5      01036         MOVWF   POSTDEC1
+034A EC00 F000 01037         CALL    _recvfrom
+034E 6E00      01038         MOVWF   r0x00
+0350 CFF3 F000 01039         MOVFF   PRODL, r0x01
+0354 0E0E      01040         MOVLW   0x0e
+0356 26E1      01041         ADDWF   FSR1L, F
+               01042 ;       .line   260; BerkeleyUDPClientDemo.c    if(i < (int)sizeof(pkt))
+0358 5000      01043         MOVF    r0x01, W
+035A 0F80      01044         ADDLW   0x80
+035C 0F80      01045         ADDLW   0x80
+035E E100      01046         BNZ     _00155_DS_
+0360 0E30      01047         MOVLW   0x30
+0362 5C00      01048         SUBWF   r0x00, W
+0364 01049 _00155_DS_:
+0364 B0D8      01050         BTFSC   STATUS, 0
+0366 D000      01051         BRA     _00125_DS_
+               01052 ;       .line   262; BerkeleyUDPClientDemo.c    if((TickGet()) - dwTimer > NTP_REPLY_TIMEOUT)
+0368 EC00 F000 01053         CALL    _TickGet
+036C 6E00      01054         MOVWF   r0x00
+036E CFF3 F000 01055         MOVFF   PRODL, r0x01
+0372 CFF4 F000 01056         MOVFF   PRODH, r0x02
+0376 CFE9 F000 01057         MOVFF   FSR0L, r0x03
+037A 0000      01058         BANKSEL _BerkeleyUDPClientDemo_dwTimer_1_1
+037C 5100      01059         MOVF    _BerkeleyUDPClientDemo_dwTimer_1_1, W, B
+037E 5E00      01060         SUBWF   r0x00, F
+0380 0000      01061         BANKSEL (_BerkeleyUDPClientDemo_dwTimer_1_1 + 1)
+0382 5100      01062         MOVF    (_BerkeleyUDPClientDemo_dwTimer_1_1 + 1), W, B
+0384 5A00      01063         SUBWFB  r0x01, F
+0386 0000      01064         BANKSEL (_BerkeleyUDPClientDemo_dwTimer_1_1 + 2)
+0388 5100      01065         MOVF    (_BerkeleyUDPClientDemo_dwTimer_1_1 + 2), W, B
+038A 5A00      01066         SUBWFB  r0x02, F
+038C 0000      01067         BANKSEL (_BerkeleyUDPClientDemo_dwTimer_1_1 + 3)
+038E 5100      01068         MOVF    (_BerkeleyUDPClientDemo_dwTimer_1_1 + 3), W, B
+0390 5A00      01069         SUBWFB  r0x03, F
+0392 0E00      01070         MOVLW   0x00
+0394 5C00      01071         SUBWF   r0x03, W
+0396 E100      01072         BNZ     _00156_DS_
+0398 0E03      01073         MOVLW   0x03
+039A 5C00      01074         SUBWF   r0x02, W
+039C E100      01075         BNZ     _00156_DS_
+039E 0EB9      01076         MOVLW   0xb9
+03A0 5C00      01077         SUBWF   r0x01, W
+03A2 E100      01078         BNZ     _00156_DS_
+03A4 0EAD      01079         MOVLW   0xad
+03A6 5C00      01080         SUBWF   r0x00, W
+gpasm-0.13.7 beta               Objects/BerkeleyUDPClientDemo.asm12-16-2009  00:27:12         PAGE 21
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+03A8 01081 _00156_DS_:
+03A8 A0D8      01082         BTFSS   STATUS, 0
+03AA D000      01083         BRA     _00135_DS_
+03AC 0000      01084         BANKSEL _BerkeleyUDPClientDemo_bsdUdpClient_1_1
+               01085 ;       .line   265; BerkeleyUDPClientDemo.c    closesocket(bsdUdpClient);
+03AE 5100      01086         MOVF    _BerkeleyUDPClientDemo_bsdUdpClient_1_1, W, B
+03B0 6EE5      01087         MOVWF   POSTDEC1
+03B2 EC00 F000 01088         CALL    _closesocket
+03B6 2AE1      01089         INCF    FSR1L, F
+               01090 ;       .line   266; BerkeleyUDPClientDemo.c    dwTimer = TickGetDiv64K();
+03B8 EC00 F000 01091         CALL    _TickGetDiv64K
+03BC 0000      01092         BANKSEL _BerkeleyUDPClientDemo_dwTimer_1_1
+03BE 6F00      01093         MOVWF   _BerkeleyUDPClientDemo_dwTimer_1_1, B
+03C0 CFF3 F000 01094         MOVFF   PRODL, (_BerkeleyUDPClientDemo_dwTimer_1_1 + 1)
+03C4 CFF4 F000 01095         MOVFF   PRODH, (_BerkeleyUDPClientDemo_dwTimer_1_1 + 2)
+03C8 CFE9 F000 01096         MOVFF   FSR0L, (_BerkeleyUDPClientDemo_dwTimer_1_1 + 3)
+               01097 ;       .line   267; BerkeleyUDPClientDemo.c    SNTPState = SM_SHORT_WAIT;
+03CC 0E05      01098         MOVLW   0x05
+03CE 0000      01099         BANKSEL _BerkeleyUDPClientDemo_SNTPState_1_1
+03D0 6F00      01100         MOVWF   _BerkeleyUDPClientDemo_SNTPState_1_1, B
+               01101 ;       .line   268; BerkeleyUDPClientDemo.c    break;
+03D2 D000      01102         BRA     _00135_DS_
+03D4 01103 _00125_DS_:
+03D4 0000      01104         BANKSEL _BerkeleyUDPClientDemo_bsdUdpClient_1_1
+               01105 ;       .line   272; BerkeleyUDPClientDemo.c    closesocket(bsdUdpClient);
+03D6 5100      01106         MOVF    _BerkeleyUDPClientDemo_bsdUdpClient_1_1, W, B
+03D8 6EE5      01107         MOVWF   POSTDEC1
+03DA EC00 F000 01108         CALL    _closesocket
+03DE 2AE1      01109         INCF    FSR1L, F
+               01110 ;       .line   273; BerkeleyUDPClientDemo.c    dwTimer = TickGetDiv64K();
+03E0 EC00 F000 01111         CALL    _TickGetDiv64K
+03E4 0000      01112         BANKSEL _BerkeleyUDPClientDemo_dwTimer_1_1
+03E6 6F00      01113         MOVWF   _BerkeleyUDPClientDemo_dwTimer_1_1, B
+03E8 CFF3 F000 01114         MOVFF   PRODL, (_BerkeleyUDPClientDemo_dwTimer_1_1 + 1)
+03EC CFF4 F000 01115         MOVFF   PRODH, (_BerkeleyUDPClientDemo_dwTimer_1_1 + 2)
+03F0 CFE9 F000 01116         MOVFF   FSR0L, (_BerkeleyUDPClientDemo_dwTimer_1_1 + 3)
+               01117 ;       .line   274; BerkeleyUDPClientDemo.c    SNTPState = SM_WAIT;
+03F4 0E06      01118         MOVLW   0x06
+03F6 0000      01119         BANKSEL _BerkeleyUDPClientDemo_SNTPState_1_1
+03F8 6F00      01120         MOVWF   _BerkeleyUDPClientDemo_SNTPState_1_1, B
+               01121 ;       .line   277; BerkeleyUDPClientDemo.c    dwLastUpdateTick = TickGet();
+03FA EC00 F000 01122         CALL    _TickGet
+03FE 0000      01123         BANKSEL _dwLastUpdateTick
+0400 6F00      01124         MOVWF   _dwLastUpdateTick, B
+0402 CFF3 F000 01125         MOVFF   PRODL, (_dwLastUpdateTick + 1)
+0406 CFF4 F000 01126         MOVFF   PRODH, (_dwLastUpdateTick + 2)
+040A CFE9 F000 01127         MOVFF   FSR0L, (_dwLastUpdateTick + 3)
+040E 0000      01128         BANKSEL (_BerkeleyUDPClientDemo_pkt_1_1 + 43)
+               01129 ;       .line   278; BerkeleyUDPClientDemo.c    dwSNTPSeconds = swapl(pkt.tx_ts_secs) - NTP_EPOCH;
+0410 5100      01130         MOVF    (_BerkeleyUDPClientDemo_pkt_1_1 + 43), W, B
+0412 6EE5      01131         MOVWF   POSTDEC1
+0414 0000      01132         BANKSEL (_BerkeleyUDPClientDemo_pkt_1_1 + 42)
+0416 5100      01133         MOVF    (_BerkeleyUDPClientDemo_pkt_1_1 + 42), W, B
+0418 6EE5      01134         MOVWF   POSTDEC1
+gpasm-0.13.7 beta               Objects/BerkeleyUDPClientDemo.asm12-16-2009  00:27:12         PAGE 22
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+041A 0000      01135         BANKSEL (_BerkeleyUDPClientDemo_pkt_1_1 + 41)
+041C 5100      01136         MOVF    (_BerkeleyUDPClientDemo_pkt_1_1 + 41), W, B
+041E 6EE5      01137         MOVWF   POSTDEC1
+0420 0000      01138         BANKSEL (_BerkeleyUDPClientDemo_pkt_1_1 + 40)
+0422 5100      01139         MOVF    (_BerkeleyUDPClientDemo_pkt_1_1 + 40), W, B
+0424 6EE5      01140         MOVWF   POSTDEC1
+0426 EC00 F000 01141         CALL    _swapl
+042A 6E00      01142         MOVWF   r0x00
+042C CFF3 F000 01143         MOVFF   PRODL, r0x01
+0430 CFF4 F000 01144         MOVFF   PRODH, r0x02
+0434 CFE9 F000 01145         MOVFF   FSR0L, r0x03
+0438 0E04      01146         MOVLW   0x04
+043A 26E1      01147         ADDWF   FSR1L, F
+043C 5000      01148         MOVF    r0x00, W
+043E 0F80      01149         ADDLW   0x80
+0440 0000      01150         BANKSEL _dwSNTPSeconds
+0442 6F00      01151         MOVWF   _dwSNTPSeconds, B
+0444 0E81      01152         MOVLW   0x81
+0446 2000      01153         ADDWFC  r0x01, W
+0448 0000      01154         BANKSEL (_dwSNTPSeconds + 1)
+044A 6F00      01155         MOVWF   (_dwSNTPSeconds + 1), B
+044C 0E55      01156         MOVLW   0x55
+044E 2000      01157         ADDWFC  r0x02, W
+0450 0000      01158         BANKSEL (_dwSNTPSeconds + 2)
+0452 6F00      01159         MOVWF   (_dwSNTPSeconds + 2), B
+0454 0E7C      01160         MOVLW   0x7c
+0456 2000      01161         ADDWFC  r0x03, W
+0458 0000      01162         BANKSEL (_dwSNTPSeconds + 3)
+045A 6F00      01163         MOVWF   (_dwSNTPSeconds + 3), B
+045C 0000      01164         BANKSEL (_BerkeleyUDPClientDemo_pkt_1_1 + 44)
+               01165 ;       .line   280; BerkeleyUDPClientDemo.c    if(((BYTE*)&pkt.tx_ts_fraq)[0] & 0x80)
+045E AE00      01166         BTFSS   (_BerkeleyUDPClientDemo_pkt_1_1 + 44), 7
+0460 D000      01167         BRA     _00135_DS_
+0462 0000      01168         BANKSEL _dwSNTPSeconds
+               01169 ;       .line   281; BerkeleyUDPClientDemo.c    dwSNTPSeconds++;
+0464 2B00      01170         INCF    _dwSNTPSeconds, F, B
+0466 E300      01171         BNC     _40167_DS_
+0468 0000      01172         BANKSEL (_dwSNTPSeconds + 1)
+046A 2B00      01173         INCF    (_dwSNTPSeconds + 1), F, B
+046C 01174 _40167_DS_:
+046C E300      01175         BNC     _50168_DS_
+046E 0000      01176         BANKSEL (_dwSNTPSeconds + 2)
+0470 2B00      01177         INCF    (_dwSNTPSeconds + 2), F, B
+0472 01178 _50168_DS_:
+0472 E300      01179         BNC     _60169_DS_
+0474 0000      01180         BANKSEL (_dwSNTPSeconds + 3)
+0476 2B00      01181         INCF    (_dwSNTPSeconds + 3), F, B
+0478 01182 _60169_DS_:
+               01183 ;       .line   283; BerkeleyUDPClientDemo.c    break;
+0478 D000      01184         BRA     _00135_DS_
+047A 01185 _00128_DS_:
+               01186 ;       .line   287; BerkeleyUDPClientDemo.c    if(TickGetDiv64K() - dwTimer > (NTP_FAST_QUERY_INTERVAL/65536ull))
+047A EC00 F000 01187         CALL    _TickGetDiv64K
+047E 6E00      01188         MOVWF   r0x00
+gpasm-0.13.7 beta               Objects/BerkeleyUDPClientDemo.asm12-16-2009  00:27:12         PAGE 23
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0480 CFF3 F000 01189         MOVFF   PRODL, r0x01
+0484 CFF4 F000 01190         MOVFF   PRODH, r0x02
+0488 CFE9 F000 01191         MOVFF   FSR0L, r0x03
+048C 0000      01192         BANKSEL _BerkeleyUDPClientDemo_dwTimer_1_1
+048E 5100      01193         MOVF    _BerkeleyUDPClientDemo_dwTimer_1_1, W, B
+0490 5E00      01194         SUBWF   r0x00, F
+0492 0000      01195         BANKSEL (_BerkeleyUDPClientDemo_dwTimer_1_1 + 1)
+0494 5100      01196         MOVF    (_BerkeleyUDPClientDemo_dwTimer_1_1 + 1), W, B
+0496 5A00      01197         SUBWFB  r0x01, F
+0498 0000      01198         BANKSEL (_BerkeleyUDPClientDemo_dwTimer_1_1 + 2)
+049A 5100      01199         MOVF    (_BerkeleyUDPClientDemo_dwTimer_1_1 + 2), W, B
+049C 5A00      01200         SUBWFB  r0x02, F
+049E 0000      01201         BANKSEL (_BerkeleyUDPClientDemo_dwTimer_1_1 + 3)
+04A0 5100      01202         MOVF    (_BerkeleyUDPClientDemo_dwTimer_1_1 + 3), W, B
+04A2 5A00      01203         SUBWFB  r0x03, F
+04A4 0E00      01204         MOVLW   0x00
+04A6 5C00      01205         SUBWF   r0x03, W
+04A8 E100      01206         BNZ     _00158_DS_
+04AA 0E00      01207         MOVLW   0x00
+04AC 5C00      01208         SUBWF   r0x02, W
+04AE E100      01209         BNZ     _00158_DS_
+04B0 0E00      01210         MOVLW   0x00
+04B2 5C00      01211         SUBWF   r0x01, W
+04B4 E100      01212         BNZ     _00158_DS_
+04B6 0E09      01213         MOVLW   0x09
+04B8 5C00      01214         SUBWF   r0x00, W
+04BA 01215 _00158_DS_:
+04BA E300      01216         BNC     _00135_DS_
+04BC 0000      01217         BANKSEL _BerkeleyUDPClientDemo_SNTPState_1_1
+               01218 ;       .line   288; BerkeleyUDPClientDemo.c    SNTPState = SM_HOME;    
+04BE 6B00      01219         CLRF    _BerkeleyUDPClientDemo_SNTPState_1_1, B
+               01220 ;       .line   289; BerkeleyUDPClientDemo.c    break;
+04C0 D000      01221         BRA     _00135_DS_
+04C2 01222 _00131_DS_:
+               01223 ;       .line   293; BerkeleyUDPClientDemo.c    if(TickGetDiv64K() - dwTimer > (NTP_QUERY_INTERVAL/65536ull))
+04C2 EC00 F000 01224         CALL    _TickGetDiv64K
+04C6 6E00      01225         MOVWF   r0x00
+04C8 CFF3 F000 01226         MOVFF   PRODL, r0x01
+04CC CFF4 F000 01227         MOVFF   PRODH, r0x02
+04D0 CFE9 F000 01228         MOVFF   FSR0L, r0x03
+04D4 0000      01229         BANKSEL _BerkeleyUDPClientDemo_dwTimer_1_1
+04D6 5100      01230         MOVF    _BerkeleyUDPClientDemo_dwTimer_1_1, W, B
+04D8 5E00      01231         SUBWF   r0x00, F
+04DA 0000      01232         BANKSEL (_BerkeleyUDPClientDemo_dwTimer_1_1 + 1)
+04DC 5100      01233         MOVF    (_BerkeleyUDPClientDemo_dwTimer_1_1 + 1), W, B
+04DE 5A00      01234         SUBWFB  r0x01, F
+04E0 0000      01235         BANKSEL (_BerkeleyUDPClientDemo_dwTimer_1_1 + 2)
+04E2 5100      01236         MOVF    (_BerkeleyUDPClientDemo_dwTimer_1_1 + 2), W, B
+04E4 5A00      01237         SUBWFB  r0x02, F
+04E6 0000      01238         BANKSEL (_BerkeleyUDPClientDemo_dwTimer_1_1 + 3)
+04E8 5100      01239         MOVF    (_BerkeleyUDPClientDemo_dwTimer_1_1 + 3), W, B
+04EA 5A00      01240         SUBWFB  r0x03, F
+04EC 0E00      01241         MOVLW   0x00
+04EE 5C00      01242         SUBWF   r0x03, W
+gpasm-0.13.7 beta               Objects/BerkeleyUDPClientDemo.asm12-16-2009  00:27:12         PAGE 24
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+04F0 E100      01243         BNZ     _00159_DS_
+04F2 0E00      01244         MOVLW   0x00
+04F4 5C00      01245         SUBWF   r0x02, W
+04F6 E100      01246         BNZ     _00159_DS_
+04F8 0E01      01247         MOVLW   0x01
+04FA 5C00      01248         SUBWF   r0x01, W
+04FC E100      01249         BNZ     _00159_DS_
+04FE 0E75      01250         MOVLW   0x75
+0500 5C00      01251         SUBWF   r0x00, W
+0502 01252 _00159_DS_:
+0502 E300      01253         BNC     _00135_DS_
+0504 0000      01254         BANKSEL _BerkeleyUDPClientDemo_SNTPState_1_1
+               01255 ;       .line   294; BerkeleyUDPClientDemo.c    SNTPState = SM_HOME;    
+0506 6B00      01256         CLRF    _BerkeleyUDPClientDemo_SNTPState_1_1, B
+0508 01257 _00135_DS_:
+               01258 ;       .line   297; BerkeleyUDPClientDemo.c    }
+0508 CFE4 F000 01259         MOVFF   PREINC1, r0x08
+050C CFE4 F000 01260         MOVFF   PREINC1, r0x07
+0510 CFE4 F000 01261         MOVFF   PREINC1, r0x06
+0514 CFE4 F000 01262         MOVFF   PREINC1, r0x05
+0518 CFE4 F000 01263         MOVFF   PREINC1, r0x04
+051C CFE4 F000 01264         MOVFF   PREINC1, r0x03
+0520 CFE4 F000 01265         MOVFF   PREINC1, r0x02
+0524 CFE4 F000 01266         MOVFF   PREINC1, r0x01
+0528 CFE4 F000 01267         MOVFF   PREINC1, r0x00
+052C CFE4 FFD9 01268         MOVFF   PREINC1, FSR2L
+0530 0012      01269         RETURN  
+               01270 
+               01271 ; ; Starting pCode block
+0532 01272 __str_0:
+0532 6F70 6C6F 01273         DB      0x70, 0x6f, 0x6f, 0x6c, 0x2e, 0x6e, 0x74, 0x70, 0x2e, 0x6f, 0x72, 0x67
+     6E2E 7074 
+     6F2E 6772 
+053E 0000      01274         DB      0x00
+               01275 
+               01276 
+               01277 ; Statistics:
+               01278 ; code size:     1574 (0x0626) bytes ( 1.20%)
+               01279 ;                 787 (0x0313) words
+               01280 ; udata size:      75 (0x004b) bytes ( 1.95%)
+               01281 ; access size:     11 (0x000b) bytes
+               01282 
+               01283 
+gpasm-0.13.7 beta               Objects/BerkeleyUDPClientDemo.asm12-16-2009  00:27:12         PAGE 25
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+FSR0L                             00000FE9
+FSR1L                             00000FE1
+FSR2L                             00000FD9
+PCL                               00000FF9
+PCLATH                            00000FFA
+PCLATU                            00000FFB
+POSTDEC1                          00000FE5
+PREINC1                           00000FE4
+PRODH                             00000FF4
+PRODL                             00000FF3
+STATUS                            00000FD8
+WREG                              00000FE8
+_00105_DS_                        00000096
+_00108_DS_                        000000DA
+_00112_DS_                        00000168
+_00114_DS_                        0000018E
+_00115_DS_                        00000194
+_00117_DS_                        000001C2
+_00118_DS_                        000001C8
+_00121_DS_                        000002EC
+_00125_DS_                        000003D4
+_00128_DS_                        0000047A
+_00131_DS_                        000004C2
+_00135_DS_                        00000508
+_00150_DS_                        0000007A
+_00151_DS_                        00000140
+_00154_DS_                        000002CC
+_00155_DS_                        00000364
+_00156_DS_                        000003A8
+_00158_DS_                        000004BA
+_00159_DS_                        00000502
+_00164_DS_                        0000005A
+_00166_DS_                        0000009A
+_00172_DS_                        00000070
+_10164_DS_                        0000007C
+_20165_DS_                        00000082
+_30166_DS_                        00000088
+_40167_DS_                        0000046C
+_50168_DS_                        00000472
+_60169_DS_                        00000478
+_ADCON0                           00000000
+_ADCON0bits                       00000000
+_ADCON1                           00000000
+_ADCON1bits                       00000000
+_ADCON2                           00000000
+_ADCON2bits                       00000000
+_ADRES                            00000000
+_ADRESH                           00000000
+_ADRESL                           00000000
+_AppConfig                        00000000
+_BAUDCON                          00000000
+_BAUDCON1                         00000000
+_BAUDCON1bits                     00000000
+gpasm-0.13.7 beta               Objects/BerkeleyUDPClientDemo.asm12-16-2009  00:27:12         PAGE 26
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_BAUDCON2                         00000000
+_BAUDCON2bits                     00000000
+_BAUDCONbits                      00000000
+_BAUDCTL                          00000000
+_BAUDCTL1                         00000000
+_BAUDCTL1bits                     00000000
+_BAUDCTL2                         00000000
+_BAUDCTL2bits                     00000000
+_BAUDCTLbits                      00000000
+_BSR                              00000000
+_BerkeleySNTPGetUTCSeconds        00000000
+_BerkeleyUDPClientDemo            00000000
+_BerkeleyUDPClientDemo_SNTPState_1_1  00000008
+_BerkeleyUDPClientDemo_addrlen_1_1  00000000
+_BerkeleyUDPClientDemo_bsdUdpClient_1_1  00000000
+_BerkeleyUDPClientDemo_dwServerIP_1_1  00000000
+_BerkeleyUDPClientDemo_dwTimer_1_1  00000000
+_BerkeleyUDPClientDemo_pkt_1_1    00000000
+_BerkeleyUDPClientDemo_udpaddr_1_1  00000000
+_CCP1CON                          00000000
+_CCP1CONbits                      00000000
+_CCP2CON                          00000000
+_CCP2CONbits                      00000000
+_CCP3CON                          00000000
+_CCP3CONbits                      00000000
+_CCP4CON                          00000000
+_CCP4CONbits                      00000000
+_CCP5CON                          00000000
+_CCP5CONbits                      00000000
+_CCPR1                            00000000
+_CCPR1H                           00000000
+_CCPR1L                           00000000
+_CCPR2                            00000000
+_CCPR2H                           00000000
+_CCPR2L                           00000000
+_CCPR3                            00000000
+_CCPR3H                           00000000
+_CCPR3L                           00000000
+_CCPR4                            00000000
+_CCPR4H                           00000000
+_CCPR4L                           00000000
+_CCPR5                            00000000
+_CCPR5H                           00000000
+_CCPR5L                           00000000
+_CMCON                            00000000
+_CMCONbits                        00000000
+_CVRCON                           00000000
+_CVRCONbits                       00000000
+_DDRA                             00000000
+_DDRAbits                         00000000
+_DDRB                             00000000
+_DDRBbits                         00000000
+_DDRC                             00000000
+_DDRCbits                         00000000
+gpasm-0.13.7 beta               Objects/BerkeleyUDPClientDemo.asm12-16-2009  00:27:12         PAGE 27
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_DDRD                             00000000
+_DDRDbits                         00000000
+_DDRE                             00000000
+_DDREbits                         00000000
+_DDRF                             00000000
+_DDRFbits                         00000000
+_DDRG                             00000000
+_DDRGbits                         00000000
+_DDRH                             00000000
+_DDRHbits                         00000000
+_DDRJ                             00000000
+_DDRJbits                         00000000
+_DNSBeginUsage                    00000000
+_DNSEndUsage                      00000000
+_DNSIsResolved                    00000000
+_DNSResolve                       00000000
+_EBSTCON                          00000000
+_EBSTCONbits                      00000000
+_EBSTCS                           00000000
+_EBSTCSH                          00000000
+_EBSTCSL                          00000000
+_EBSTSD                           00000000
+_ECCP1AS                          00000000
+_ECCP1ASbits                      00000000
+_ECCP1CON                         00000000
+_ECCP1CONbits                     00000000
+_ECCP1DEL                         00000000
+_ECCP1DELbits                     00000000
+_ECCP2AS                          00000000
+_ECCP2ASbits                      00000000
+_ECCP2CON                         00000000
+_ECCP2CONbits                     00000000
+_ECCP2DEL                         00000000
+_ECCP2DELbits                     00000000
+_ECCP3AS                          00000000
+_ECCP3ASbits                      00000000
+_ECCP3CON                         00000000
+_ECCP3CONbits                     00000000
+_ECCP3DEL                         00000000
+_ECCP3DELbits                     00000000
+_ECON1                            00000000
+_ECON1bits                        00000000
+_ECON2                            00000000
+_ECON2bits                        00000000
+_EDATA                            00000000
+_EDATAbits                        00000000
+_EDMACS                           00000000
+_EDMACSH                          00000000
+_EDMACSL                          00000000
+_EDMADST                          00000000
+_EDMADSTH                         00000000
+_EDMADSTL                         00000000
+_EDMAND                           00000000
+_EDMANDH                          00000000
+gpasm-0.13.7 beta               Objects/BerkeleyUDPClientDemo.asm12-16-2009  00:27:12         PAGE 28
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_EDMANDL                          00000000
+_EDMAST                           00000000
+_EDMASTH                          00000000
+_EDMASTL                          00000000
+_EECON1                           00000000
+_EECON1bits                       00000000
+_EECON2                           00000000
+_EFLOCON                          00000000
+_EFLOCONbits                      00000000
+_EHT0                             00000000
+_EHT1                             00000000
+_EHT2                             00000000
+_EHT3                             00000000
+_EHT4                             00000000
+_EHT5                             00000000
+_EHT6                             00000000
+_EHT7                             00000000
+_EIE                              00000000
+_EIEbits                          00000000
+_EIR                              00000000
+_EIRbits                          00000000
+_EPAUS                            00000000
+_EPAUSH                           00000000
+_EPAUSL                           00000000
+_EPKTCNT                          00000000
+_EPMCS                            00000000
+_EPMCSH                           00000000
+_EPMCSL                           00000000
+_EPMM0                            00000000
+_EPMM1                            00000000
+_EPMM2                            00000000
+_EPMM3                            00000000
+_EPMM4                            00000000
+_EPMM5                            00000000
+_EPMM6                            00000000
+_EPMM7                            00000000
+_EPMO                             00000000
+_EPMOH                            00000000
+_EPMOL                            00000000
+_ERDPT                            00000000
+_ERDPTH                           00000000
+_ERDPTL                           00000000
+_ERXFCON                          00000000
+_ERXFCONbits                      00000000
+_ERXND                            00000000
+_ERXNDH                           00000000
+_ERXNDL                           00000000
+_ERXRDPT                          00000000
+_ERXRDPTH                         00000000
+_ERXRDPTL                         00000000
+_ERXST                            00000000
+_ERXSTH                           00000000
+_ERXSTL                           00000000
+_ERXWRPT                          00000000
+gpasm-0.13.7 beta               Objects/BerkeleyUDPClientDemo.asm12-16-2009  00:27:12         PAGE 29
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_ERXWRPTH                         00000000
+_ERXWRPTL                         00000000
+_ESTAT                            00000000
+_ESTATbits                        00000000
+_ETXND                            00000000
+_ETXNDH                           00000000
+_ETXNDL                           00000000
+_ETXST                            00000000
+_ETXSTH                           00000000
+_ETXSTL                           00000000
+_EWOLIE                           00000000
+_EWOLIEbits                       00000000
+_EWOLIR                           00000000
+_EWOLIRbits                       00000000
+_EWRPT                            00000000
+_EWRPTH                           00000000
+_EWRPTL                           00000000
+_FSR0H                            00000000
+_FSR0L                            00000000
+_FSR1H                            00000000
+_FSR1L                            00000000
+_FSR2H                            00000000
+_FSR2L                            00000000
+_INDF0                            00000000
+_INDF1                            00000000
+_INDF2                            00000000
+_INTCON                           00000000
+_INTCON2                          00000000
+_INTCON2bits                      00000000
+_INTCON3                          00000000
+_INTCON3bits                      00000000
+_INTCONbits                       00000000
+_IPR1                             00000000
+_IPR1bits                         00000000
+_IPR2                             00000000
+_IPR2bits                         00000000
+_IPR3                             00000000
+_IPR3bits                         00000000
+_LATA                             00000000
+_LATAbits                         00000000
+_LATB                             00000000
+_LATBbits                         00000000
+_LATC                             00000000
+_LATCbits                         00000000
+_LATD                             00000000
+_LATDbits                         00000000
+_LATE                             00000000
+_LATEbits                         00000000
+_LATF                             00000000
+_LATFbits                         00000000
+_LATG                             00000000
+_LATGbits                         00000000
+_LATH                             00000000
+_LATHbits                         00000000
+gpasm-0.13.7 beta               Objects/BerkeleyUDPClientDemo.asm12-16-2009  00:27:12         PAGE 30
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_LATJ                             00000000
+_LATJbits                         00000000
+_LCDText                          00000000
+_MAADR1                           00000000
+_MAADR2                           00000000
+_MAADR3                           00000000
+_MAADR4                           00000000
+_MAADR5                           00000000
+_MAADR6                           00000000
+_MABBIPG                          00000000
+_MACLCON1                         00000000
+_MACLCON1bits                     00000000
+_MACLCON2                         00000000
+_MACLCON2bits                     00000000
+_MACON1                           00000000
+_MACON1bits                       00000000
+_MACON2                           00000000
+_MACON2bits                       00000000
+_MACON3                           00000000
+_MACON3bits                       00000000
+_MACON4                           00000000
+_MACON4bits                       00000000
+_MAIPG                            00000000
+_MAIPGH                           00000000
+_MAIPGL                           00000000
+_MAMXFL                           00000000
+_MAMXFLH                          00000000
+_MAMXFLL                          00000000
+_MEMCON                           00000000
+_MEMCONbits                       00000000
+_MICMD                            00000000
+_MICMDbits                        00000000
+_MICON                            00000000
+_MICONbits                        00000000
+_MIRD                             00000000
+_MIRDH                            00000000
+_MIRDL                            00000000
+_MIREGADR                         00000000
+_MISTAT                           00000000
+_MISTATbits                       00000000
+_MIWR                             00000000
+_MIWRH                            00000000
+_MIWRL                            00000000
+_OSCCON                           00000000
+_OSCCONbits                       00000000
+_OSCTUNE                          00000000
+_OSCTUNEbits                      00000000
+_PC                               00000000
+_PCL                              00000000
+_PCLATH                           00000000
+_PCLATU                           00000000
+_PIE1                             00000000
+_PIE1bits                         00000000
+_PIE2                             00000000
+gpasm-0.13.7 beta               Objects/BerkeleyUDPClientDemo.asm12-16-2009  00:27:12         PAGE 31
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_PIE2bits                         00000000
+_PIE3                             00000000
+_PIE3bits                         00000000
+_PIR1                             00000000
+_PIR1bits                         00000000
+_PIR2                             00000000
+_PIR2bits                         00000000
+_PIR3                             00000000
+_PIR3bits                         00000000
+_PLUSW0                           00000000
+_PLUSW1                           00000000
+_PLUSW2                           00000000
+_PORTA                            00000000
+_PORTAbits                        00000000
+_PORTB                            00000000
+_PORTBbits                        00000000
+_PORTC                            00000000
+_PORTCbits                        00000000
+_PORTD                            00000000
+_PORTDbits                        00000000
+_PORTE                            00000000
+_PORTEbits                        00000000
+_PORTF                            00000000
+_PORTFbits                        00000000
+_PORTG                            00000000
+_PORTGbits                        00000000
+_PORTH                            00000000
+_PORTHbits                        00000000
+_PORTJ                            00000000
+_PORTJbits                        00000000
+_POSTDEC0                         00000000
+_POSTDEC1                         00000000
+_POSTDEC2                         00000000
+_POSTINC0                         00000000
+_POSTINC1                         00000000
+_POSTINC2                         00000000
+_PR2                              00000000
+_PR4                              00000000
+_PREINC0                          00000000
+_PREINC1                          00000000
+_PREINC2                          00000000
+_PROD                             00000000
+_PRODH                            00000000
+_PRODL                            00000000
+_PSPCON                           00000000
+_PSPCONbits                       00000000
+_RCON                             00000000
+_RCONbits                         00000000
+_RCREG                            00000000
+_RCREG1                           00000000
+_RCREG2                           00000000
+_RCSTA                            00000000
+_RCSTA1                           00000000
+_RCSTA1bits                       00000000
+gpasm-0.13.7 beta               Objects/BerkeleyUDPClientDemo.asm12-16-2009  00:27:12         PAGE 32
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_RCSTA2                           00000000
+_RCSTA2bits                       00000000
+_RCSTAbits                        00000000
+_SPBRG                            00000000
+_SPBRG1                           00000000
+_SPBRG2                           00000000
+_SPBRGH                           00000000
+_SPBRGH1                          00000000
+_SPBRGH2                          00000000
+_SSP1ADD                          00000000
+_SSP1BUF                          00000000
+_SSP1CON1                         00000000
+_SSP1CON1bits                     00000000
+_SSP1CON2                         00000000
+_SSP1CON2bits                     00000000
+_SSP1STAT                         00000000
+_SSP1STATbits                     00000000
+_SSP2ADD                          00000000
+_SSP2BUF                          00000000
+_SSP2CON1                         00000000
+_SSP2CON1bits                     00000000
+_SSP2CON2                         00000000
+_SSP2CON2bits                     00000000
+_SSP2STAT                         00000000
+_SSP2STATbits                     00000000
+_SSPADD                           00000000
+_SSPBUF                           00000000
+_SSPCON1                          00000000
+_SSPCON1bits                      00000000
+_SSPCON2                          00000000
+_SSPCON2bits                      00000000
+_SSPSTAT                          00000000
+_SSPSTATbits                      00000000
+_STATUS                           00000000
+_STATUSbits                       00000000
+_STKPTR                           00000000
+_STKPTRbits                       00000000
+_T0CON                            00000000
+_T0CONbits                        00000000
+_T1CON                            00000000
+_T1CONbits                        00000000
+_T2CON                            00000000
+_T2CONbits                        00000000
+_T3CON                            00000000
+_T3CONbits                        00000000
+_T4CON                            00000000
+_T4CONbits                        00000000
+_TABLAT                           00000000
+_TBLPTR                           00000000
+_TBLPTRH                          00000000
+_TBLPTRL                          00000000
+_TBLPTRU                          00000000
+_TMR0H                            00000000
+_TMR0L                            00000000
+gpasm-0.13.7 beta               Objects/BerkeleyUDPClientDemo.asm12-16-2009  00:27:12         PAGE 33
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_TMR1H                            00000000
+_TMR1L                            00000000
+_TMR2                             00000000
+_TMR3H                            00000000
+_TMR3L                            00000000
+_TMR4                             00000000
+_TOS                              00000000
+_TOSH                             00000000
+_TOSL                             00000000
+_TOSU                             00000000
+_TRISA                            00000000
+_TRISAbits                        00000000
+_TRISB                            00000000
+_TRISBbits                        00000000
+_TRISC                            00000000
+_TRISCbits                        00000000
+_TRISD                            00000000
+_TRISDbits                        00000000
+_TRISE                            00000000
+_TRISEbits                        00000000
+_TRISF                            00000000
+_TRISFbits                        00000000
+_TRISG                            00000000
+_TRISGbits                        00000000
+_TRISH                            00000000
+_TRISHbits                        00000000
+_TRISJ                            00000000
+_TRISJbits                        00000000
+_TXREG                            00000000
+_TXREG1                           00000000
+_TXREG2                           00000000
+_TXSTA                            00000000
+_TXSTA1                           00000000
+_TXSTA1bits                       00000000
+_TXSTA2                           00000000
+_TXSTA2bits                       00000000
+_TXSTAbits                        00000000
+_TickGet                          00000000
+_TickGetDiv64K                    00000000
+_UDPRxCount                       00000000
+_UDPSocketInfo                    00000000
+_UDPTxCount                       00000000
+_WDTCON                           00000000
+_WDTCONbits                       00000000
+_WREG                             00000000
+__18F97J60                        00000001
+__str_0                           00000532
+_activeUDPSocket                  00000000
+_closesocket                      00000000
+_dwLastUpdateTick                 00000004
+_dwSNTPSeconds                    00000000
+_memset                           00000000
+_recvfrom                         00000000
+_sendto                           00000000
+gpasm-0.13.7 beta               Objects/BerkeleyUDPClientDemo.asm12-16-2009  00:27:12         PAGE 34
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_socket                           00000000
+_stdin                            00000000
+_stdout                           00000000
+_swapl                            00000000
+r0x00                             00000000
+r0x01                             00000001
+r0x02                             00000002
+r0x03                             00000003
+r0x04                             00000004
+r0x05                             00000005
+r0x06                             00000006
+r0x07                             00000007
+r0x08                             00000008
+r0x09                             00000009
+r0x0a                             0000000A
+
+
+Errors   :       0
+Warnings :       0 reported,       0 suppressed
+Messages :       0 reported,       0 suppressed
+

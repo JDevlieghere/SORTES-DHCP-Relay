@@ -2,13 +2,13 @@
  *
  *	TCP/IP Stack Manager
  *  Module for Microchip TCP/IP Stack
- *	 -Handles internal RX packet pre-processing prior to dispatching 
+ *	 -Handles internal RX packet pre-processing prior to dispatching
  *    to upper application layers.
  *	 -Reference: AN833
  *
  *********************************************************************
  * FileName:        StackTsk.c
- * Dependencies:    ARP, IP, Network layer interface (ENC28J60.c, 
+ * Dependencies:    ARP, IP, Network layer interface (ENC28J60.c,
  *					ETH97J60.c, ENCX24J600.c, or ZG2100.c)
  * Processor:       PIC18, PIC24F, PIC24H, dsPIC30F, dsPIC33F, PIC32
  * Compiler:        Microchip C32 v1.05 or higher
@@ -73,7 +73,7 @@
 
 
 #if defined( ZG_CS_TRIS )
-    #if defined(ZG_CONFIG_LINKMGRII) 
+    #if defined(ZG_CONFIG_LINKMGRII)
         #include "TCPIP Stack\ZGLinkMgrII.h"
     #endif
     #if defined( ZG_CONFIG_CONSOLE )
@@ -129,11 +129,11 @@ void StackInit(void)
 
     MACInit();
 #if defined( ZG_CS_TRIS )
-    #if defined(ZG_CONFIG_LINKMGRII) 
+    #if defined(ZG_CONFIG_LINKMGRII)
         ZGLibInitialize();
         ZGLinkMgrInit();
     #endif
-#endif    
+#endif
 
 
     ARPInit();
@@ -175,7 +175,7 @@ void StackInit(void)
 
     if(!AppConfig.Flags.bIsDHCPEnabled)
     {
-        DHCPDisable(0);  
+        DHCPDisable(0);
     }
 #endif
 
@@ -216,9 +216,9 @@ void StackTask(void)
     #if defined( ZG_CS_TRIS )
         // This task performs low-level MAC processing specific to the ZG2100
         MACProcess();
-        #if defined(ZG_CONFIG_LINKMGRII) 
+        #if defined(ZG_CONFIG_LINKMGRII)
             ZGLinkMgr();
-        #endif     
+        #endif
     #endif
 
     #if defined(STACK_USE_DHCP_CLIENT)
@@ -230,7 +230,7 @@ void StackTask(void)
 	{
 		static BOOL bLastLinkState = FALSE;
 		BOOL bCurrentLinkState;
-		
+
 		bCurrentLinkState = MACIsLinked();
 		if(bCurrentLinkState != bLastLinkState)
 		{
@@ -243,13 +243,13 @@ void StackTask(void)
 				DHCPInit(0);
 			}
 		}
-	
+
 		// DHCP must be called all the time even after IP configuration is
 		// discovered.
 		// DHCP has to account lease expiration time and renew the
 		// configuration time.
 		DHCPTask();
-		
+
 		if(DHCPIsBound(0))
 			AppConfig.Flags.bInConfigMode = FALSE;
 	}
@@ -278,14 +278,14 @@ void StackTask(void)
 			RandomAdd(remoteNode.MACAddr.v[5]);
 		#endif
 
-		// We are about to fetch a new packet, make sure that the 
-		// UDP module knows that any old RX data it has laying 
+		// We are about to fetch a new packet, make sure that the
+		// UDP module knows that any old RX data it has laying
 		// around will now be gone.
 		#if defined(STACK_USE_UDP)
 			UDPDiscard();
 		#endif
 
-		// Fetch a packet (throws old one away, if not thrown away 
+		// Fetch a packet (throws old one away, if not thrown away
 		// yet)
 		if(!MACGetHeader(&remoteNode.MACAddr, &cFrameType))
 			break;
@@ -297,7 +297,7 @@ void StackTask(void)
 //			  DisplayString(0,"gotARP");  //ML
 				ARPProcess();
 				break;
-	
+
 			case MAC_IP:
 //			  DisplayString(0,"gotIP");  //ML
 				if(!IPGetHeader(&tempLocalIP, &remoteNode, &cIPFrameType, &dataCount))
@@ -323,7 +323,7 @@ void StackTask(void)
 					}
 					#endif
 
-					// Process this ICMP packet if it the destination IP address matches 
+					// Process this ICMP packet if it the destination IP address matches
 					// our address or one of the broadcast IP addressees
 					if( (tempLocalIP.Val == AppConfig.MyIPAddr.Val) ||
 						(tempLocalIP.Val == 0xFFFFFFFF) ||
@@ -335,7 +335,7 @@ void StackTask(void)
 					break;
 				}
 				#endif
-				
+
 				#if defined(STACK_USE_TCP)
 				if(cIPFrameType == IP_PROT_TCP)
 				{
@@ -344,7 +344,7 @@ void StackTask(void)
 					break;
 				}
 				#endif
-				
+
 				#if defined(STACK_USE_UDP)
 				if(cIPFrameType == IP_PROT_UDP)
 				{
@@ -380,55 +380,59 @@ void StackApplications(void)
 	#if defined(STACK_USE_HTTP_SERVER) || defined(STACK_USE_HTTP2_SERVER)
 	HTTPServer();
 	#endif
-	
+
 	#if defined(STACK_USE_FTP_SERVER) && defined(STACK_USE_MPFS)
 	FTPServer();
 	#endif
-	
+
 	#if defined(STACK_USE_SNMP_SERVER)
 	SNMPTask();
 	#endif
-	
+
 	#if defined(STACK_USE_ANNOUNCE)
 	DiscoveryTask();
 	#endif
-	
+
 	#if defined(STACK_USE_NBNS)
 	NBNSTask();
 	#endif
-	
+
 	#if defined(STACK_USE_DHCP_SERVER)
 	DHCPServerTask();
 	#endif
-	
+
+	#if defined(STACK_USE_DHCP_RELAY)
+	DHCPRelayTask();
+	#endif
+
 	#if defined (STACK_USE_DYNAMICDNS_CLIENT)
 	DDNSTask();
 	#endif
-	
+
 	#if defined(STACK_USE_TELNET_SERVER)
 	TelnetTask();
 	#endif
-	
+
 	#if defined(STACK_USE_REBOOT_SERVER)
 	RebootTask();
 	#endif
-	
+
 	#if defined(STACK_USE_SNTP_CLIENT)
 	SNTPClient();
 	#endif
-	
+
 	#if defined(STACK_USE_UDP_PERFORMANCE_TEST)
 	UDPPerformanceTask();
 	#endif
-	
+
 	#if defined(STACK_USE_TCP_PERFORMANCE_TEST)
 	TCPPerformanceTask();
 	#endif
-	
+
 	#if defined(STACK_USE_SMTP_CLIENT)
 	SMTPTask();
 	#endif
-	
+
 	#if defined(STACK_USE_UART2TCP_BRIDGE)
 	UART2TCPBridgeTask();
 	#endif

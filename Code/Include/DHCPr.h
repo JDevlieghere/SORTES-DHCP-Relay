@@ -7,15 +7,15 @@
 #define __SDCC__
 #include <pic18f97j60.h> //ML
 
-#include "Include/TCPIPConfig.h"
+#include "TCPIPConfig.h"
 
-#include "Include/DHCPr.h"
+#include "DHCPr.h"
 
 #if defined(STACK_USE_DHCP_SERVER)
 
-#include "Include/TCPIP_Stack/TCPIP.h"
+#include "TCPIP_Stack/TCPIP.h"
 
-#include "Include/MainDemo.h"
+#include "MainDemo.h"
 
 // UDP client port for DHCP Client transactions
 #define DHCP_CLIENT_PORT                (68u)
@@ -49,5 +49,5 @@ BOOL 						bDHCPRelayEnabled = TRUE;	// Whether or not the DHCP server is enable
 void DHCPRelayTask(void);
 static void DHCPReplyToDiscovery(BOOTP_HEADER *Header);
 static void DHCPReplyToRequest(BOOTP_HEADER *Header, BOOL bAccept);
-
+#endif
 #endif

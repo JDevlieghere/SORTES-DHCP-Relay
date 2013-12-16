@@ -11,8 +11,8 @@ LDFLAGS= -mpic16 -p18f97j60 -L/usr/local/lib/pic16 -llibio18f97j60.lib -llibdev1
 AR = ar
 RM = rm
 
-OBJECTS=Objects/MainDemo.o  Objects/Announce.o Objects/ARP.o Objects/Delay.o \
-   Objects/DHCP.o Objects/DHCPs.o Objects/DNS.o  Objects/ETH97J60.o  \
+OBJECTS=Objects/MainDemo.o Objects/Announce.o Objects/ARP.o Objects/Delay.o \
+   Objects/DHCP.o Objects/DNS.o Objects/DHCPs.o Objects/ETH97J60.o  \
    Objects/Hashes.o Objects/Helpers.o Objects/ICMP.o Objects/IP.o \
    Objects/LCDBlocking.o Objects/StackTsk.o Objects/UDPPerformanceTest.o \
    Objects/Tick.o Objects/UDP.o
@@ -89,6 +89,10 @@ Objects/MainDemo.o : MainDemo.c $(SDCC_HEADERS) $(SDCC_PIC16_HEADERS) \
    $(APP_HEADERS) $(TCPIP_HEADERS)
 	$(CC) $(CFLAGS) MainDemo.c
 
+#Objects/DHCPs.o : TCPIP_Stack/DHCPs.c $(SDCC_HEADERS) $(SDCC_PIC16_HEADERS) \
+#   $(APP_HEADERS) $(TCPIP_HEADERS)
+#	$(CC) $(CFLAGS) MTCPIP_Stack/DHCPs.c
+#
 Objects/CustomHTTPApp.o : TCPIP_Stack/CustomHTTPApp.c $(SDCC_HEADERS) \
    $(SDCC_PIC16_HEADERS) $(APP_HEADERS) $(TCPIP_HEADERS)
 	$(CC) -c -mpic16 -p18f97j60  -o"Objects/CustomHTTPApp.o" \

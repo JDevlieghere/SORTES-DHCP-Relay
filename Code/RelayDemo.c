@@ -69,7 +69,6 @@ void DHCPRelayTask(void)
 				break;
 			}else{
 				Log("Socket success","");
-				DisplayIPValue(DHCPServer.IPAddr.Val);
 				smDHCPRelay++;
 			}
 
@@ -208,7 +207,7 @@ static void RelayToClient(BOOTP_HEADER *Header, int type){
 	UDPPutArray((BYTE*)&(Header->ClientIP), sizeof(Header->ClientIP));
 	UDPPutArray((BYTE*)&(Header->YourIP), sizeof(Header->YourIP));
 	UDPPutArray((BYTE*)&(Header->NextServerIP), sizeof(Header->NextServerIP));
-	UDPPutArray((BYTE*)&(AppConfig.PrimaryDNSServer), sizeof(AppConfig.PrimaryDNSServer));
+	UDPPutArray((BYTE*)&(AppConfig.MyIPAddr.Val), sizeof(AppConfig.MyIPAddr.Val));
 	UDPPutArray((BYTE*)&(Header->ClientMAC), sizeof(Header->ClientMAC));
 
 	// Everything is else is zero
@@ -305,7 +304,7 @@ static void RelayToServer(BOOTP_HEADER *Header, int type){
 	UDPPutArray((BYTE*)&(Header->ClientIP), sizeof(Header->ClientIP));
 	UDPPutArray((BYTE*)&(Header->YourIP), sizeof(Header->YourIP));
 	UDPPutArray((BYTE*)&(Header->NextServerIP), sizeof(Header->NextServerIP));
-	UDPPutArray((BYTE*)&(AppConfig.PrimaryDNSServer), sizeof(AppConfig.PrimaryDNSServer));
+	UDPPutArray((BYTE*)&(AppConfig.MyIPAddr.Val), sizeof(AppConfig.MyIPAddr.Val));
 	UDPPutArray((BYTE*)&(Header->ClientMAC), sizeof(Header->ClientMAC));
 
 	// Magic Cookie

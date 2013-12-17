@@ -11,7 +11,7 @@
 
 #include "DHCPr.h"
 
-#if defined(STACK_USE_DHCP_SERVER)
+#if defined(STACK_USE_DHCP_RELAY)
 
 #include "TCPIP_Stack/TCPIP.h"
 

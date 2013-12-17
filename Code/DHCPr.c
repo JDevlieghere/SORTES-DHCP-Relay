@@ -9,7 +9,6 @@
 #if defined(STACK_USE_DHCP_RELAY)
 
 #include "Include/MainDemo.h"
-#define DHCP_LEASE_DURATION				60ul
 
 /*****************************************************************************
   Function:

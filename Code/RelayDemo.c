@@ -28,9 +28,11 @@ int reqIPnonNull = 0;
 
 BOOL 	bDHCPRelayEnabled = TRUE;
 
+static int Arp();
 static void RelayToServer(BOOTP_HEADER *Header, int type);
 static void RelayToClient(BOOTP_HEADER *Header, int type);
 void Log(char *top, char *bottom);
+
 
 void DHCPRelayTask(void)
 {
@@ -156,9 +158,15 @@ void DHCPRelayTask(void)
 
 static int Arp(){
 	ARPResolve(&DHCPServer.IPAddr);
-	return ARPIsResolved(&DHCPServer.IPAddr,&DHCPServer.MACAddr)
+	return ARPIsResolved(&DHCPServer.IPAddr,&DHCPServer.MACAddr);
 }
 
+/**
+ * Relay the DHCP Packet to the Client
+ *
+ * @param Header The UDP Header
+ * @param type   The DHCP Type
+ */
 static void RelayToClient(BOOTP_HEADER *Header, int type){
 	BYTE i;
 	UDP_SOCKET_INFO *p;
@@ -223,6 +231,12 @@ static void RelayToClient(BOOTP_HEADER *Header, int type){
 	UDPFlush();
 }
 
+/**
+ * Relay the DHCP Packet to the DHCP Server
+ *
+ * @param Header The UDP Header
+ * @param type   The DHCP Type
+ */
 static void RelayToServer(BOOTP_HEADER *Header, int type){
 	BYTE a;
 	UDP_SOCKET_INFO *p;
@@ -319,7 +333,6 @@ static void RelayToServer(BOOTP_HEADER *Header, int type){
 	}
 	UDPFlush();
 }
-
 
 void Log(char *top, char *bottom){
 	LCDErase();

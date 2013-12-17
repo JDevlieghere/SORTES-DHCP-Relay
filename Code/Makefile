@@ -74,13 +74,13 @@ TCPIP_HEADERS=Include/TCPIP_Stack/Helpers.h \
    Include/TCPIP_Stack/HTTP2.h \
    Include/TCPIP_Stack/SMTP.h \
    Include/TCPIP_Stack/TFTPc.h \
+   Include/DHCPr.h \
 
 APP_HEADERS=Include/GenericTypeDefs.h \
    Include/Compiler.h \
    Include/HardwareProfile.h \
    Include/TCPIPConfig.h \
    Include/mib.h \
-   Include/DHCPr.h \
    Include/MainDemo.h
 
 TCPIP_Demo : $(OBJECTS) 
@@ -90,6 +90,11 @@ Objects/DHCPr.o : DHCPr.c  $(SDCC_HEADERS)  \
    $(SDCC_PIC16_HEADERS) $(APP_HEADERS) $(TCPIP_HEADERS)
 	$(CC) -c -mpic16 -p18f97j60  -o"Objects/DHCPr.o" \
    -L/usr/local/lib/pic16  DHCPr.c
+
+#bjects/DHCPr.o : DHCPr.c $(SDCC_HEADERS) $(SDCC_PIC16_HEADERS) \
+#  $(APP_HEADERS) $(TCPIP_HEADERS)
+#       $(CC) $(CFLAGS) DHCPr.c
+#
 
 Objects/MainDemo.o : MainDemo.c $(SDCC_HEADERS) $(SDCC_PIC16_HEADERS) \
    $(APP_HEADERS) $(TCPIP_HEADERS)

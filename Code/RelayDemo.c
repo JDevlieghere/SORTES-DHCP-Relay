@@ -214,8 +214,8 @@ void DHCPRelayTask(void)
   ***************************************************************************/
 static void DHCPReplyToDiscovery(BOOTP_HEADER *Header)
 {
-	DisplayString(0,"DHCPReplyToDiscovery");
 	BYTE i;
+	DisplayString(0,"DHCPReplyToDiscovery");
 
 	// Set the correct socket to active and ensure that
 	// enough space is available to generate the DHCP response
@@ -290,7 +290,7 @@ static void DHCPReplyToDiscovery(BOOTP_HEADER *Header)
 }
 
 
-****************************************************************************
+/****************************************************************************
   Function:
 	static void DHCPReplyToRequest(BOOTP_HEADER *Header, BOOL bAccept)
 
@@ -313,11 +313,11 @@ static void DHCPReplyToDiscovery(BOOTP_HEADER *Header)
 
   Internal:
 	Needs to support more than one simultaneous lease in the future.
-  **************************************************************************
+  **************************************************************************/
 static void DHCPReplyToRequest(BOOTP_HEADER *Header, BOOL bAccept)
 {
-	DisplayString(0,"DHCPReplyToRequest");
 	BYTE i;
+	DisplayString(0,"DHCPReplyToRequest");
 
 	// Set the correct socket to active and ensure that
 	// enough space is available to generate the DHCP response

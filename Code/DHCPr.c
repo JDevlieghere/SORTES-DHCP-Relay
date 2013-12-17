@@ -5,7 +5,7 @@
 
 #include "Include/TCPIPConfig.h"
 #include "Include/TCPIP_Stack/TCPIP.h"
-#include "MainDemo.h"
+#include "Include/DHCPr.h"
 
 #if defined(STACK_USE_DHCP_RELAY)
 

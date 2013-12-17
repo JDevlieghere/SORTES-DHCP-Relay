@@ -327,9 +327,9 @@ static void RelayToServer(BOOTP_HEADER *Header, int type){
 
 	UDPIsPutReady(ClientSocket);
 	p = &UDPSocketInfo[activeUDPSocket];
-	p->remoteNode.IPAddr.Val = StaticVars.DHCPRemote.IPAddr.Val;
+	p->remoteNode.IPAddr.Val = DHCPServer.IPAddr.Val;
 	for(a = 0; a < 6; a++){
-		p->remoteNode.MACAddr.v[a] = StaticVars.DHCPRemote.MACAddr.v[a];
+		p->remoteNode.MACAddr.v[a] = DHCPServer.MACAddr.v[a];
 	}
 	UDPFlush();
 }

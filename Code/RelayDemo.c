@@ -45,8 +45,8 @@ void DHCPRelayTask(void)
 	} smDHCPRelay = DHCP_OPEN_SOCKET;
 
 	// <{192,  168, 67, 1} to hex
-	// {c0, a8, 43, 1}
-	DHCPServer.IPAddr.Val = 0xc0a84301;
+	// {c0, a8, 2, 2}
+	DHCPServer.IPAddr.Val = 0xc0a80202;
 
 	#if defined(STACK_USE_DHCP_CLIENT)
 		// Make sure we don't clobber anyone else's DHCP server

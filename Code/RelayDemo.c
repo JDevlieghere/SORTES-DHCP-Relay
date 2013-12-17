@@ -30,7 +30,7 @@ static int Arp();
 static void RelayToServer(BOOTP_HEADER *Header, int type);
 static void RelayToClient(BOOTP_HEADER *Header, int type);
 void Log(char *top, char *bottom);
-void LogMac(BOOTP_HEADER *Header);
+void LogMac(int pos, BOOTP_HEADER *Header);
 
 void DHCPRelayTask(void)
 {
@@ -119,22 +119,22 @@ void DHCPRelayTask(void)
 						{
 							case DHCP_DISCOVER_MESSAGE:
 								Log("DISCOVER","");
-								LogMac(&BOOTPHeader);
+								LogMac(BOT, &BOOTPHeader);
 								RelayToServer(&BOOTPHeader, 1);
 								break;
 							case DHCP_REQUEST_MESSAGE:
 								Log("REQUEST","");
-								LogMac(&BOOTPHeader);
+								LogMac(BOT, &BOOTPHeader);
 								RelayToServer(&BOOTPHeader, 2);
 								break;
 							case DHCP_OFFER_MESSAGE:
 								Log("OFFER","");
-								LogMac(&BOOTPHeader);
+								LogMac(BOT, &BOOTPHeader);
 								RelayToClient(&BOOTPHeader, 1);
 								break;
 							case DHCP_ACK_MESSAGE:
 								Log("ACK","");
-								LogMac(&BOOTPHeader);
+								LogMac(BOT, &BOOTPHeader);
 								RelayToClient(&BOOTPHeader, 2);
 								break;
 							case DHCP_RELEASE_MESSAGE:
@@ -235,6 +235,9 @@ static void RelayToClient(BOOTP_HEADER *Header, int type){
 		UDPPut(0);
 
 	UDPFlush();
+
+	Log("Relayed to Server","From:");
+	LogMac(BOT + 5, &BOOTPHeader);
 }
 
 /**
@@ -247,8 +250,10 @@ static void RelayToServer(BOOTP_HEADER *Header, int type){
 	BYTE a;
 	UDP_SOCKET_INFO *p;
 
-	if(!Arp())
+	if(!Arp()){
+		Log("ARP Failed.");
 		return;
+	}
 
 	// Set the correct socket to active and ensure that
 	// enough space is available.
@@ -337,6 +342,9 @@ static void RelayToServer(BOOTP_HEADER *Header, int type){
 		p->remoteNode.MACAddr.v[a] = DHCPServer.MACAddr.v[a];
 	}
 	UDPFlush();
+
+	Log("Relayed to Client","From:");
+	LogMac(BOT + 5, &BOOTPHeader);
 }
 
 /**
@@ -346,7 +354,7 @@ static void RelayToServer(BOOTP_HEADER *Header, int type){
  */
 void Log(char *top, char *bottom){
 	LCDErase();
-	DisplayString(TOP, top);
+	DisplayStripos, ng(TOP, top);
 	DisplayString(BOT, bottom);
 }
 
@@ -355,9 +363,9 @@ void Log(char *top, char *bottom){
  * @param pos    Start position
  * @param Header Header containing the MAC-address
  */
-void LogMac(BOOTP_HEADER *Header){
-	DisplayWORD(16, Header->ClientMAC.v[4]);
-	DisplayWORD(20, Header->ClientMAC.v[5]);
+void LogMac(int pos, BOOTP_HEADER *Header){
+	DisplayWORD(pos, Header->ClientMAC.v[4]);
+	DisplayWORD(pos+4, Header->ClientMAC.v[5]);
 }
 
 

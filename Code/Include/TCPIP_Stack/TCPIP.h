@@ -51,6 +51,7 @@
 #ifndef __TCPIP_HITECH_WORKAROUND_H
 #define __TCPIP_HITECH_WORKAROUND_H
 
+#define STACK_USE_DHCP_RELAY
 #define VERSION 		"v5.10"		// TCP/IP stack version
 
 #include <string.h>
@@ -336,8 +337,6 @@
 #if defined(STACK_USE_UART)
 	#include "UART.h"
 #endif
-
-#define STACK_USE_DHCP_RELAY
 
 #if defined(STACK_USE_DHCP_RELAY)
 	#include "../DHCPr.h"

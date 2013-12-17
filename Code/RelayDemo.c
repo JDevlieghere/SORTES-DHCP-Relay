@@ -21,20 +21,8 @@
 /// Ignore: #define DHCP_MAX_LEASES					2		// Not implemented
 #define DHCP_LEASE_DURATION				60ul
 
-// DHCP Control Block.  Lease IP address is derived from index into DCB array.
-typedef struct _DHCP_CONTROL_BLOCK
-{
-	TICK 		LeaseExpires;	// Expiration time for this lease
-	MAC_ADDR	ClientMAC;		// Client's MAC address.  Multicase bit is used to determine if a lease is given out or not
-	enum
-	{
-		LEASE_UNUSED = 0,
-		LEASE_REQUESTED,
-		LEASE_GRANTED
-	} smLease;					// Status of this lease
-} DHCP_CONTROL_BLOCK;
-
-static UDP_SOCKET			MySocket;		// Socket used by DHCP Server
+static UDP_SOCKET			ClientSocket;		// Socket used by DHCP Server
+static UDP_SOCKET 			ServerSocket;
 static IP_ADDR				DHCPNextLease;	// IP Address to provide for next lease
 /// Ignore: static DHCP_CONTROL_BLOCK	DCB[DHCP_MAX_LEASES];	// Not Implmented
 
@@ -42,27 +30,8 @@ BOOL 	bDHCPRelayEnabled = TRUE;	// Whether or not the DHCP server is enabled
 
 static void DHCPReplyToDiscovery(BOOTP_HEADER *Header);
 static void DHCPReplyToRequest(BOOTP_HEADER *Header, BOOL bAccept);
+void Log(char *top, char *bottom);
 
-/*****************************************************************************
-  Function:
-	void DHCPRelayTask(void)
-
-  Summary:
-	Performs periodic DHCP server tasks.
-
-  Description:
-	This function performs any periodic tasks requied by the DHCP server
-	module, such as processing DHCP requests and distributing IP addresses.
-
-  Precondition:
-	None
-
-  Parameters:
-	None
-
-  Returns:
-  	None
-  ***************************************************************************/
 void DHCPRelayTask(void)
 {
 	BYTE 				i;
@@ -89,18 +58,20 @@ void DHCPRelayTask(void)
 	{
 		case DHCP_OPEN_SOCKET:
 			// Obtain a UDP socket to listen/transmit on
-			MySocket = UDPOpen(DHCP_SERVER_PORT, NULL, DHCP_CLIENT_PORT);
-			if(MySocket == INVALID_UDP_SOCKET){
-				DisplayString(TOP, "Socket error.");
+			ClientSocket = UDPOpen(DHCP_SERVER_PORT, NULL, DHCP_CLIENT_PORT);
+			ServerSocket = UDPOpen(DHCP_CLIENT_PORT, NULL, DHCP_SERVER_PORT);
+
+			if(ClientSocket == INVALID_UDP_SOCKET || ServerSocket == INVALID_UDP_SOCKET){
+				DisplayString(TOP, "Socket error");
 			}else{
-				DisplayString(TOP, "Socket success.");
+				DisplayString(TOP, "Socket success");
 			}
 
 			smDHCPRelay++;
 
 		case DHCP_LISTEN:
 			// Check to see if a valid DHCP packet has arrived
-			if(UDPIsGetReady(MySocket) < 241u)
+			if(UDPIsGetReady(ClientSocket) < 241u)
 				break;
 
 			// Retrieve the BOOTP header
@@ -146,19 +117,22 @@ void DHCPRelayTask(void)
 						switch(i)
 						{
 							case DHCP_DISCOVER_MESSAGE:
-								DisplayString(TOP,"DHCP_DISCOVER_MESSAGE");
+								Log("DHCP Message","DISCOVER");
 								break;
-
 							case DHCP_REQUEST_MESSAGE:
-								DisplayString(TOP,"DHCP_REQUEST_MESSAGE");
+								Log("DHCP Message","REQUEST");
 								break;
-
-							// Need to handle these if supporting more than one DHCP lease
+							case DHCP_OFFER_MESSAGE:
+								Log("DHCP Message","OFFER");
+								break;
+							case DHCP_ACK_MESSAGE:
+								Log("DHCP Message","ACK");
+								break;
 							case DHCP_RELEASE_MESSAGE:
-								DisplayString(TOP,"DHCP_RELEASE_MESSAGE");
+								Log("DHCP Message","RELEASE");
 								break;
 							case DHCP_DECLINE_MESSAGE:
-								DisplayString(TOP,"DHCP_DECLINE_MESSAGE");
+								Log("DHCP Message","DECLINE");
 								break;
 						}
 						break;
@@ -191,26 +165,6 @@ void DHCPRelayTask(void)
 }
 
 
-/*****************************************************************************
-  Function:
-	static void DHCPReplyToDiscovery(BOOTP_HEADER *Header)
-
-  Summary:
-	Replies to a DHCP Discover message.
-
-  Description:
-	This function replies to a DHCP Discover message by sending out a
-	DHCP Offer message.
-
-  Precondition:
-	None
-
-  Parameters:
-	Header - the BootP header this is in response to.
-
-  Returns:
-  	None
-  ***************************************************************************/
 static void DHCPReplyToDiscovery(BOOTP_HEADER *Header)
 {
 	BYTE i;
@@ -218,7 +172,7 @@ static void DHCPReplyToDiscovery(BOOTP_HEADER *Header)
 
 	// Set the correct socket to active and ensure that
 	// enough space is available to generate the DHCP response
-	if(UDPIsPutReady(MySocket) < 300u)
+	if(UDPIsPutReady(ClientSocket) < 300u)
 		return;
 
 	// Begin putting the BOOTP Header and DHCP options
@@ -288,31 +242,6 @@ static void DHCPReplyToDiscovery(BOOTP_HEADER *Header)
 	UDPFlush();
 }
 
-
-/****************************************************************************
-  Function:
-	static void DHCPReplyToRequest(BOOTP_HEADER *Header, BOOL bAccept)
-
-  Summary:
-	Replies to a DHCP Request message.
-
-  Description:
-	This function replies to a DHCP Request message by sending out a
-	DHCP Acknowledge message.
-
-  Precondition:
-	None
-
-  Parameters:
-	Header - the BootP header this is in response to.
-	bAccept - whether or not we've accepted this request
-
-  Returns:
-  	None
-
-  Internal:
-	Needs to support more than one simultaneous lease in the future.
-  **************************************************************************/
 static void DHCPReplyToRequest(BOOTP_HEADER *Header, BOOL bAccept)
 {
 	BYTE i;
@@ -320,12 +249,12 @@ static void DHCPReplyToRequest(BOOTP_HEADER *Header, BOOL bAccept)
 
 	// Set the correct socket to active and ensure that
 	// enough space is available to generate the DHCP response
-	if(UDPIsPutReady(MySocket) < 300u)
+	if(UDPIsPutReady(ClientSocket) < 300u)
 		return;
 
 	// Search through all remaining options and look for the Requested IP address field
 	// Obtain options
-	while(UDPIsGetReady(MySocket))
+	while(UDPIsGetReady(ClientSocket))
 	{
 		BYTE Option, Len;
 		DWORD dw;
@@ -430,6 +359,12 @@ static void DHCPReplyToRequest(BOOTP_HEADER *Header, BOOL bAccept)
 
 	// Transmit the packet
 	UDPFlush();
+}
+
+void Log(char *top, char *bottom){
+	LCDErase();
+	DisplayString(TOP, top);
+	DisplayString(BOT, bottom);
 }
 
 #endif	//#if defined(STACK_USE_DHCP_RELAY)

@@ -119,23 +119,23 @@ void DHCPRelayTask(void)
 						{
 							case DHCP_DISCOVER_MESSAGE:
 								Log("DISCOVER","");
-								LogMac(BOT, &BOOTPHeader);
+								LogMac(B&BOOTPHeader);
 								DisplayWord();
 								RelayToServer(&BOOTPHeader, 1);
 								break;
 							case DHCP_REQUEST_MESSAGE:
 								Log("REQUEST","");
-								LogMac(BOT, &BOOTPHeader);
+								LogMac(&BOOTPHeader);
 								RelayToServer(&BOOTPHeader, 2);
 								break;
 							case DHCP_OFFER_MESSAGE:
 								Log("OFFER","");
-								LogMac(BOT, &BOOTPHeader);
+								LogMac(&BOOTPHeader);
 								RelayToClient(&BOOTPHeader, 1);
 								break;
 							case DHCP_ACK_MESSAGE:
 								Log("ACK","");
-								LogMac(BOT, &BOOTPHeader);
+								LogMac(&BOOTPHeader);
 								RelayToClient(&BOOTPHeader, 2);
 								break;
 							case DHCP_RELEASE_MESSAGE:

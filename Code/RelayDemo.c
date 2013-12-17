@@ -16,7 +16,11 @@
 #define DHCP_LEASE_DURATION	60ul
 #define TOP	0
 #define BOT 16
-#define DHCP_SERVER_IP	0xc0a80202
+
+
+// HDCP Server at 	192.168.97.3
+// 					c0.a8.61.03
+#define DHCP_SERVER_IP	0xc0a86103
 
 static 	UDP_SOCKET	ClientSocket;
 static 	UDP_SOCKET 	ServerSocket;

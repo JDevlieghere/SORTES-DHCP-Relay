@@ -11,7 +11,7 @@ LDFLAGS= -mpic16 -p18f97j60 -L/usr/local/lib/pic16 -llibio18f97j60.lib -llibdev1
 AR = ar
 RM = rm
 
-OBJECTS=Objects/MainDemo.o Objects/Announce.o Objects/ARP.o Objects/Delay.o \
+OBJECTS=Objects/DHCPr.o Objects/MainDemo.o Objects/Announce.o Objects/ARP.o Objects/Delay.o \
    Objects/DHCP.o Objects/DNS.o Objects/DHCPs.o Objects/ETH97J60.o  \
    Objects/Hashes.o Objects/Helpers.o Objects/ICMP.o Objects/IP.o \
    Objects/LCDBlocking.o Objects/StackTsk.o Objects/UDPPerformanceTest.o \
@@ -80,10 +80,16 @@ APP_HEADERS=Include/GenericTypeDefs.h \
    Include/HardwareProfile.h \
    Include/TCPIPConfig.h \
    Include/mib.h \
+   Include/DHCPr.h \
    Include/MainDemo.h
 
 TCPIP_Demo : $(OBJECTS) 
 	$(LD) $(LDFLAGS) $(OBJECTS)
+
+Objects/DHCPr.o : DHCPr.c  $(SDCC_HEADERS)  \
+   $(SDCC_PIC16_HEADERS) $(APP_HEADERS) $(TCPIP_HEADERS)
+	$(CC) -c -mpic16 -p18f97j60  -o"Objects/DHCPr.o" \
+   -L/usr/local/lib/pic16  DHCPr.c
 
 Objects/MainDemo.o : MainDemo.c $(SDCC_HEADERS) $(SDCC_PIC16_HEADERS) \
    $(APP_HEADERS) $(TCPIP_HEADERS)
@@ -127,6 +133,7 @@ Objects/DHCPs.o : TCPIP_Stack/DHCPs.c  $(SDCC_HEADERS)  \
    $(SDCC_PIC16_HEADERS) $(APP_HEADERS) $(TCPIP_HEADERS)
 	$(CC) -c -mpic16 -p18f97j60  -o"Objects/DHCPs.o" \
    -L/usr/local/lib/pic16  TCPIP_Stack/DHCPs.c
+
 
 Objects/DNS.o : TCPIP_Stack/DNS.c  $(SDCC_HEADERS)  \
    $(SDCC_PIC16_HEADERS) $(APP_HEADERS) $(TCPIP_HEADERS)

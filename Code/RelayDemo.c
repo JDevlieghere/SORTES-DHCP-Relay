@@ -65,14 +65,15 @@ void DHCPRelayTask(void)
 			ServerSocket = UDPOpen(DHCP_CLIENT_PORT, NULL, DHCP_SERVER_PORT);
 
 			if(ClientSocket == INVALID_UDP_SOCKET || ServerSocket == INVALID_UDP_SOCKET){
-				DisplayString(TOP, "Socket error");
+				Log("Socket error","Unable to open");
 				break;
 			}else{
-				DisplayString(TOP, "Socket success");
+				Log("Socket success","");
+				DisplayIPValue(DHCPServer.IPAddr.Val);
 				smDHCPRelay++;
 			}
 
-			DisplayIPValue(DHCPServer.IPAddr.Val);
+
 
 		case DHCP_LISTEN:
 			// Check to see if a valid DHCP packet has arrived

@@ -68,7 +68,6 @@
 #define __18F97J60
 #define __SDCC__
 #include "../Include/HardwareProfile.h"
-
 #include "../Include/TCPIP_Stack/TCPIP.h"
 
 
@@ -402,6 +401,7 @@ void StackApplications(void)
 	#endif
 
 	#if defined(STACK_USE_DHCP_RELAY)
+	DisplayString(0,"Calling DHCPRTASK");
 	DHCPRelayTask();
 	#endif
 

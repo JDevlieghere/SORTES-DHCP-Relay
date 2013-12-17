@@ -77,7 +77,7 @@ void DHCPRelayTask(void)
 			}
 		case DHCP_LISTEN:
 			// Check to see if a valid DHCP packet has arrived
-			if(UDPIsGetReady(ClientSocket) < 241u)
+			if(UDPIsGetReady(ClientSocket) < 241u && UDPIsGetReady(ServerSocket) < 241u)
 				break;
 
 			// Retrieve the BOOTP header
@@ -252,8 +252,10 @@ static void RelayToServer(BOOTP_HEADER *Header, int type){
 	BYTE a;
 	UDP_SOCKET_INFO *p;
 
-	if(!Arp())
+	if(!Arp()){
+		DisplayString(BOT, "ARP failed");
 		return;
+	}
 
 	// Set the correct socket to active and ensure that
 	// enough space is available.

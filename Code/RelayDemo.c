@@ -77,7 +77,10 @@ void DHCPRelayTask(void)
 			}
 		case DHCP_LISTEN:
 			// Check to see if a valid DHCP packet has arrived
-			if(UDPIsGetReady(ClientSocket) < 241u && UDPIsGetReady(ServerSocket) < 241u)
+			if(UDPIsGetReady(ClientSocket) < 241u)
+				break;
+
+			if(UDPIsGetReady(ServerSocket) < 241u)
 				break;
 
 			// Retrieve the BOOTP header

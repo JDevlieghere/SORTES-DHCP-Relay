@@ -46,7 +46,7 @@ void DHCPRelayTask(void)
 
 	// <{192,  168, 67, 1} to hex
 	// {c0, a8, 2, 2}
-	DHCPServer.IPAddr.Val = 0xc0a80202;
+	DHCPServer.IPAddr.Val = 0xc0a86102;
 
 	#if defined(STACK_USE_DHCP_CLIENT)
 		// Make sure we don't clobber anyone else's DHCP server
@@ -122,22 +122,22 @@ void DHCPRelayTask(void)
 							case DHCP_DISCOVER_MESSAGE:
 								Log("DISCOVER","");
 								LogMac(BOT, &BOOTPHeader);
-								RelayToServer(&BOOTPHeader, 1);
+								RelayToServer(&BOOTPHeader, i);
 								break;
 							case DHCP_REQUEST_MESSAGE:
 								Log("REQUEST","");
 								LogMac(BOT, &BOOTPHeader);
-								RelayToServer(&BOOTPHeader, 2);
+								RelayToServer(&BOOTPHeader, i);
 								break;
 							case DHCP_OFFER_MESSAGE:
 								Log("OFFER","");
 								LogMac(BOT, &BOOTPHeader);
-								RelayToClient(&BOOTPHeader, 1);
+								RelayToClient(&BOOTPHeader, i);
 								break;
 							case DHCP_ACK_MESSAGE:
 								Log("ACK","");
 								LogMac(BOT, &BOOTPHeader);
-								RelayToClient(&BOOTPHeader, 2);
+								RelayToClient(&BOOTPHeader, i);
 								break;
 							case DHCP_RELEASE_MESSAGE:
 								Log("RELEASE","");
@@ -280,7 +280,6 @@ static void RelayToServer(BOOTP_HEADER *Header, int type){
 			// Get the requested IP address.
 			UDPGetArray((BYTE*)&ReqIP, 4);
 			reqIPnonNull = 1;
-			Len -= 4;
 			break;
 		}
 

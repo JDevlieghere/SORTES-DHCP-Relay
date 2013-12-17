@@ -1,4 +1,15 @@
-//#if defined(STACK_USE_DHCP_RELAY)
+#define __PINGDEMO_C
+#define __18F97J60
+#define __SDCC__
+#include <pic18f97j60.h> //ML
+
+#include "Include/TCPIPConfig.h"
+#include "Include/TCPIP_Stack/TCPIP.h"
+
+#if defined(STACK_USE_DHCP_RELAY)
+
+#include "Include/MainDemo.h"
+
 /*****************************************************************************
   Function:
 	void DHCPRelayTask(void)
@@ -391,4 +402,4 @@ static void DHCPReplyToRequest(BOOTP_HEADER *Header, BOOL bAccept)
 	// Transmit the packet
 	UDPFlush();
 }
-//#endif //#if defined(STACK_USE_DHCP_SERVER)
+#endif //#if defined(STACK_USE_DHCP_RELAY)

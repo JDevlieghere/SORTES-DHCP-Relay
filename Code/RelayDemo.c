@@ -21,6 +21,7 @@
 // HDCP Server at 	192.168.97.3
 // 					c0.a8.61.03
 #define DHCP_SERVER_IP	0xc0a86103
+#define BROADCAST 		0xFFFFFFFF
 
 static 	UDP_SOCKET	ClientSocket;
 static 	UDP_SOCKET 	ServerSocket;
@@ -191,7 +192,7 @@ static void RelayToClient(BOOTP_HEADER *Header, int type){
 	p = &UDPSocketInfo[activeUDPSocket];
 
 	// Set as broadcast packet to DHCP Client Port
-	p->remoteNode.IPAddr.Val = AppConfig.Br.Val;
+	p->remoteNode.IPAddr.Val = BROADCAST;
 	p->remotePort = DHCP_CLIENT_PORT;
 
 	// Copy the MAC address of the client (from CHADDR field)

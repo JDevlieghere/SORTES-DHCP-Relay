@@ -75,6 +75,7 @@ void DHCPRelayTask(void)
 		DHCP_OPEN_SOCKET,
 		DHCP_LISTEN
 	} smDHCPRelay = DHCP_OPEN_SOCKET;
+	DisplayString(TOP, "DHCP Relay Task");
 
 #if defined(STACK_USE_DHCP_CLIENT)
 	// Make sure we don't clobber anyone else's DHCP server

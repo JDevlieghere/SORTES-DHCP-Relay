@@ -119,11 +119,11 @@ void DHCPRelayTask(void)
 						switch(i)
 						{
 							case DHCP_DISCOVER_MESSAGE:
-								DHCPReplyToDiscovery(&BOOTPHeader);
+								DisplayString(0,"DHCP_DISCOVER_MESSAGE");
 								break;
 
 							case DHCP_REQUEST_MESSAGE:
-								DHCPReplyToRequest(&BOOTPHeader, bAccept);
+								DisplayString(0,"DHCP_REQUEST_MESSAGE");
 								break;
 
 							// Need to handle these if supporting more than one DHCP lease
@@ -161,244 +161,244 @@ void DHCPRelayTask(void)
 }
 
 
-/*****************************************************************************
-  Function:
-	static void DHCPReplyToDiscovery(BOOTP_HEADER *Header)
+// /*****************************************************************************
+//   Function:
+// 	static void DHCPReplyToDiscovery(BOOTP_HEADER *Header)
 
-  Summary:
-	Replies to a DHCP Discover message.
+//   Summary:
+// 	Replies to a DHCP Discover message.
 
-  Description:
-	This function replies to a DHCP Discover message by sending out a
-	DHCP Offer message.
+//   Description:
+// 	This function replies to a DHCP Discover message by sending out a
+// 	DHCP Offer message.
 
-  Precondition:
-	None
+//   Precondition:
+// 	None
 
-  Parameters:
-	Header - the BootP header this is in response to.
+//   Parameters:
+// 	Header - the BootP header this is in response to.
 
-  Returns:
-  	None
-  ***************************************************************************/
-static void DHCPReplyToDiscovery(BOOTP_HEADER *Header)
-{
-	DisplayString(0,"DHCPReplyToDiscovery");
-	BYTE i;
+//   Returns:
+//   	None
+//   ***************************************************************************/
+// static void DHCPReplyToDiscovery(BOOTP_HEADER *Header)
+// {
+// 	DisplayString(0,"DHCPReplyToDiscovery");
+// 	BYTE i;
 
-	// Set the correct socket to active and ensure that
-	// enough space is available to generate the DHCP response
-	if(UDPIsPutReady(MySocket) < 300u)
-		return;
+// 	// Set the correct socket to active and ensure that
+// 	// enough space is available to generate the DHCP response
+// 	if(UDPIsPutReady(MySocket) < 300u)
+// 		return;
 
-	// Begin putting the BOOTP Header and DHCP options
-	UDPPut(BOOT_REPLY);			// Message Type: 2 (BOOTP Reply)
-	// Reply with the same Hardware Type, Hardware Address Length, Hops, and Transaction ID fields
-	UDPPutArray((BYTE*)&(Header->HardwareType), 7);
-	UDPPut(0x00);				// Seconds Elapsed: 0 (Not used)
-	UDPPut(0x00);				// Seconds Elapsed: 0 (Not used)
-	UDPPutArray((BYTE*)&(Header->BootpFlags), sizeof(Header->BootpFlags));
-	UDPPut(0x00);				// Your (client) IP Address: 0.0.0.0 (none yet assigned)
-	UDPPut(0x00);				// Your (client) IP Address: 0.0.0.0 (none yet assigned)
-	UDPPut(0x00);				// Your (client) IP Address: 0.0.0.0 (none yet assigned)
-	UDPPut(0x00);				// Your (client) IP Address: 0.0.0.0 (none yet assigned)
-	UDPPutArray((BYTE*)&DHCPNextLease, sizeof(IP_ADDR));	// Lease IP address to give out
-	UDPPut(0x00);				// Next Server IP Address: 0.0.0.0 (not used)
-	UDPPut(0x00);				// Next Server IP Address: 0.0.0.0 (not used)
-	UDPPut(0x00);				// Next Server IP Address: 0.0.0.0 (not used)
-	UDPPut(0x00);				// Next Server IP Address: 0.0.0.0 (not used)
-	UDPPut(0x00);				// Relay Agent IP Address: 0.0.0.0 (not used)
-	UDPPut(0x00);				// Relay Agent IP Address: 0.0.0.0 (not used)
-	UDPPut(0x00);				// Relay Agent IP Address: 0.0.0.0 (not used)
-	UDPPut(0x00);				// Relay Agent IP Address: 0.0.0.0 (not used)
-	UDPPutArray((BYTE*)&(Header->ClientMAC), sizeof(MAC_ADDR));	// Client MAC address: Same as given by client
-	for(i = 0; i < 64+128+(16-sizeof(MAC_ADDR)); i++)	// Remaining 10 bytes of client hardware address, server host name: Null string (not used)
-		UDPPut(0x00);									// Boot filename: Null string (not used)
-	UDPPut(0x63);				// Magic Cookie: 0x63538263
-	UDPPut(0x82);				// Magic Cookie: 0x63538263
-	UDPPut(0x53);				// Magic Cookie: 0x63538263
-	UDPPut(0x63);				// Magic Cookie: 0x63538263
+// 	// Begin putting the BOOTP Header and DHCP options
+// 	UDPPut(BOOT_REPLY);			// Message Type: 2 (BOOTP Reply)
+// 	// Reply with the same Hardware Type, Hardware Address Length, Hops, and Transaction ID fields
+// 	UDPPutArray((BYTE*)&(Header->HardwareType), 7);
+// 	UDPPut(0x00);				// Seconds Elapsed: 0 (Not used)
+// 	UDPPut(0x00);				// Seconds Elapsed: 0 (Not used)
+// 	UDPPutArray((BYTE*)&(Header->BootpFlags), sizeof(Header->BootpFlags));
+// 	UDPPut(0x00);				// Your (client) IP Address: 0.0.0.0 (none yet assigned)
+// 	UDPPut(0x00);				// Your (client) IP Address: 0.0.0.0 (none yet assigned)
+// 	UDPPut(0x00);				// Your (client) IP Address: 0.0.0.0 (none yet assigned)
+// 	UDPPut(0x00);				// Your (client) IP Address: 0.0.0.0 (none yet assigned)
+// 	UDPPutArray((BYTE*)&DHCPNextLease, sizeof(IP_ADDR));	// Lease IP address to give out
+// 	UDPPut(0x00);				// Next Server IP Address: 0.0.0.0 (not used)
+// 	UDPPut(0x00);				// Next Server IP Address: 0.0.0.0 (not used)
+// 	UDPPut(0x00);				// Next Server IP Address: 0.0.0.0 (not used)
+// 	UDPPut(0x00);				// Next Server IP Address: 0.0.0.0 (not used)
+// 	UDPPut(0x00);				// Relay Agent IP Address: 0.0.0.0 (not used)
+// 	UDPPut(0x00);				// Relay Agent IP Address: 0.0.0.0 (not used)
+// 	UDPPut(0x00);				// Relay Agent IP Address: 0.0.0.0 (not used)
+// 	UDPPut(0x00);				// Relay Agent IP Address: 0.0.0.0 (not used)
+// 	UDPPutArray((BYTE*)&(Header->ClientMAC), sizeof(MAC_ADDR));	// Client MAC address: Same as given by client
+// 	for(i = 0; i < 64+128+(16-sizeof(MAC_ADDR)); i++)	// Remaining 10 bytes of client hardware address, server host name: Null string (not used)
+// 		UDPPut(0x00);									// Boot filename: Null string (not used)
+// 	UDPPut(0x63);				// Magic Cookie: 0x63538263
+// 	UDPPut(0x82);				// Magic Cookie: 0x63538263
+// 	UDPPut(0x53);				// Magic Cookie: 0x63538263
+// 	UDPPut(0x63);				// Magic Cookie: 0x63538263
 
-	// Options: DHCP Offer
-	UDPPut(DHCP_MESSAGE_TYPE);
-	UDPPut(1);
-	UDPPut(DHCP_OFFER_MESSAGE);
+// 	// Options: DHCP Offer
+// 	UDPPut(DHCP_MESSAGE_TYPE);
+// 	UDPPut(1);
+// 	UDPPut(DHCP_OFFER_MESSAGE);
 
-	// Option: Subnet Mask
-	UDPPut(DHCP_SUBNET_MASK);
-	UDPPut(sizeof(IP_ADDR));
-	UDPPutArray((BYTE*)&AppConfig.MyMask, sizeof(IP_ADDR));
+// 	// Option: Subnet Mask
+// 	UDPPut(DHCP_SUBNET_MASK);
+// 	UDPPut(sizeof(IP_ADDR));
+// 	UDPPutArray((BYTE*)&AppConfig.MyMask, sizeof(IP_ADDR));
 
-	// Option: Lease duration
-	UDPPut(DHCP_IP_LEASE_TIME);
-	UDPPut(4);
-	UDPPut((DHCP_LEASE_DURATION>>24) & 0xFF);
-	UDPPut((DHCP_LEASE_DURATION>>16) & 0xFF);
-	UDPPut((DHCP_LEASE_DURATION>>8) & 0xFF);
-	UDPPut((DHCP_LEASE_DURATION) & 0xFF);
+// 	// Option: Lease duration
+// 	UDPPut(DHCP_IP_LEASE_TIME);
+// 	UDPPut(4);
+// 	UDPPut((DHCP_LEASE_DURATION>>24) & 0xFF);
+// 	UDPPut((DHCP_LEASE_DURATION>>16) & 0xFF);
+// 	UDPPut((DHCP_LEASE_DURATION>>8) & 0xFF);
+// 	UDPPut((DHCP_LEASE_DURATION) & 0xFF);
 
-	// Option: Server identifier
-	UDPPut(DHCP_SERVER_IDENTIFIER);
-	UDPPut(sizeof(IP_ADDR));
-	UDPPutArray((BYTE*)&AppConfig.MyIPAddr, sizeof(IP_ADDR));
+// 	// Option: Server identifier
+// 	UDPPut(DHCP_SERVER_IDENTIFIER);
+// 	UDPPut(sizeof(IP_ADDR));
+// 	UDPPutArray((BYTE*)&AppConfig.MyIPAddr, sizeof(IP_ADDR));
 
-	// Option: Router/Gateway address
-	UDPPut(DHCP_ROUTER);
-	UDPPut(sizeof(IP_ADDR));
-	UDPPutArray((BYTE*)&AppConfig.MyIPAddr, sizeof(IP_ADDR));
+// 	// Option: Router/Gateway address
+// 	UDPPut(DHCP_ROUTER);
+// 	UDPPut(sizeof(IP_ADDR));
+// 	UDPPutArray((BYTE*)&AppConfig.MyIPAddr, sizeof(IP_ADDR));
 
-	// No more options, mark ending
-	UDPPut(DHCP_END_OPTION);
+// 	// No more options, mark ending
+// 	UDPPut(DHCP_END_OPTION);
 
-	// Add zero padding to ensure compatibility with old BOOTP relays that discard small packets (<300 UDP octets)
-	while(UDPTxCount < 300u)
-		UDPPut(0);
+// 	// Add zero padding to ensure compatibility with old BOOTP relays that discard small packets (<300 UDP octets)
+// 	while(UDPTxCount < 300u)
+// 		UDPPut(0);
 
-	// Transmit the packet
-	UDPFlush();
-}
+// 	// Transmit the packet
+// 	UDPFlush();
+// }
 
 
-/*****************************************************************************
-  Function:
-	static void DHCPReplyToRequest(BOOTP_HEADER *Header, BOOL bAccept)
+// ****************************************************************************
+//   Function:
+// 	static void DHCPReplyToRequest(BOOTP_HEADER *Header, BOOL bAccept)
 
-  Summary:
-	Replies to a DHCP Request message.
+//   Summary:
+// 	Replies to a DHCP Request message.
 
-  Description:
-	This function replies to a DHCP Request message by sending out a
-	DHCP Acknowledge message.
+//   Description:
+// 	This function replies to a DHCP Request message by sending out a
+// 	DHCP Acknowledge message.
 
-  Precondition:
-	None
+//   Precondition:
+// 	None
 
-  Parameters:
-	Header - the BootP header this is in response to.
-	bAccept - whether or not we've accepted this request
+//   Parameters:
+// 	Header - the BootP header this is in response to.
+// 	bAccept - whether or not we've accepted this request
 
-  Returns:
-  	None
+//   Returns:
+//   	None
 
-  Internal:
-	Needs to support more than one simultaneous lease in the future.
-  ***************************************************************************/
-static void DHCPReplyToRequest(BOOTP_HEADER *Header, BOOL bAccept)
-{
-	DisplayString(0,"DHCPReplyToRequest");
-	BYTE i;
+//   Internal:
+// 	Needs to support more than one simultaneous lease in the future.
+//   **************************************************************************
+// static void DHCPReplyToRequest(BOOTP_HEADER *Header, BOOL bAccept)
+// {
+// 	DisplayString(0,"DHCPReplyToRequest");
+// 	BYTE i;
 
-	// Set the correct socket to active and ensure that
-	// enough space is available to generate the DHCP response
-	if(UDPIsPutReady(MySocket) < 300u)
-		return;
+// 	// Set the correct socket to active and ensure that
+// 	// enough space is available to generate the DHCP response
+// 	if(UDPIsPutReady(MySocket) < 300u)
+// 		return;
 
-	// Search through all remaining options and look for the Requested IP address field
-	// Obtain options
-	while(UDPIsGetReady(MySocket))
-	{
-		BYTE Option, Len;
-		DWORD dw;
+// 	// Search through all remaining options and look for the Requested IP address field
+// 	// Obtain options
+// 	while(UDPIsGetReady(MySocket))
+// 	{
+// 		BYTE Option, Len;
+// 		DWORD dw;
 
-		// Get option type
-		if(!UDPGet(&Option))
-			break;
-		if(Option == DHCP_END_OPTION)
-			break;
+// 		// Get option type
+// 		if(!UDPGet(&Option))
+// 			break;
+// 		if(Option == DHCP_END_OPTION)
+// 			break;
 
-		// Get option length
-		UDPGet(&Len);
+// 		// Get option length
+// 		UDPGet(&Len);
 
-		// Process option
-		if((Option == DHCP_PARAM_REQUEST_IP_ADDRESS) && (Len == 4u))
-		{
-			// Get the requested IP address and see if it is the one we have on offer.  If not, we should send back a NAK, but since there could be some other DHCP server offering this address, we'll just silently ignore this request.
-			UDPGetArray((BYTE*)&dw, 4);
-			Len -= 4;
-			if(dw != DHCPNextLease.Val)
-			{
-				bAccept = FALSE;
-			}
-			break;
-		}
+// 		// Process option
+// 		if((Option == DHCP_PARAM_REQUEST_IP_ADDRESS) && (Len == 4u))
+// 		{
+// 			// Get the requested IP address and see if it is the one we have on offer.  If not, we should send back a NAK, but since there could be some other DHCP server offering this address, we'll just silently ignore this request.
+// 			UDPGetArray((BYTE*)&dw, 4);
+// 			Len -= 4;
+// 			if(dw != DHCPNextLease.Val)
+// 			{
+// 				bAccept = FALSE;
+// 			}
+// 			break;
+// 		}
 
-		// Remove the unprocessed bytes that we don't care about
-		while(Len--)
-		{
-			UDPGet(&i);
-		}
-	}
+// 		// Remove the unprocessed bytes that we don't care about
+// 		while(Len--)
+// 		{
+// 			UDPGet(&i);
+// 		}
+// 	}
 
-	// Begin putting the BOOTP Header and DHCP options
-	UDPPut(BOOT_REPLY);			// Message Type: 2 (BOOTP Reply)
-	// Reply with the same Hardware Type, Hardware Address Length, Hops, and Transaction ID fields
-	UDPPutArray((BYTE*)&(Header->HardwareType), 7);
-	UDPPut(0x00);				// Seconds Elapsed: 0 (Not used)
-	UDPPut(0x00);				// Seconds Elapsed: 0 (Not used)
-	UDPPutArray((BYTE*)&(Header->BootpFlags), sizeof(Header->BootpFlags));
-	UDPPutArray((BYTE*)&(Header->ClientIP), sizeof(IP_ADDR));// Your (client) IP Address:
-	UDPPutArray((BYTE*)&DHCPNextLease, sizeof(IP_ADDR));	// Lease IP address to give out
-	UDPPut(0x00);				// Next Server IP Address: 0.0.0.0 (not used)
-	UDPPut(0x00);				// Next Server IP Address: 0.0.0.0 (not used)
-	UDPPut(0x00);				// Next Server IP Address: 0.0.0.0 (not used)
-	UDPPut(0x00);				// Next Server IP Address: 0.0.0.0 (not used)
-	UDPPut(0x00);				// Relay Agent IP Address: 0.0.0.0 (not used)
-	UDPPut(0x00);				// Relay Agent IP Address: 0.0.0.0 (not used)
-	UDPPut(0x00);				// Relay Agent IP Address: 0.0.0.0 (not used)
-	UDPPut(0x00);				// Relay Agent IP Address: 0.0.0.0 (not used)
-	UDPPutArray((BYTE*)&(Header->ClientMAC), sizeof(MAC_ADDR));	// Client MAC address: Same as given by client
-	for(i = 0; i < 64+128+(16-sizeof(MAC_ADDR)); i++)	// Remaining 10 bytes of client hardware address, server host name: Null string (not used)
-		UDPPut(0x00);									// Boot filename: Null string (not used)
-	UDPPut(0x63);				// Magic Cookie: 0x63538263
-	UDPPut(0x82);				// Magic Cookie: 0x63538263
-	UDPPut(0x53);				// Magic Cookie: 0x63538263
-	UDPPut(0x63);				// Magic Cookie: 0x63538263
+// 	// Begin putting the BOOTP Header and DHCP options
+// 	UDPPut(BOOT_REPLY);			// Message Type: 2 (BOOTP Reply)
+// 	// Reply with the same Hardware Type, Hardware Address Length, Hops, and Transaction ID fields
+// 	UDPPutArray((BYTE*)&(Header->HardwareType), 7);
+// 	UDPPut(0x00);				// Seconds Elapsed: 0 (Not used)
+// 	UDPPut(0x00);				// Seconds Elapsed: 0 (Not used)
+// 	UDPPutArray((BYTE*)&(Header->BootpFlags), sizeof(Header->BootpFlags));
+// 	UDPPutArray((BYTE*)&(Header->ClientIP), sizeof(IP_ADDR));// Your (client) IP Address:
+// 	UDPPutArray((BYTE*)&DHCPNextLease, sizeof(IP_ADDR));	// Lease IP address to give out
+// 	UDPPut(0x00);				// Next Server IP Address: 0.0.0.0 (not used)
+// 	UDPPut(0x00);				// Next Server IP Address: 0.0.0.0 (not used)
+// 	UDPPut(0x00);				// Next Server IP Address: 0.0.0.0 (not used)
+// 	UDPPut(0x00);				// Next Server IP Address: 0.0.0.0 (not used)
+// 	UDPPut(0x00);				// Relay Agent IP Address: 0.0.0.0 (not used)
+// 	UDPPut(0x00);				// Relay Agent IP Address: 0.0.0.0 (not used)
+// 	UDPPut(0x00);				// Relay Agent IP Address: 0.0.0.0 (not used)
+// 	UDPPut(0x00);				// Relay Agent IP Address: 0.0.0.0 (not used)
+// 	UDPPutArray((BYTE*)&(Header->ClientMAC), sizeof(MAC_ADDR));	// Client MAC address: Same as given by client
+// 	for(i = 0; i < 64+128+(16-sizeof(MAC_ADDR)); i++)	// Remaining 10 bytes of client hardware address, server host name: Null string (not used)
+// 		UDPPut(0x00);									// Boot filename: Null string (not used)
+// 	UDPPut(0x63);				// Magic Cookie: 0x63538263
+// 	UDPPut(0x82);				// Magic Cookie: 0x63538263
+// 	UDPPut(0x53);				// Magic Cookie: 0x63538263
+// 	UDPPut(0x63);				// Magic Cookie: 0x63538263
 
-	// Options: DHCP lease ACKnowledge
-	if(bAccept)
-	{
-		UDPPut(DHCP_OPTION_ACK_MESSAGE);
-		UDPPut(1);
-		UDPPut(DHCP_ACK_MESSAGE);
-	}
-	else	// Send a NACK
-	{
-		UDPPut(DHCP_OPTION_ACK_MESSAGE);
-		UDPPut(1);
-		UDPPut(DHCP_NAK_MESSAGE);
-	}
+// 	// Options: DHCP lease ACKnowledge
+// 	if(bAccept)
+// 	{
+// 		UDPPut(DHCP_OPTION_ACK_MESSAGE);
+// 		UDPPut(1);
+// 		UDPPut(DHCP_ACK_MESSAGE);
+// 	}
+// 	else	// Send a NACK
+// 	{
+// 		UDPPut(DHCP_OPTION_ACK_MESSAGE);
+// 		UDPPut(1);
+// 		UDPPut(DHCP_NAK_MESSAGE);
+// 	}
 
-	// Option: Lease duration
-	UDPPut(DHCP_IP_LEASE_TIME);
-	UDPPut(4);
-	UDPPut((DHCP_LEASE_DURATION>>24) & 0xFF);
-	UDPPut((DHCP_LEASE_DURATION>>16) & 0xFF);
-	UDPPut((DHCP_LEASE_DURATION>>8) & 0xFF);
-	UDPPut((DHCP_LEASE_DURATION) & 0xFF);
+// 	// Option: Lease duration
+// 	UDPPut(DHCP_IP_LEASE_TIME);
+// 	UDPPut(4);
+// 	UDPPut((DHCP_LEASE_DURATION>>24) & 0xFF);
+// 	UDPPut((DHCP_LEASE_DURATION>>16) & 0xFF);
+// 	UDPPut((DHCP_LEASE_DURATION>>8) & 0xFF);
+// 	UDPPut((DHCP_LEASE_DURATION) & 0xFF);
 
-	// Option: Server identifier
-	UDPPut(DHCP_SERVER_IDENTIFIER);
-	UDPPut(sizeof(IP_ADDR));
-	UDPPutArray((BYTE*)&AppConfig.MyIPAddr, sizeof(IP_ADDR));
+// 	// Option: Server identifier
+// 	UDPPut(DHCP_SERVER_IDENTIFIER);
+// 	UDPPut(sizeof(IP_ADDR));
+// 	UDPPutArray((BYTE*)&AppConfig.MyIPAddr, sizeof(IP_ADDR));
 
-	// Option: Subnet Mask
-	UDPPut(DHCP_SUBNET_MASK);
-	UDPPut(sizeof(IP_ADDR));
-	UDPPutArray((BYTE*)&AppConfig.MyMask, sizeof(IP_ADDR));
+// 	// Option: Subnet Mask
+// 	UDPPut(DHCP_SUBNET_MASK);
+// 	UDPPut(sizeof(IP_ADDR));
+// 	UDPPutArray((BYTE*)&AppConfig.MyMask, sizeof(IP_ADDR));
 
-	// Option: Router/Gateway address
-	UDPPut(DHCP_ROUTER);
-	UDPPut(sizeof(IP_ADDR));
-	UDPPutArray((BYTE*)&AppConfig.MyIPAddr, sizeof(IP_ADDR));
+// 	// Option: Router/Gateway address
+// 	UDPPut(DHCP_ROUTER);
+// 	UDPPut(sizeof(IP_ADDR));
+// 	UDPPutArray((BYTE*)&AppConfig.MyIPAddr, sizeof(IP_ADDR));
 
-	// No more options, mark ending
-	UDPPut(DHCP_END_OPTION);
+// 	// No more options, mark ending
+// 	UDPPut(DHCP_END_OPTION);
 
-	// Add zero padding to ensure compatibility with old BOOTP relays that discard small packets (<300 UDP octets)
-	while(UDPTxCount < 300u)
-		UDPPut(0);
+// 	// Add zero padding to ensure compatibility with old BOOTP relays that discard small packets (<300 UDP octets)
+// 	while(UDPTxCount < 300u)
+// 		UDPPut(0);
 
-	// Transmit the packet
-	UDPFlush();
-}
+// 	// Transmit the packet
+// 	UDPFlush();
+// }
 #endif //#if defined(STACK_USE_DHCP_RELAY)

@@ -33,7 +33,7 @@ static IP_ADDR				DHCPNextLease;	// IP Address to provide for next lease
 BOOL 						bDHCPRelayEnabled = TRUE;	// Whether or not the DHCP server is enabled
 
 void DHCPRelayTask(void);
-static void DHCPReplyToDiscovery(BOOTP_HEADER *Header);
-static void DHCPReplyToRequest(BOOTP_HEADER *Header, BOOL bAccept);
+// static void DHCPReplyToDiscovery(BOOTP_HEADER *Header);
+// static void DHCPReplyToRequest(BOOTP_HEADER *Header, BOOL bAccept);
 #endif
 #endif

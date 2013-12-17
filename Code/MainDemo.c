@@ -380,16 +380,19 @@ static void InitializeBoard(void)
   LED0_TRIS = 0;  //LED0
 	LED1_TRIS = 0;  //LED1
 	LED2_TRIS = 0;  //LED2
-	LED3_TRIS = 1;  //LED_LCD1
-	LED4_TRIS = 1;  //LED_LCD2
+	LED3_TRIS = 0;  //LED_LCD1
+	LED4_TRIS = 0;  //LED_LCD2
 	LED5_TRIS = 0;  //LED5=RELAY1
 	LED6_TRIS = 0;  //LED7=RELAY2
 #if (!defined(EXPLORER_16) &&!defined(OLIMEX_MAXI))    // Pin multiplexed with
 	// a button on EXPLORER_16 and not used on OLIMEX_MAXI
 	LED7_TRIS = 0;
 #endif
-        LED_PUT(0x00);  //turn off LED0 - LED2
+  LED_PUT(0x00);  //turn off LED0 - LED2
 	RELAY_PUT(0x00); //turn relays off to save power
+
+  // Enable backlight
+  LED3_IO = 1;
 
 	//set clock to 25 MHz
 

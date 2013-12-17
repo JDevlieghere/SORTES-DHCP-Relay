@@ -39,7 +39,6 @@ void DHCPRelayTask(void)
 	BYTE 				i;
 	BYTE				Option, Len;
 	BOOTP_HEADER		BOOTPHeader;
-	DWORD				dw;
 	static enum
 	{
 		DHCP_OPEN_SOCKET,
@@ -121,15 +120,19 @@ void DHCPRelayTask(void)
 						{
 							case DHCP_DISCOVER_MESSAGE:
 								Log("DHCP Message","DISCOVER");
+								RelayToServer(&BOOTPHeader, 1);
 								break;
 							case DHCP_REQUEST_MESSAGE:
 								Log("DHCP Message","REQUEST");
+								RelayToServer(&BOOTPHeader, 2);
 								break;
 							case DHCP_OFFER_MESSAGE:
 								Log("DHCP Message","OFFER");
+								RelayToClient(&BOOTPHeader, 1);
 								break;
 							case DHCP_ACK_MESSAGE:
 								Log("DHCP Message","ACK");
+								RelayToClient(&BOOTPHeader, 2);
 								break;
 							case DHCP_RELEASE_MESSAGE:
 								Log("DHCP Message","RELEASE");

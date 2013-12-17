@@ -232,39 +232,38 @@ static DWORD dwLastIP = 0;
 
     while(1)
     {
+       // Blink LED0 (right most one) every second.
+      nt =  TickGetDiv256();
+      if((nt - t) >= (DWORD)(TICK_SECOND/1024ul))
+      {
+          t = nt;
+          LED0_IO ^= 1;
+          ClrWdt();  //Clear the watchdog
+      }
 
-         // Blink LED0 (right most one) every second.
-        nt =  TickGetDiv256();
-        if((nt - t) >= (DWORD)(TICK_SECOND/1024ul))
-        {
-            t = nt;
-            LED0_IO ^= 1;
-            ClrWdt();  //Clear the watchdog
-        }
+      // This task performs normal stack task including checking
+      // for incoming packet, type of packet and calling
+      // appropriate stack entity to process it.
+      StackTask();
 
-        // This task performs normal stack task including checking
-        // for incoming packet, type of packet and calling
-        // appropriate stack entity to process it.
-        StackTask();
+      // This tasks invokes each of the core stack application tasks
+      StackApplications();
 
-        // This tasks invokes each of the core stack application tasks
-	StackApplications(); //all except dhcp, ping and arp
+      // Process application specific tasks here.
 
-        // Process application specific tasks here.
-
-        // If the local IP address has changed (ex: due to DHCP lease change)
-        // write the new IP address to the LCD display, UART, and Announce
-        // service
-	if(dwLastIP != AppConfig.MyIPAddr.Val)
-	{
-	     dwLastIP = AppConfig.MyIPAddr.Val;
-             #if defined(__SDCC__)
-                 DisplayIPValue(dwLastIP); // must be a WORD: sdcc does not
-                                           // pass aggregates
-             #else
-                 DisplayIPValue(AppConfig.MyIPAddr);
-             #endif
- 	}
+      // If the local IP address has changed (ex: due to DHCP lease change)
+      // write the new IP address to the LCD display, UART, and Announce
+      // service
+    	if(dwLastIP != AppConfig.MyIPAddr.Val)
+    	{
+    	     dwLastIP = AppConfig.MyIPAddr.Val;
+                 #if defined(__SDCC__)
+                     DisplayIPValue(dwLastIP); // must be a WORD: sdcc does not
+                                               // pass aggregates
+                 #else
+                     DisplayIPValue(AppConfig.MyIPAddr);
+                 #endif
+     	}
     }//end of while(1)
 }//end of main()
 

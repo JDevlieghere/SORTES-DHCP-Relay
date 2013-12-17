@@ -72,6 +72,8 @@ void DHCPRelayTask(void)
 				smDHCPRelay++;
 			}
 
+			DisplayIPValue(DHCPServer.IPAddr.Val);
+
 		case DHCP_LISTEN:
 			// Check to see if a valid DHCP packet has arrived
 			if(UDPIsGetReady(ClientSocket) < 241u)
@@ -236,7 +238,7 @@ static void RelayToClient(BOOTP_HEADER *Header, int type){
 
 	UDPFlush();
 
-	Log("Relayed to Server","From:");
+	Log("Relayed2Client","From:");
 	LogMac(BOT + 5, Header);
 }
 
@@ -343,7 +345,7 @@ static void RelayToServer(BOOTP_HEADER *Header, int type){
 	}
 	UDPFlush();
 
-	Log("Relayed to Client","From:");
+	Log("Relayed2Server","From:");
 	LogMac(BOT + 5, Header);
 }
 

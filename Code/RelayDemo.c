@@ -6,6 +6,9 @@
 #include "Include/TCPIPConfig.h"
 #include "Include/TCPIP_Stack/TCPIP.h"
 
+#define TOP	0
+#define BOT 16
+
 #if defined(STACK_USE_DHCP_RELAY)
 
 #include "Include/TCPIP_Stack/TCPIP.h"
@@ -87,18 +90,11 @@ void DHCPRelayTask(void)
 		case DHCP_OPEN_SOCKET:
 			// Obtain a UDP socket to listen/transmit on
 			MySocket = UDPOpen(DHCP_SERVER_PORT, NULL, DHCP_CLIENT_PORT);
-			if(MySocket == INVALID_UDP_SOCKET)
-				break;
-
-
-			// Decide which address to lease out
-			// Note that this needs to be changed if we are to
-			// support more than one lease
-			DHCPNextLease.Val = (AppConfig.MyIPAddr.Val & AppConfig.MyMask.Val) + 0x02000000;
-			if(DHCPNextLease.v[3] == 255u)
-				DHCPNextLease.v[3] += 0x03;
-			if(DHCPNextLease.v[3] == 0u)
-				DHCPNextLease.v[3] += 0x02;
+			if(MySocket == INVALID_UDP_SOCKET){
+				DisplayString(TOP, "Socket error.");
+			}else{
+				DisplayString(TOP, "Socket success.");
+			}
 
 			smDHCPRelay++;
 
@@ -150,16 +146,19 @@ void DHCPRelayTask(void)
 						switch(i)
 						{
 							case DHCP_DISCOVER_MESSAGE:
-								DisplayString(0,"DHCP_DISCOVER_MESSAGE");
+								DisplayString(TOP,"DHCP_DISCOVER_MESSAGE");
 								break;
 
 							case DHCP_REQUEST_MESSAGE:
-								DisplayString(0,"DHCP_REQUEST_MESSAGE");
+								DisplayString(TOP,"DHCP_REQUEST_MESSAGE");
 								break;
 
 							// Need to handle these if supporting more than one DHCP lease
 							case DHCP_RELEASE_MESSAGE:
+								DisplayString(TOP,"DHCP_RELEASE_MESSAGE");
+								break;
 							case DHCP_DECLINE_MESSAGE:
+								DisplayString(TOP,"DHCP_DECLINE_MESSAGE");
 								break;
 						}
 						break;
@@ -215,7 +214,7 @@ void DHCPRelayTask(void)
 static void DHCPReplyToDiscovery(BOOTP_HEADER *Header)
 {
 	BYTE i;
-	DisplayString(0,"DHCPReplyToDiscovery");
+	DisplayString(TOP,"DHCPReplyToDiscovery");
 
 	// Set the correct socket to active and ensure that
 	// enough space is available to generate the DHCP response
@@ -317,7 +316,7 @@ static void DHCPReplyToDiscovery(BOOTP_HEADER *Header)
 static void DHCPReplyToRequest(BOOTP_HEADER *Header, BOOL bAccept)
 {
 	BYTE i;
-	DisplayString(0,"DHCPReplyToRequest");
+	DisplayString(TOP,"DHCPReplyToRequest");
 
 	// Set the correct socket to active and ensure that
 	// enough space is available to generate the DHCP response

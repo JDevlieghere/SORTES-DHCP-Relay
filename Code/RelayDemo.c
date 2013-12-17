@@ -136,17 +136,6 @@ void DHCPRelayTask(void)
 								break;
 						}
 						break;
-
-					case DHCP_PARAM_REQUEST_IP_ADDRESS:
-						if(Len == 4u)
-						{
-							// Get the requested IP address and see if it is the one we have on offer.
-							UDPGetArray((BYTE*)&dw, 4);
-							Len -= 4;
-							bAccept = (dw == DHCPNextLease.Val);
-						}
-						break;
-
 					case DHCP_END_OPTION:
 						UDPDiscard();
 						return;

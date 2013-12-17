@@ -11,7 +11,8 @@ LDFLAGS= -mpic16 -p18f97j60 -L/usr/local/lib/pic16 -llibio18f97j60.lib -llibdev1
 AR = ar
 RM = rm
 
-OBJECTS=Objects/MainDemo.o Objects/DHCPr.o Objects/Announce.o Objects/ARP.o Objects/Delay.o \
+
+OBJECTS=Objects/RelayDemo.o Objects/MainDemo.o Objects/DHCPr.o Objects/Announce.o Objects/ARP.o Objects/Delay.o \
    Objects/DHCP.o Objects/DNS.o Objects/DHCPs.o Objects/ETH97J60.o  \
    Objects/Hashes.o Objects/Helpers.o Objects/ICMP.o Objects/IP.o \
    Objects/LCDBlocking.o Objects/StackTsk.o Objects/UDPPerformanceTest.o \
@@ -85,6 +86,10 @@ APP_HEADERS=Include/GenericTypeDefs.h \
 
 TCPIP_Demo : $(OBJECTS) 
 	$(LD) $(LDFLAGS) $(OBJECTS)
+
+Objects/RelayDemo.o : RelayDemo.c $(SDCC_HEADERS)  \
+   $(SDCC_PIC16_HEADERS) $(APP_HEADERS) $(TCPIP_HEADERS)
+	$(CC) -c -mpic16 -p18f97j60  -o"Objects/RelayDemo.o" -L/usr/local/lib/pic16  RelayDemo.c
 
 Objects/MainDemo.o : MainDemo.c $(SDCC_HEADERS) $(SDCC_PIC16_HEADERS) \
    $(APP_HEADERS) $(TCPIP_HEADERS)

@@ -1,4 +1,4 @@
-#if defined(STACK_USE_DHCP_SERVER)
+//#if defined(STACK_USE_DHCP_RELAY)
 /*****************************************************************************
   Function:
 	void DHCPRelayTask(void)
@@ -391,4 +391,4 @@ static void DHCPReplyToRequest(BOOTP_HEADER *Header, BOOL bAccept)
 	// Transmit the packet
 	UDPFlush();
 }
-#endif //#if defined(STACK_USE_DHCP_SERVER)
+//#endif //#if defined(STACK_USE_DHCP_SERVER)

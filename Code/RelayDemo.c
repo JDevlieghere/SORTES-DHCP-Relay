@@ -120,26 +120,31 @@ void DHCPRelayTask(void)
 						switch(i)
 						{
 							case DHCP_DISCOVER_MESSAGE:
-								Log("DHCP Message","DISCOVER");
+								Log("DISCOVER","");
+								LogMac(BOT, &BOOTPHeader);
+								DisplayWord();
 								RelayToServer(&BOOTPHeader, 1);
 								break;
 							case DHCP_REQUEST_MESSAGE:
-								Log("DHCP Message","REQUEST");
+								Log("REQUEST","");
+								LogMac(BOT, &BOOTPHeader);
 								RelayToServer(&BOOTPHeader, 2);
 								break;
 							case DHCP_OFFER_MESSAGE:
-								Log("DHCP Message","OFFER");
+								Log("OFFER","");
+								LogMac(BOT, &BOOTPHeader);
 								RelayToClient(&BOOTPHeader, 1);
 								break;
 							case DHCP_ACK_MESSAGE:
-								Log("DHCP Message","ACK");
+								Log("ACK","");
+								LogMac(BOT, &BOOTPHeader);
 								RelayToClient(&BOOTPHeader, 2);
 								break;
 							case DHCP_RELEASE_MESSAGE:
-								Log("DHCP Message","RELEASE");
+								Log("RELEASE","");
 								break;
 							case DHCP_DECLINE_MESSAGE:
-								Log("DHCP Message","DECLINE");
+								Log("DECLINE","");
 								break;
 						}
 						break;
@@ -341,6 +346,13 @@ void Log(char *top, char *bottom){
 	LCDErase();
 	DisplayString(TOP, top);
 	DisplayString(BOT, bottom);
+}
+
+
+
+void LogMac(int pos, BOOTP_HEADER *Header){
+	DisplayWORD(pos, Header->ClientMAC.v[4]);
+	DisplayWORD(pos+4, Header->ClientMAC.v[5]);
 }
 
 

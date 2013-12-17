@@ -241,7 +241,7 @@ static void RelayToClient(BOOTP_HEADER *Header, int type){
 
 	UDPFlush();
 
-	DisplayString(BOT, "R2C:")
+	DisplayString(BOT, "R2C:");
 	LogMac(BOT + 5, Header);
 }
 
@@ -354,7 +354,7 @@ static void RelayToServer(BOOTP_HEADER *Header, int type){
 	}
 	UDPFlush();
 
-	DisplayString(BOT, "R2S:")
+	DisplayString(BOT, "R2S:");
 	LogMac(BOT + 5, Header);
 }
 

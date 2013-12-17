@@ -241,7 +241,7 @@ static void RelayToClient(BOOTP_HEADER *Header, int type){
 
 	UDPFlush();
 
-	Log("Relayed2Client","From:");
+	DisplayString(BOT, "R2C:")
 	LogMac(BOT + 5, Header);
 }
 
@@ -255,10 +255,8 @@ static void RelayToServer(BOOTP_HEADER *Header, int type){
 	BYTE a;
 	UDP_SOCKET_INFO *p;
 
-	if(!Arp()){
-		Log("ARP Failed.","");
+	if(!Arp())
 		return;
-	}
 
 	// Set the correct socket to active and ensure that
 	// enough space is available.
@@ -356,7 +354,7 @@ static void RelayToServer(BOOTP_HEADER *Header, int type){
 	}
 	UDPFlush();
 
-	Log("Relayed2Server","From:");
+	DisplayString(BOT, "R2S:")
 	LogMac(BOT + 5, Header);
 }
 

@@ -75,9 +75,6 @@ void DHCPRelayTask(void)
 				Log("Socket success","");
 				smDHCPRelay++;
 			}
-
-
-
 		case DHCP_LISTEN:
 			// Check to see if a valid DHCP packet has arrived
 			if(UDPIsGetReady(ClientSocket) < 241u)
@@ -125,22 +122,18 @@ void DHCPRelayTask(void)
 						{
 							case DHCP_DISCOVER_MESSAGE:
 								Log("DISCOVER","");
-								LogMac(BOT, &BOOTPHeader);
-								RelayToServer(&BOOTPHeader, i);
-								break;
-							case DHCP_REQUEST_MESSAGE:
-								Log("REQUEST","");
-								LogMac(BOT, &BOOTPHeader);
 								RelayToServer(&BOOTPHeader, i);
 								break;
 							case DHCP_OFFER_MESSAGE:
 								Log("OFFER","");
-								LogMac(BOT, &BOOTPHeader);
 								RelayToClient(&BOOTPHeader, i);
+								break;
+							case DHCP_REQUEST_MESSAGE:
+								Log("REQUEST","");
+								RelayToServer(&BOOTPHeader, i);
 								break;
 							case DHCP_ACK_MESSAGE:
 								Log("ACK","");
-								LogMac(BOT, &BOOTPHeader);
 								RelayToClient(&BOOTPHeader, i);
 								break;
 							case DHCP_RELEASE_MESSAGE:
@@ -148,6 +141,9 @@ void DHCPRelayTask(void)
 								break;
 							case DHCP_DECLINE_MESSAGE:
 								Log("DECLINE","");
+								break;
+							default:
+								Log("Default","");
 								break;
 						}
 						break;

@@ -30,7 +30,7 @@ static int Arp();
 static void RelayToServer(BOOTP_HEADER *Header, int type);
 static void RelayToClient(BOOTP_HEADER *Header, int type);
 void Log(char *top, char *bottom);
-void LogMac(BYTE pos, BOOTP_HEADER *Header);
+LogMac(BOOTP_HEADER *Header);
 
 void DHCPRelayTask(void)
 {
@@ -356,9 +356,9 @@ void Log(char *top, char *bottom){
  * @param pos    Start position
  * @param Header Header containing the MAC-address
  */
-void LogMac(BYTE pos, BOOTP_HEADER *Header){
-	DisplayWORD(pos, Header->ClientMAC.v[4]);
-	DisplayWORD(pos+4, Header->ClientMAC.v[5]);
+void LogMac(BOOTP_HEADER *Header){
+	DisplayWORD(BOT, Header->ClientMAC.v[4]);
+	DisplayWORD(BOT+4, Header->ClientMAC.v[5]);
 }
 
 

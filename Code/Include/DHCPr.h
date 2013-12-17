@@ -1,5 +1,5 @@
-#ifndef __DHCPR_H
-#define __DHCPR_H
+#ifndef __DHCP_RELAY_H
+#define __DHCP_RELAY_H
 
 #if defined(STACK_USE_DHCP_RELAY)
 

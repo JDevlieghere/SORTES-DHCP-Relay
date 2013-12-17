@@ -237,7 +237,7 @@ static void RelayToClient(BOOTP_HEADER *Header, int type){
 	UDPFlush();
 
 	Log("Relayed to Server","From:");
-	LogMac(BOT + 5, &BOOTPHeader);
+	LogMac(BOT + 5, Header);
 }
 
 /**
@@ -251,7 +251,7 @@ static void RelayToServer(BOOTP_HEADER *Header, int type){
 	UDP_SOCKET_INFO *p;
 
 	if(!Arp()){
-		Log("ARP Failed.");
+		Log("ARP Failed.","");
 		return;
 	}
 
@@ -344,7 +344,7 @@ static void RelayToServer(BOOTP_HEADER *Header, int type){
 	UDPFlush();
 
 	Log("Relayed to Client","From:");
-	LogMac(BOT + 5, &BOOTPHeader);
+	LogMac(BOT + 5, Header);
 }
 
 /**
@@ -354,7 +354,7 @@ static void RelayToServer(BOOTP_HEADER *Header, int type){
  */
 void Log(char *top, char *bottom){
 	LCDErase();
-	DisplayStripos, ng(TOP, top);
+	DisplayString(TOP, top);
 	DisplayString(BOT, bottom);
 }
 

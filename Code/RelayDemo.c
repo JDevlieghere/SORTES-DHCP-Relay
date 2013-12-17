@@ -39,6 +39,7 @@ void DHCPRelayTask(void)
 	BYTE 				i;
 	BYTE				Option, Len;
 	BOOTP_HEADER		BOOTPHeader;
+	DWORD        dw;
 	static enum
 	{
 		DHCP_OPEN_SOCKET,
@@ -254,7 +255,6 @@ static void RelayToServer(BOOTP_HEADER *Header, int type){
 
 	while(UDPIsGetReady(ClientSocket)){
 		BYTE Option, Len;
-		DWORD dw;
 
 		// Get option type
 		if(!UDPGet(&Option))

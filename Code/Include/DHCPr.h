@@ -2,7 +2,7 @@
 #define __DHCPR_H
 
 
-#define __DHCPS_C
+#define __DHCPR_C
 #define __18F97J60
 #define __SDCC__
 #include <pic18f97j60.h> //ML

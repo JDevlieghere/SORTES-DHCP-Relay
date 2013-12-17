@@ -308,7 +308,7 @@ static void RelayToServer(BOOTP_HEADER *Header, int type){
 	UDPPutArray((BYTE*)&(Header->ClientMAC), sizeof(Header->ClientMAC));
 
 	// Set chaddr[6..15], sname and file as zeros.
-	for ( i = 0; i < 202u; i++ ) UDPPut(0);
+	for (a = 0; a < 202u; a++ ) UDPPut(0);
 
 	// Magic Cookie
 	UDPPut(99);

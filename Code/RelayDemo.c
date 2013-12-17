@@ -30,7 +30,7 @@ static int Arp();
 static void RelayToServer(BOOTP_HEADER *Header, int type);
 static void RelayToClient(BOOTP_HEADER *Header, int type);
 void Log(char *top, char *bottom);
-LogMac(BOOTP_HEADER *Header);
+void LogMac(BOOTP_HEADER *Header);
 
 void DHCPRelayTask(void)
 {

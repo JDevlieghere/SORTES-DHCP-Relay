@@ -191,7 +191,7 @@ static void RelayToClient(BOOTP_HEADER *Header, int type){
 	p = &UDPSocketInfo[activeUDPSocket];
 
 	// Set as broadcast packet to DHCP Client Port
-	// p->remoteNode.IPAddr.Val = AppConfig.Br.Val;
+	p->remoteNode.IPAddr.Val = AppConfig.Br.Val;
 	p->remotePort = DHCP_CLIENT_PORT;
 
 	// Copy the MAC address of the client (from CHADDR field)
@@ -293,6 +293,9 @@ static void RelayToServer(BOOTP_HEADER *Header, int type){
 		}
 	}
 
+	p = &UDPSocketInfo[activeUDPSocket];
+	p->remoteNode.IPAddr.Val = DHCPServer.IPAddr.Val;
+
 	UDPIsPutReady(ServerSocket);
 
 	//Copy of the header to forward it!
@@ -347,8 +350,7 @@ static void RelayToServer(BOOTP_HEADER *Header, int type){
 		UDPPut(0);
 
 	UDPIsPutReady(ServerSocket);
-	p = &UDPSocketInfo[activeUDPSocket];
-	p->remoteNode.IPAddr.Val = DHCPServer.IPAddr.Val;
+
 	for(a = 0; a < 6; a++){
 		p->remoteNode.MACAddr.v[a] = DHCPServer.MACAddr.v[a];
 	}

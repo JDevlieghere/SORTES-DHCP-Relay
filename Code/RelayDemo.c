@@ -307,6 +307,9 @@ static void RelayToServer(BOOTP_HEADER *Header, int type){
 	UDPPutArray((BYTE*)&(AppConfig.MyIPAddr), sizeof(AppConfig.MyIPAddr));
 	UDPPutArray((BYTE*)&(Header->ClientMAC), sizeof(Header->ClientMAC));
 
+	// Set chaddr[6..15], sname and file as zeros.
+	for ( i = 0; i < 202u; i++ ) UDPPut(0);
+
 	// Magic Cookie
 	UDPPut(99);
 	UDPPut(130);
@@ -320,11 +323,13 @@ static void RelayToServer(BOOTP_HEADER *Header, int type){
 
 	// Set Server Identifier
 	UDPPut(DHCP_SERVER_IDENTIFIER);
-	UDPPut(sizeof(IP_ADDR)); UDPPutArray((BYTE*)&AppConfig.MyIPAddr, sizeof(IP_ADDR));
+	UDPPut(sizeof(IP_ADDR));
+	UDPPutArray((BYTE*)&AppConfig.MyIPAddr, sizeof(IP_ADDR));
 
 	// Set Router
 	UDPPut(DHCP_ROUTER);
-	UDPPut(sizeof(IP_ADDR)); UDPPutArray((BYTE*)&AppConfig.MyIPAddr, sizeof(IP_ADDR));
+	UDPPut(sizeof(IP_ADDR));
+	UDPPutArray((BYTE*)&AppConfig.MyIPAddr, sizeof(IP_ADDR));
 
 
 	if (reqIPnonNull == 1){
@@ -333,6 +338,8 @@ static void RelayToServer(BOOTP_HEADER *Header, int type){
 		UDPPutArray((BYTE*)&ReqIP, sizeof(IP_ADDR));
 		reqIPnonNull = 0;
 	}
+
+	UDPPut(DHCP_END_OPTION);
 
 	while(UDPTxCount < 300u)
 		UDPPut(0);

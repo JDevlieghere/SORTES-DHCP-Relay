@@ -20,7 +20,7 @@
 
 // HDCP Server at 	192.168.97.3
 // 					c0.a8.61.03
-#define DHCP_SERVER_IP	0xc0a86103
+#define DHCP_SERVER_IP	0x0202A8C0
 #define BROADCAST 		0xFFFFFFFF
 
 static 	UDP_SOCKET	ClientSocket;
@@ -315,10 +315,11 @@ static void RelayToServer(BOOTP_HEADER *Header, int type){
 	for (a = 0; a < 202u; a++ ) UDPPut(0);
 
 	// Magic Cookie
-	UDPPut(99);
-	UDPPut(130);
-	UDPPut(83);
-	UDPPut(99);
+	UDPPut(0x63);				// Magic Cookie: 0x63538263
+	UDPPut(0x82);				// Magic Cookie: 0x63538263
+	UDPPut(0x53);				// Magic Cookie: 0x63538263
+	UDPPut(0x63);				// Magic Cookie: 0x63538263
+
 
 	// Set message type
 	UDPPut(DHCP_MESSAGE_TYPE);

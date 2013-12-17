@@ -1,19 +1,7 @@
 #ifndef __DHCPR_H
 #define __DHCPR_H
 
-
-#define __DHCPR_C
-#define __18F97J60
-#define __SDCC__
-#include <pic18f97j60.h> //ML
-
-#include "TCPIPConfig.h"
-
 #if defined(STACK_USE_DHCP_RELAY)
-
-#include "TCPIP_Stack/TCPIP.h"
-
-#include "MainDemo.h"
 
 // UDP client port for DHCP Client transactions
 #define DHCP_CLIENT_PORT                (68u)

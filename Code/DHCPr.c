@@ -1,14 +1,13 @@
-#define __PINGDEMO_C
+#define __DHCPR_C
 #define __18F97J60
 #define __SDCC__
 #include <pic18f97j60.h> //ML
 
 #include "Include/TCPIPConfig.h"
 #include "Include/TCPIP_Stack/TCPIP.h"
+#include "MainDemo.h"
 
 #if defined(STACK_USE_DHCP_RELAY)
-
-#include "Include/MainDemo.h"
 
 /*****************************************************************************
   Function:

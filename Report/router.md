@@ -2,6 +2,8 @@
 
 ## Setup
 
+Our testing setup contains the following devices:
+
  * The PIC
  * The Router
  * The DHCP Server

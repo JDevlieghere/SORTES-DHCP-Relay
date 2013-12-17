@@ -16,6 +16,7 @@
 #define DHCP_LEASE_DURATION	60ul
 #define TOP	0
 #define BOT 16
+#define DHCP_SERVER_IP	0xc0a80202
 
 static 	UDP_SOCKET	ClientSocket;
 static 	UDP_SOCKET 	ServerSocket;
@@ -44,9 +45,7 @@ void DHCPRelayTask(void)
 		DHCP_LISTEN
 	} smDHCPRelay = DHCP_OPEN_SOCKET;
 
-	// <{192,  168, 67, 1} to hex
-	// {c0, a8, 2, 2}
-	DHCPServer.IPAddr.Val = 0xc0a86102;
+	DHCPServer.IPAddr.Val = DHCP_SERVER_IP;
 
 	#if defined(STACK_USE_DHCP_CLIENT)
 		// Make sure we don't clobber anyone else's DHCP server

@@ -259,10 +259,10 @@ static void RelayToServer(BOOTP_HEADER *Header, int type){
 
 	// Set the correct socket to active and ensure that
 	// enough space is available.
-	if(UDPIsPutReady(ClientSocket) < 300u)
+	if(UDPIsPutReady(ServerSocket) < 300u)
 		return;
 
-	while(UDPIsGetReady(ClientSocket)){
+	while(UDPIsGetReady(ServerSocket)){
 		BYTE Option, Len;
 
 		// Get option type
@@ -291,7 +291,7 @@ static void RelayToServer(BOOTP_HEADER *Header, int type){
 		}
 	}
 
-	UDPIsPutReady(ClientSocket);
+	UDPIsPutReady(ServerSocket);
 
 	//Copy of the header to forward it!
 	UDPPutArray((BYTE*)&(Header->MessageType), sizeof(Header->MessageType));
@@ -337,7 +337,7 @@ static void RelayToServer(BOOTP_HEADER *Header, int type){
 	while(UDPTxCount < 300u)
 		UDPPut(0);
 
-	UDPIsPutReady(ClientSocket);
+	UDPIsPutReady(ServerSocket);
 	p = &UDPSocketInfo[activeUDPSocket];
 	p->remoteNode.IPAddr.Val = DHCPServer.IPAddr.Val;
 	for(a = 0; a < 6; a++){

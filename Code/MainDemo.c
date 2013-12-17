@@ -248,7 +248,7 @@ static DWORD dwLastIP = 0;
         StackTask();
 
         // This tasks invokes each of the core stack application tasks
-	//        StackApplications(); //all except dhcp, ping and arp
+	StackApplications(); //all except dhcp, ping and arp
 
         // Process application specific tasks here.
 

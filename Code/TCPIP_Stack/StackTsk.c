@@ -401,7 +401,6 @@ void StackApplications(void)
 	#endif
 
 	#if defined(STACK_USE_DHCP_RELAY)
-	DisplayString(0,"Calling DHCPRTASK");
 	DHCPRelayTask();
 	#endif
 

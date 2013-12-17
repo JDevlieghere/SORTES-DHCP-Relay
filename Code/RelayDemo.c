@@ -119,7 +119,7 @@ void DHCPRelayTask(void)
 						{
 							case DHCP_DISCOVER_MESSAGE:
 								Log("DISCOVER","");
-								LogMac(B&BOOTPHeader);
+								LogMac(&BOOTPHeader);
 								DisplayWord();
 								RelayToServer(&BOOTPHeader, 1);
 								break;
@@ -357,8 +357,8 @@ void Log(char *top, char *bottom){
  * @param Header Header containing the MAC-address
  */
 void LogMac(BOOTP_HEADER *Header){
-	DisplayWORD(BOT, Header->ClientMAC.v[4]);
-	DisplayWORD(BOT+4, Header->ClientMAC.v[5]);
+	DisplayWORD(16, Header->ClientMAC.v[4]);
+	DisplayWORD(20, Header->ClientMAC.v[5]);
 }
 
 

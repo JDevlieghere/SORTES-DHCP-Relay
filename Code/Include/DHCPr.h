@@ -9,8 +9,6 @@
 
 #include "TCPIPConfig.h"
 
-#include "DHCPr.h"
-
 #if defined(STACK_USE_DHCP_RELAY)
 
 #include "TCPIP_Stack/TCPIP.h"

@@ -32,7 +32,7 @@ static int Arp();
 static void RelayToServer(BOOTP_HEADER *Header, int type);
 static void RelayToClient(BOOTP_HEADER *Header, int type);
 void Log(char *top, char *bottom);
-
+void LogMac(int pos, BOOTP_HEADER *Header);
 
 void DHCPRelayTask(void)
 {
@@ -342,14 +342,22 @@ static void RelayToServer(BOOTP_HEADER *Header, int type){
 	UDPFlush();
 }
 
+/**
+ * Log strings to the LCD
+ * @param top    String on the top line
+ * @param bottom String on the bottom line
+ */
 void Log(char *top, char *bottom){
 	LCDErase();
 	DisplayString(TOP, top);
 	DisplayString(BOT, bottom);
 }
 
-
-
+/**
+ * Display MAC-address on the LCD
+ * @param pos    Start position
+ * @param Header Header containing the MAC-address
+ */
 void LogMac(int pos, BOOTP_HEADER *Header){
 	DisplayWORD(pos, Header->ClientMAC.v[4]);
 	DisplayWORD(pos+4, Header->ClientMAC.v[5]);

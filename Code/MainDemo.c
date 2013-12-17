@@ -126,6 +126,7 @@ BYTE AN0String[8];
 // These may or may not be present in all applications.
 static void InitAppConfig(void);
 static void InitializeBoard(void);
+void DisplayWORD(BYTE pos, WORD w); //write WORDs on LCD for debugging
 
 //
 // PIC18 Interrupt Service Routines
@@ -277,7 +278,23 @@ static DWORD dwLastIP = 0;
  __SDCC__ only: for debugging
 *************************************************/
 #if defined(__SDCC__)
+void DisplayWORD(BYTE pos, WORD w) //WORD is a 16 bits unsigned
+{
+    BYTE WDigit[6]; //enough for a  number < 65636: 5 digits + \0
+    BYTE j;
+    BYTE LCDPos=0;  //write on first line of LCD
+    unsigned radix=10; //type expected by sdcc's ultoa()
 
+    LCDPos=pos;
+    ultoa(w, WDigit, radix);
+    for(j = 0; j < strlen((char*)WDigit); j++)
+    {
+       LCDText[LCDPos++] = WDigit[j];
+    }
+    if(LCDPos < 32u)
+       LCDText[LCDPos] = 0;
+    LCDUpdate();
+}
 /*************************************************
  Function DisplayString:
  Writes an IP address to string to the LCD display

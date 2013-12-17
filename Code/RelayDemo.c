@@ -31,7 +31,6 @@ static void RelayToServer(BOOTP_HEADER *Header, int type);
 static void RelayToClient(BOOTP_HEADER *Header, int type);
 void Log(char *top, char *bottom);
 void LogMac(BOOTP_HEADER *Header);
-void DisplayWORD(BYTE pos, WORD w);
 
 void DHCPRelayTask(void)
 {
@@ -121,7 +120,6 @@ void DHCPRelayTask(void)
 							case DHCP_DISCOVER_MESSAGE:
 								Log("DISCOVER","");
 								LogMac(&BOOTPHeader);
-								DisplayWord();
 								RelayToServer(&BOOTPHeader, 1);
 								break;
 							case DHCP_REQUEST_MESSAGE:
@@ -362,22 +360,5 @@ void LogMac(BOOTP_HEADER *Header){
 	DisplayWORD(20, Header->ClientMAC.v[5]);
 }
 
-void DisplayWORD(BYTE pos, WORD w) //WORD is a 16 bits unsigned
-{
-    BYTE WDigit[6]; //enough for a  number < 65636: 5 digits + \0
-    BYTE j;
-    BYTE LCDPos=0;  //write on first line of LCD
-    unsigned radix=10; //type expected by sdcc's ultoa()
-
-    LCDPos=pos;
-    ultoa(w, WDigit, radix);
-    for(j = 0; j < strlen((char*)WDigit); j++)
-    {
-       LCDText[LCDPos++] = WDigit[j];
-    }
-    if(LCDPos < 32u)
-       LCDText[LCDPos] = 0;
-    LCDUpdate();
-}
 
 #endif	//#if defined(STACK_USE_DHCP_RELAY)

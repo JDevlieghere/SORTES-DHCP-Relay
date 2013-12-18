@@ -97,8 +97,8 @@ void ListenToSocket(UDP_SOCKET socket){
 	UDPGetArray((BYTE*)&BOOTPHeader, sizeof(BOOTPHeader));
 
 	// Validate first three fields
-	if(BOOTPHeader.MessageType != 1u)
-		return;
+	//if(BOOTPHeader.MessageType != 1u)
+	//	return;
 	if(BOOTPHeader.HardwareType != 1u)
 		return;
 	if(BOOTPHeader.HardwareLen != 6u)

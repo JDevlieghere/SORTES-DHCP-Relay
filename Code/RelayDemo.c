@@ -44,6 +44,8 @@ void DHCPRelayTask(void)
 	BYTE				Option, Len;
 	BOOTP_HEADER		BOOTPHeader;
 	DWORD        dw;
+	int ClientReady, ServerReady;
+
 	static enum
 	{
 		DHCP_OPEN_SOCKET,
@@ -78,8 +80,8 @@ void DHCPRelayTask(void)
 		case DHCP_LISTEN:
 			// Check to see if a valid DHCP packet has arrived
 
-			unsigned int ClientReady = DPIsGetReady(ClientSocket);
-			unsigned int ServerReady = UDPIsGetReady(ServerSocket);
+			ClientReady = UDPIsGetReady(ClientSocket);
+			ServerReady = UDPIsGetReady(ServerSocket);
 
 			if(ClientReady < 241u && ServerReady < 241u)
 				break;

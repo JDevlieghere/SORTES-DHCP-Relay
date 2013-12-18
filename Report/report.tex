@@ -32,8 +32,8 @@ language=sh
 
 \section{DHCP Relay}
 Assuming the reader is familiar with the Dynamic Host Configuration Protocol
-we'll explain in short how the DHCP Relay works. we'll focus on the four stages
-listed below. The purpose of a DHCP Relay is allowing clients from a differt
+We'll explain in short how the DHCP Relay works and focus on the four stages
+listed below. The purpose of a DHCP Relay is allowing clients from a different
 subnet than that of the DHCP to still communicate with the server. Because
 broadcasts are limited to the local subnet, the relay forwards the broadcast
 using unicast to the DHCP server. Messages from the server are returned to the
@@ -67,13 +67,18 @@ is set in the \texttt{GIADDR} field. This field is used by the server to
 determine the correct subnet and as destination address for the responding
 packet. An ARP request is made to determine the servers MAC-address.\\
 \\
-\textbf{Note:} Usually the first packet forwards fails due to an unfinished ARP request. By the time the packet is received again, the request has been fulfilled and the packet is forwarded as expected. We chose not to introduce a delay since we are certain a duplicate of the packet will be received soon.
+\textbf{Note:} Usually the first packet forwards fails due to an unfinished ARP
+request. By the time the packet is received again, the request has been
+fulfilled and the packet is forwarded as expected. We chose not to introduce a
+delay since we are certain a duplicate of the packet will be received soon.
 
 \subsection{Forwarding to Client}
 Forwarding a DHCP packet from the server to the client is even more
 straightforward. The whole packet is simply broadcasted onto the local subnet.
 
 \section{Deployment}
+
+\subsection{Building}
 Simply run deploy.sh to build and deploy the application to the PIC. You will
 automatically enter the tftp shell allowing you to copy the hex file to the
 board.
@@ -111,5 +116,15 @@ implementation. The manual did provide some insight but lacked a proper
 explanation of how to add a new component such as the relay. Most part of the
 solution is therefore based on the existing implementation, adapted to fit our
 needs.
+\\\\
+Most problems were caused by a lack of knowledge of the stack API. Especially
+when rewriting code, this created a lot of confusion. For example, we based our
+DHCP listening function on the one used by the available DHCP server. This code
+ignored some critical bytes needed for receiving packets from the server. It
+took us a long time to discover this problem.
+\\\\
+The experience we had with the PIC, the compiler and the hardware interface,
+which all caused us a lot of troubles last time, significantly improved our
+working proficiency.
 
 \end{document}

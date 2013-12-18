@@ -44,7 +44,7 @@ void DHCPRelayTask(void)
 	BYTE				Option, Len;
 	BOOTP_HEADER		BOOTPHeader;
 	DWORD        dw;
-	int ClientReady, ServerReady;
+	unsigned ClientReady, ServerReady;
 
 	static enum
 	{

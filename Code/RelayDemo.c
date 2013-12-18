@@ -34,10 +34,9 @@ IP_ADDR ReqIP;
 int reqIPnonNull = 0;
 
 BOOL 	bDHCPRelayEnabled = TRUE;
-
 static int Arp();
 static void RelayToServer(BOOTP_HEADER *Header, int type);
-static void RelayToClient(BOOTP_HEADER *Header, int type);
+static void RelayToClient(BOOTP_HEADER *Header, int type, int useBroadcast);
 void Log(char *top, char *bottom);
 void LogMac(int pos, BOOTP_HEADER *Header);
 void ListenToSocket(UDP_SOCKET socket);
@@ -135,11 +134,11 @@ void ListenToSocket(UDP_SOCKET socket){
 				{
 					case DHCP_ACK_MESSAGE:
 						Log("ACK","");
-						RelayToClient(&BOOTPHeader, i);
+						RelayToClient(&BOOTPHeader, i, 0);
 						break;
 					case DHCP_OFFER_MESSAGE:
 						Log("OFFER","");
-						RelayToClient(&BOOTPHeader, i);
+						RelayToClient(&BOOTPHeader, i, 1);
 						break;
 					case DHCP_DISCOVER_MESSAGE:
 						Log("DISCOVER","");
@@ -186,10 +185,9 @@ static int Arp(){
  * @param Header The UDP Header
  * @param type   The DHCP Type
  */
-static void RelayToClient(BOOTP_HEADER *Header, int type){
+static void RelayToClient(BOOTP_HEADER *Header, int type, int useBroadcast){
 	BYTE i;
 	UDP_SOCKET_INFO *p;
-
 	// Set the correct socket to active and ensure that
 	// enough space is available.
 	if(UDPIsPutReady(ClientSocket) < 300u){
@@ -215,7 +213,17 @@ static void RelayToClient(BOOTP_HEADER *Header, int type){
 	UDPPutArray((BYTE*)&(Header->Hops), sizeof(Header->Hops));
 	UDPPutArray((BYTE*)&(Header->TransactionID), sizeof(Header->TransactionID));
 	UDPPutArray((BYTE*)&(Header->SecondsElapsed), sizeof(Header->SecondsElapsed));
-	UDPPutArray((BYTE*)&(Header->BootpFlags), sizeof(Header->BootpFlags));
+	//Broadcast flag should be 0 when recieved packet is zero.
+	//UNLESS unicast is not (yet) possible.
+	if(useBroadcast){
+		UDPPut(0x80);
+		UDPPut(0x00);
+		//Header->BootpFlags = 0x0800; // 0008 
+	} else {
+		UDPPut(0x00);
+		UDPPut(0x00);
+		//Header->BootpFlags = 0x0000;
+	}
 	UDPPutArray((BYTE*)&(Header->ClientIP), sizeof(Header->ClientIP));
 	UDPPutArray((BYTE*)&(Header->YourIP), sizeof(Header->YourIP));
 	UDPPutArray((BYTE*)&(Header->NextServerIP), sizeof(Header->NextServerIP));
@@ -243,7 +251,8 @@ static void RelayToClient(BOOTP_HEADER *Header, int type){
 	// Set Router
 	UDPPut(DHCP_ROUTER);
 	UDPPut(sizeof(IP_ADDR)); UDPPutArray((BYTE*)&AppConfig.MyIPAddr, sizeof(IP_ADDR));
-
+	// End DHCP packet
+	UDPPut(DHCP_END_OPTION);
 	// Pad with zeros
 	while(UDPTxCount < 300u)
 		UDPPut(0);

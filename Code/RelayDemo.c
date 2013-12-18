@@ -130,7 +130,6 @@ void ListenToSocket(UDP_SOCKET socket, int type){
 		{
 			case DHCP_MESSAGE_TYPE:
 				UDPGet(&i);
-
 				switch(type)
 				{
 					case DHCP_CLIENT_SOCKET:

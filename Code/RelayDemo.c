@@ -225,10 +225,10 @@ static void RelayToClient(BOOTP_HEADER *Header, int type){
 	for ( i = 0; i < 202u; i++ ) UDPPut(0);
 
 	// Magic Cookie
-	UDPPut(99);
-	UDPPut(130);
-	UDPPut(83);
-	UDPPut(99);
+	UDPPut(0x63);				// Magic Cookie: 0x63538263
+	UDPPut(0x82);				// Magic Cookie: 0x63538263
+	UDPPut(0x53);				// Magic Cookie: 0x63538263
+	UDPPut(0x63);				// Magic Cookie: 0x63538263
 
 	// Set message type
 	UDPPut(DHCP_MESSAGE_TYPE);
@@ -303,6 +303,9 @@ static void RelayToServer(BOOTP_HEADER *Header, int type){
 
 	p = &UDPSocketInfo[activeUDPSocket];
 	p->remoteNode.IPAddr.Val = DHCPServer.IPAddr.Val;
+	for(a = 0; a < 6; a++){
+		p->remoteNode.MACAddr.v[a] = DHCPServer.MACAddr.v[a];
+	}
 
 	UDPIsPutReady(ServerSocket);
 
@@ -360,9 +363,6 @@ static void RelayToServer(BOOTP_HEADER *Header, int type){
 
 	UDPIsPutReady(ServerSocket);
 
-	for(a = 0; a < 6; a++){
-		p->remoteNode.MACAddr.v[a] = DHCPServer.MACAddr.v[a];
-	}
 	UDPFlush();
 
 	DisplayString(BOT, "R2S:");

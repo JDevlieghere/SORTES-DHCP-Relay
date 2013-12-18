@@ -434,7 +434,7 @@ static void InitializeBoard(void)
 
 static void InitAppConfig(void)
 {
-	AppConfig.Flags.bIsDHCPEnabled = TRUE;
+	AppConfig.Flags.bIsDHCPEnabled = FALSE;
 	AppConfig.Flags.bInConfigMode = TRUE;
 
 //ML using sdcc (MPLAB has a trick to generate serial numbers)

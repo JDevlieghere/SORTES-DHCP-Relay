@@ -170,7 +170,7 @@ void StackInit(void)
 #endif
 
 #if defined(STACK_USE_DHCP_CLIENT)
-	DHCPInit(0);
+//	DHCPInit(0);
 
     if(!AppConfig.Flags.bIsDHCPEnabled)
     {
@@ -247,7 +247,7 @@ void StackTask(void)
 		// discovered.
 		// DHCP has to account lease expiration time and renew the
 		// configuration time.
-		DHCPTask();
+		//DHCPTask();
 
 		if(DHCPIsBound(0))
 			AppConfig.Flags.bInConfigMode = FALSE;

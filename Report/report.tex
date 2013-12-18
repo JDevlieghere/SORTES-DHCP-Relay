@@ -5,16 +5,6 @@
 \usepackage{courier}
 \usepackage{hyperref}
 
-\lstset{
-language=sh
-,breaklines=true
-,frame=single
-,tabsize=2
-,basicstyle=\ttfamily
-,showstringspaces=false
-,numbers=left
-,numberstyle=\tiny\color{gray}}
-
 \setlength\parindent{0pt}
 
 \newcommand{\io}[1]{\textbf{#1}}
@@ -103,8 +93,8 @@ The following setup was used to test the relay:
 \subsubsection{Router Configuration}
 We had to configure the router to allow our desired setup. First of all we
 disabled the internal DHCP server. We then assigned a static IP to the WAN port
-(\texttt{192.168.2.1}) and disabled the NAT. \\
-\\
+(\texttt{192.168.2.1}) and disabled the NAT.
+\\\\
 \textbf{Note:} Without the DHCP running, you will have to use a static IP on the
 client of server machine to access the router configuration web page or upload a
 new software version to the PIC. This might be a hassle, especially when

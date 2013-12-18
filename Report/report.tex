@@ -1,0 +1,131 @@
+\documentclass[11pt]{article}
+\usepackage[english]{babel}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{courier}
+\usepackage{hyperref}
+
+\lstset{
+language=sh
+,breaklines=true
+,frame=single
+,tabsize=2
+,basicstyle=\ttfamily
+,showstringspaces=false
+,numbers=left
+,numberstyle=\tiny\color{gray}}
+
+\setlength\parindent{0pt}
+
+\newcommand{\io}[1]{\textbf{#1}}
+
+\title{SORTES - DHCP Relay}
+\author{Dieter Castel (0256149) \\ Jonas Devlieghere (0256709)}
+\date{\today}
+
+\begin{document}
+\maketitle
+\newpage
+
+\tableofcontents
+\newpage
+
+\section{DHCP Relay}
+Assuming the reader is familiar with the Dynamic Host Configuration Protocol
+We'll explain in short how the DHCP Relay works and focus on the four stages
+listed below. The purpose of a DHCP Relay is allowing clients from a different
+subnet than that of the DHCP to still communicate with the server. Because
+broadcasts are limited to the local subnet, the relay forwards the broadcast
+using unicast to the DHCP server. Messages from the server are returned to the
+relay, also using unicast, which are than forwarded to the client.
+
+\begin{itemize}
+	\item \textbf{DHCP Discovery}: The client broadcasts on his subnet to
+	discover DHCP servers. The Relay will forward this message to the DHCP
+	server using unicast.
+	\item \textbf{DHCP Offer}: The server replies to the client by offering an
+	IP. This message is forwarded by the relay from the server to the client.
+	\item \textbf{DHCP Request}: The client will confirm an offer using a
+	request message. This is once again forwarded to the server by the relay.
+	\item \textbf{DHCP Acknowledgement}: The acknowledgement finally confirms
+	the deal between the client and the server. This message is forwarded from
+	the server to the client by the relay.
+\end{itemize}
+
+\section{DHCP Relay Design}
+The relay consists of 3 large parts. The first one is listening for incoming UDP
+packets and filtering those related to DHCP. The second and third part consists
+of forwarding messages to the server and client respectively.
+
+\subsection{Listening for DHCP Packets}
+The relay is constantly listening for DHCP packets from both the server and the
+client. Once a packet is received, the appropriate relay function is called and
+the packet forwarded.
+
+\subsection{Forwarding to Server}
+When forwarding a packet to the server, the content is copied and the relay's IP
+is set in the \texttt{GIADDR} field. This field is used by the server to
+determine the correct subnet and as destination address for the responding
+packet. An ARP request is made to determine the servers MAC-address.\\
+\\
+\textbf{Note:} Usually the first packet forwards fails due to an unfinished ARP
+request. By the time the packet is received again, the request has been
+fulfilled and the packet is forwarded as expected. We chose not to introduce a
+delay since we are certain a duplicate of the packet will be received soon.
+
+\subsection{Forwarding to Client}
+Forwarding a DHCP packet from the server to the client is even more
+straightforward. The whole packet is simply broadcasted onto the local subnet.
+
+\section{Deployment}
+
+\subsection{Building}
+Simply run deploy.sh to build and deploy the application to the PIC. You will
+automatically enter the tftp shell allowing you to copy the hex file to the
+board.
+
+\subsection{Testing}
+The following setup was used to test the relay:
+
+\begin{itemize}
+	\item The PIC connected to port 2 (LAN) of the router. The relay has a
+	static IP of \texttt{192.168.97.60}.
+	\item The DHCP server is connected to port 1 (WAN) of the router. This port
+	is assigned the ip \texttt{192.168.2.1} and the server itself is set to the
+	static IP \texttt{192.168.2.2}.
+	\item The client connected to a LAN port of the router.
+\end{itemize}
+
+\subsubsection{Router Configuration}
+We had to configure the router to allow our desired setup. First of all we
+disabled the internal DHCP server. We then assigned a static IP to the WAN port
+(\texttt{192.168.2.1}) and disabled the NAT. \\
+\\
+\textbf{Note:} Without the DHCP running, you will have to use a static IP on the
+client of server machine to access the router configuration web page or upload a
+new software version to the PIC. This might be a hassle, especially when
+switching between a static IP and one assigned by DHCP when testing.
+
+\subsubsection{Validation}
+We ran Wireshark on both the computer acting as DHCP server and the one acting
+as client. This allowed us to capture the packages received and sent by both
+devices.
+
+\section{Difficulties \& Particularities}
+The hardest part of the assignment was understanding the TCP/IP stack and its
+implementation. The manual did provide some insight but lacked a proper
+explanation of how to add a new component such as the relay. Most part of the
+solution is therefore based on the existing implementation, adapted to fit our
+needs.
+\\\\
+Most problems were caused by a lack of knowledge of the stack API. Especially
+when rewriting code, this created a lot of confusion. For example, we based our
+DHCP listening function on the one used by the available DHCP server. This code
+ignored some critical bytes needed for receiving packets from the server. It
+took us a long time to discover this problem.
+\\\\
+The experience we had with the PIC, the compiler and the hardware interface,
+which all caused us a lot of troubles last time, significantly improved our
+working proficiency.
+
+\end{document}

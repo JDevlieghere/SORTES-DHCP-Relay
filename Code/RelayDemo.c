@@ -73,8 +73,8 @@ void DHCPRelayTask(void)
 				smDHCPRelay++;
 			}
 		case DHCP_LISTEN:
-			ListenToSocket(ClientSocket);
 			ListenToSocket(ServerSocket);
+			ListenToSocket(ClientSocket);
 			UDPDiscard();
 			break;
 	}

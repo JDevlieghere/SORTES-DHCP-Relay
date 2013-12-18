@@ -40,12 +40,6 @@ void LogMac(int pos, BOOTP_HEADER *Header);
 
 void DHCPRelayTask(void)
 {
-	BYTE 				i;
-	BYTE				Option, Len;
-	BOOTP_HEADER		BOOTPHeader;
-	DWORD        dw;
-	unsigned ClientReady, ServerReady;
-
 	static enum
 	{
 		DHCP_OPEN_SOCKET,
@@ -78,95 +72,100 @@ void DHCPRelayTask(void)
 				smDHCPRelay++;
 			}
 		case DHCP_LISTEN:
-			// Check to see if a valid DHCP packet has arrived
-
-			ClientReady = UDPIsGetReady(ClientSocket);
-			ServerReady = UDPIsGetReady(ServerSocket);
-
-			if(ClientReady < 241u && ServerReady < 241u)
-				break;
-
-			// Retrieve the BOOTP header
-			UDPGetArray((BYTE*)&BOOTPHeader, sizeof(BOOTPHeader));
-
-			// Validate first three fields
-			if(BOOTPHeader.MessageType != 1u)
-				break;
-			if(BOOTPHeader.HardwareType != 1u)
-				break;
-			if(BOOTPHeader.HardwareLen != 6u)
-				break;
-
-			// Throw away 10 unused bytes of hardware address,
-			// server host name, and boot file name -- unsupported/not needed.
-			for(i = 0; i < 64+128+(16-sizeof(MAC_ADDR)); i++)
-				UDPGet(&Option);
-
-			// Obtain Magic Cookie and verify
-			UDPGetArray((BYTE*)&dw, sizeof(DWORD));
-			if(dw != 0x63538263ul)
-				break;
-
-			// Obtain options
-			while(1)
-			{
-				// Get option type
-				if(!UDPGet(&Option))
-					break;
-				if(Option == DHCP_END_OPTION)
-					break;
-
-				// Get option length
-				UDPGet(&Len);
-
-				// Process option
-				switch(Option)
-				{
-					case DHCP_MESSAGE_TYPE:
-						UDPGet(&i);
-						switch(i)
-						{
-							case DHCP_DISCOVER_MESSAGE:
-								Log("DISCOVER","");
-								RelayToServer(&BOOTPHeader, i);
-								break;
-							case DHCP_OFFER_MESSAGE:
-								Log("OFFER","");
-								RelayToClient(&BOOTPHeader, i);
-								break;
-							case DHCP_REQUEST_MESSAGE:
-								Log("REQUEST","");
-								RelayToServer(&BOOTPHeader, i);
-								break;
-							case DHCP_ACK_MESSAGE:
-								Log("ACK","");
-								RelayToClient(&BOOTPHeader, i);
-								break;
-							case DHCP_RELEASE_MESSAGE:
-								Log("RELEASE","");
-								break;
-							case DHCP_DECLINE_MESSAGE:
-								Log("DECLINE","");
-								break;
-							default:
-								Log("Default","");
-								break;
-						}
-						break;
-					case DHCP_END_OPTION:
-						UDPDiscard();
-						return;
-				}
-
-				// Remove any unprocessed bytes that we don't care about
-				while(Len--)
-				{
-					UDPGet(&i);
-				}
-			}
-
+			ListenToSocket(ClientSocket);
+			ListenToSocket(ServerSocket);
 			UDPDiscard();
 			break;
+	}
+}
+
+void ListenToSocket(UDP_SOCKET socket){
+	BYTE 			i;
+	BYTE			Option, Len;
+	BOOTP_HEADER	BOOTPHeader;
+	DWORD        	dw;
+
+	// Check to see if a valid DHCP packet has arrived
+	if(UDPIsGetReady(socket) < 241u)
+		break;
+
+	// Retrieve the BOOTP header
+	UDPGetArray((BYTE*)&BOOTPHeader, sizeof(BOOTPHeader));
+
+	// Validate first three fields
+	if(BOOTPHeader.MessageType != 1u)
+		break;
+	if(BOOTPHeader.HardwareType != 1u)
+		break;
+	if(BOOTPHeader.HardwareLen != 6u)
+		break;
+
+	// Throw away 10 unused bytes of hardware address,
+	// server host name, and boot file name -- unsupported/not needed.
+	for(i = 0; i < 64+128+(16-sizeof(MAC_ADDR)); i++)
+		UDPGet(&Option);
+
+	// Obtain Magic Cookie and verify
+	UDPGetArray((BYTE*)&dw, sizeof(DWORD));
+	if(dw != 0x63538263ul)
+		break;
+
+	// Obtain options
+	while(1)
+	{
+		// Get option type
+		if(!UDPGet(&Option))
+			break;
+		if(Option == DHCP_END_OPTION)
+			break;
+
+		// Get option length
+		UDPGet(&Len);
+
+		// Process option
+		switch(Option)
+		{
+			case DHCP_MESSAGE_TYPE:
+				UDPGet(&i);
+				switch(i)
+				{
+					case DHCP_DISCOVER_MESSAGE:
+						Log("DISCOVER","");
+						RelayToServer(&BOOTPHeader, i);
+						break;
+					case DHCP_OFFER_MESSAGE:
+						Log("OFFER","");
+						RelayToClient(&BOOTPHeader, i);
+						break;
+					case DHCP_REQUEST_MESSAGE:
+						Log("REQUEST","");
+						RelayToServer(&BOOTPHeader, i);
+						break;
+					case DHCP_ACK_MESSAGE:
+						Log("ACK","");
+						RelayToClient(&BOOTPHeader, i);
+						break;
+					case DHCP_RELEASE_MESSAGE:
+						Log("RELEASE","");
+						break;
+					case DHCP_DECLINE_MESSAGE:
+						Log("DECLINE","");
+						break;
+					default:
+						Log("Default","");
+						break;
+				}
+				break;
+			case DHCP_END_OPTION:
+				UDPDiscard();
+				return;
+		}
+
+		// Remove any unprocessed bytes that we don't care about
+		while(Len--)
+		{
+			UDPGet(&i);
+		}
 	}
 }
 

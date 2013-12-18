@@ -37,6 +37,7 @@ static void RelayToServer(BOOTP_HEADER *Header, int type);
 static void RelayToClient(BOOTP_HEADER *Header, int type);
 void Log(char *top, char *bottom);
 void LogMac(int pos, BOOTP_HEADER *Header);
+void ListenToSocket(UDP_SOCKET socket);
 
 void DHCPRelayTask(void)
 {

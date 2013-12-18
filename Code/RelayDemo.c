@@ -16,14 +16,11 @@
 #define DHCP_LEASE_DURATION	60ul
 #define TOP	0
 #define BOT 16
-#define DHCP_SERVER_SOCKET 0
-#define DHCP_CLIENT_SOCKET 1
 
 
 // HDCP Server at 	192.168.97.3
 // 					c0.a8.61.03
-// #define DHCP_SERVER_IP	0x0202A8C0
-#define DHCP_SERVER_IP	0x0361A8C0
+#define DHCP_SERVER_IP	0x0202A8C0
 #define BROADCAST 		0xFFFFFFFF
 
 static 	UDP_SOCKET	ClientSocket;
@@ -40,7 +37,7 @@ static void RelayToServer(BOOTP_HEADER *Header, int type);
 static void RelayToClient(BOOTP_HEADER *Header, int type);
 void Log(char *top, char *bottom);
 void LogMac(int pos, BOOTP_HEADER *Header);
-void ListenToSocket(UDP_SOCKET socket, int type);
+void ListenToSocket(UDP_SOCKET socket);
 
 void DHCPRelayTask(void)
 {
@@ -76,8 +73,8 @@ void DHCPRelayTask(void)
 				smDHCPRelay++;
 			}
 		case DHCP_LISTEN:
-			ListenToSocket(ServerSocket, DHCP_SERVER_SOCKET);
-			ListenToSocket(ClientSocket, DHCP_CLIENT_SOCKET);
+			ListenToSocket(ServerSocket);
+			ListenToSocket(ClientSocket);
 			UDPDiscard();
 			break;
 	}
@@ -131,35 +128,37 @@ void ListenToSocket(UDP_SOCKET socket, int type){
 		{
 			case DHCP_MESSAGE_TYPE:
 				UDPGet(&i);
-				switch(type)
+				switch(i)
 				{
-					case DHCP_CLIENT_SOCKET:
-						switch(i)
-						{
-							case DHCP_DISCOVER_MESSAGE:
-								Log("DISCOVER","");
-								RelayToServer(&BOOTPHeader, i);
-								break;
-							case DHCP_REQUEST_MESSAGE:
-								Log("REQUEST","");
-								RelayToServer(&BOOTPHeader, i);
-								break;
-						}
+					case DHCP_ACK_MESSAGE:
+						Log("ACK","");
+						RelayToClient(&BOOTPHeader, i);
 						break;
-					case DHCP_SERVER_SOCKET:
-						switch(i)
-						{
-							case DHCP_OFFER_MESSAGE:
-								Log("OFFER","");
-								RelayToClient(&BOOTPHeader, i);
-								break;
-							case DHCP_ACK_MESSAGE:
-								Log("ACK","");
-								RelayToClient(&BOOTPHeader, i);
-								break;
-						}
+					case DHCP_OFFER_MESSAGE:
+						Log("OFFER","");
+						RelayToClient(&BOOTPHeader, i);
+						break;
+					case DHCP_DISCOVER_MESSAGE:
+						Log("DISCOVER","");
+						RelayToServer(&BOOTPHeader, i);
+						break;
+					case DHCP_REQUEST_MESSAGE:
+						Log("REQUEST","");
+						RelayToServer(&BOOTPHeader, i);
+						break;
+					case DHCP_RELEASE_MESSAGE:
+						Log("RELEASE","");
+						break;
+					case DHCP_DECLINE_MESSAGE:
+						Log("DECLINE","");
+						break;
+					default:
+						Log("DEFAULT","");
 						break;
 				}
+				break;
+			case DHCP_PARAM_REQUEST_IP_ADDRESS:
+				Log("IP Requested","Not handled");
 			case DHCP_END_OPTION:
 				UDPDiscard();
 				return;

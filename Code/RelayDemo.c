@@ -18,8 +18,11 @@
 #define BOT 16
 
 
-// HDCP Server at 	192.168.97.3
-// 					c0.a8.61.03
+// DHCP Server at 	192.168.2.2
+// 			c0.a8.02.02
+// DHCP Server at 	192.168.97.3
+// 			c0.a8.61.03
+// Little endian!
 #define DHCP_SERVER_IP	0x0202A8C0
 #define BROADCAST 		0xFFFFFFFF
 
@@ -80,7 +83,7 @@ void DHCPRelayTask(void)
 	}
 }
 
-void ListenToSocket(UDP_SOCKET socket, int type){
+void ListenToSocket(UDP_SOCKET socket){
 	BYTE 			i;
 	BYTE			Option, Len;
 	BOOTP_HEADER	BOOTPHeader;

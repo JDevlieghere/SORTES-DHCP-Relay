@@ -64,3 +64,5 @@ Thumbs.db
 *.mtc1
 *.out
 *.synctex.gz
+*.fls
+*.fdb_latexmk

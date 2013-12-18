@@ -87,18 +87,18 @@ void ListenToSocket(UDP_SOCKET socket){
 
 	// Check to see if a valid DHCP packet has arrived
 	if(UDPIsGetReady(socket) < 241u)
-		break;
+		return;
 
 	// Retrieve the BOOTP header
 	UDPGetArray((BYTE*)&BOOTPHeader, sizeof(BOOTPHeader));
 
 	// Validate first three fields
 	if(BOOTPHeader.MessageType != 1u)
-		break;
+		return;
 	if(BOOTPHeader.HardwareType != 1u)
-		break;
+		return;
 	if(BOOTPHeader.HardwareLen != 6u)
-		break;
+		return;
 
 	// Throw away 10 unused bytes of hardware address,
 	// server host name, and boot file name -- unsupported/not needed.
@@ -108,7 +108,7 @@ void ListenToSocket(UDP_SOCKET socket){
 	// Obtain Magic Cookie and verify
 	UDPGetArray((BYTE*)&dw, sizeof(DWORD));
 	if(dw != 0x63538263ul)
-		break;
+		return;
 
 	// Obtain options
 	while(1)

@@ -192,9 +192,10 @@ static void RelayToClient(BOOTP_HEADER *Header, int type){
 
 	// Set the correct socket to active and ensure that
 	// enough space is available.
-	if(UDPIsPutReady(ClientSocket) < 300u)
+	if(UDPIsPutReady(ClientSocket) < 300u){
+		Log("UDP SOCKET NOT","READY");
 		return;
-
+	}
 	// Get socket info
 	p = &UDPSocketInfo[activeUDPSocket];
 

@@ -40,8 +40,11 @@ using unicast to the DHCP server. Messages from the server are returned to the
 relay, also using unicast, which are than forwarded to the client.
 
 \begin{itemize}
-	\item \textbf{DHCP Discovery}: The client broadcasts on his subnet to discover DHCP servers. The Relay will forward this message to the DHCP server using unicast.
-	\item \textbf{DHCP Offer}: The server replies to the client by offering an IP. This message is forwarded by the relay from the server to the client.
+	\item \textbf{DHCP Discovery}: The client broadcasts on his subnet to
+	discover DHCP servers. The Relay will forward this message to the DHCP
+	server using unicast.
+	\item \textbf{DHCP Offer}: The server replies to the client by offering an
+	IP. This message is forwarded by the relay from the server to the client.
 	\item \textbf{DHCP Request}: The client will confirm an offer using a request message. This is once again forwarded to the server by the relay.
 	\item \textbf{DHCP Acknowledgement}: The acknowledgement finally confirms
 	the deal between the client and the server. This message is forwarded from
@@ -71,7 +74,9 @@ Forwarding a DHCP packet from the server to the client is even more
 straightforward. The whole packet is simply broadcasted onto the local subnet.
 
 \section{Deployment}
-Simply run deploy.sh to build and deploy the application to the PIC. You will automatically enter the tftp shell allowing you to copy the hex file to the board.
+Simply run deploy.sh to build and deploy the application to the PIC. You will
+automatically enter the tftp shell allowing you to copy the hex file to the
+board.
 
 \subsection{Testing}
 The following setup was used to test the relay:
@@ -83,14 +88,25 @@ The following setup was used to test the relay:
 \end{itemize}
 
 \subsubsection{Router Configuration}
-We had to configure the router to allow our desired setup. First of all we disabled the internal DHCP server. We then assigned a static IP to the WAN port (\texttt{192.168.2.1}) and disabled the NAT. \\
+We had to configure the router to allow our desired setup. First of all we
+disabled the internal DHCP server. We then assigned a static IP to the WAN port
+(\texttt{192.168.2.1}) and disabled the NAT. \\
 \\
-\textbf{Note:} Without the DHCP running, you will have to use a static IP on the client of server machine to access the router configuration web page or upload a new software version to the PIC. This might be a hassle, especially when switching between a static IP and one assigned by DHCP when testing.
+\textbf{Note:} Without the DHCP running, you will have to use a static IP on the
+client of server machine to access the router configuration web page or upload a
+new software version to the PIC. This might be a hassle, especially when
+switching between a static IP and one assigned by DHCP when testing.
 
 \subsubsection{Validation}
-We ran Wireshark on both the computer acting as DHCP server and the one acting as client. This allowed us to capture the packages received and sent by both devices.
+We ran Wireshark on both the computer acting as DHCP server and the one acting
+as client. This allowed us to capture the packages received and sent by both
+devices.
 
 \section{Difficulties \& Particularities}
-The hardest part of the assignment was understanding the TCP/IP stack and its implementation. The manual did provide some insight but lacked a proper explanation of how to add a new component such as the relay. Most part of the solution is therefore based on the existing implementation, adapted to fit our needs.
+The hardest part of the assignment was understanding the TCP/IP stack and its
+implementation. The manual did provide some insight but lacked a proper
+explanation of how to add a new component such as the relay. Most part of the
+solution is therefore based on the existing implementation, adapted to fit our
+needs.
 
 \end{document}

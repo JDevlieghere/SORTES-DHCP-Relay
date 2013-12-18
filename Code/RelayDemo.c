@@ -218,7 +218,7 @@ static void RelayToClient(BOOTP_HEADER *Header, int type, int useBroadcast){
 	if(useBroadcast){
 		UDPPut(0x80);
 		UDPPut(0x00);
-		//Header->BootpFlags = 0x0800; // 0008 
+		//Header->BootpFlags = 0x0800; // 0008
 	} else {
 		UDPPut(0x00);
 		UDPPut(0x00);
@@ -244,15 +244,9 @@ static void RelayToClient(BOOTP_HEADER *Header, int type, int useBroadcast){
 	UDPPut(DHCP_MESSAGE_TYPE_LEN);
 	UDPPut(type);
 
-	// Set Server Identifier
-	UDPPut(DHCP_SERVER_IDENTIFIER);
-	UDPPut(sizeof(IP_ADDR)); UDPPutArray((BYTE*)&AppConfig.MyIPAddr, sizeof(IP_ADDR));
-
-	// Set Router
-	UDPPut(DHCP_ROUTER);
-	UDPPut(sizeof(IP_ADDR)); UDPPutArray((BYTE*)&AppConfig.MyIPAddr, sizeof(IP_ADDR));
 	// End DHCP packet
 	UDPPut(DHCP_END_OPTION);
+
 	// Pad with zeros
 	while(UDPTxCount < 300u)
 		UDPPut(0);

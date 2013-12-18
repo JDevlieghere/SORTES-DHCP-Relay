@@ -16,6 +16,8 @@
 #define DHCP_LEASE_DURATION	60ul
 #define TOP	0
 #define BOT 16
+#define DHCP_SERVER_SOCKET 0
+#define DHCP_CLIENT_SOCKET 1
 
 
 // HDCP Server at 	192.168.97.3
@@ -73,14 +75,14 @@ void DHCPRelayTask(void)
 				smDHCPRelay++;
 			}
 		case DHCP_LISTEN:
-			ListenToSocket(ServerSocket);
-			ListenToSocket(ClientSocket);
+			ListenToSocket(ServerSocket, DHCP_SERVER_SOCKET);
+			ListenToSocket(ClientSocket, DHCP_CLIENT_SOCKET);
 			UDPDiscard();
 			break;
 	}
 }
 
-void ListenToSocket(UDP_SOCKET socket){
+void ListenToSocket(UDP_SOCKET socket, int type){
 	BYTE 			i;
 	BYTE			Option, Len;
 	BOOTP_HEADER	BOOTPHeader;
@@ -128,35 +130,36 @@ void ListenToSocket(UDP_SOCKET socket){
 		{
 			case DHCP_MESSAGE_TYPE:
 				UDPGet(&i);
-				switch(i)
+
+				switch(type)
 				{
-					case DHCP_DISCOVER_MESSAGE:
-						Log("DISCOVER","");
-						RelayToServer(&BOOTPHeader, i);
+					case DHCP_CLIENT_SOCKET:
+						switch(i)
+						{
+							case DHCP_DISCOVER_MESSAGE:
+								Log("DISCOVER","");
+								RelayToServer(&BOOTPHeader, i);
+								break;
+							case DHCP_REQUEST_MESSAGE:
+								Log("REQUEST","");
+								RelayToServer(&BOOTPHeader, i);
+								break;
+						}
 						break;
-					case DHCP_OFFER_MESSAGE:
-						Log("OFFER","");
-						RelayToClient(&BOOTPHeader, i);
-						break;
-					case DHCP_REQUEST_MESSAGE:
-						Log("REQUEST","");
-						RelayToServer(&BOOTPHeader, i);
-						break;
-					case DHCP_ACK_MESSAGE:
-						Log("ACK","");
-						RelayToClient(&BOOTPHeader, i);
-						break;
-					case DHCP_RELEASE_MESSAGE:
-						Log("RELEASE","");
-						break;
-					case DHCP_DECLINE_MESSAGE:
-						Log("DECLINE","");
-						break;
-					default:
-						Log("Default","");
+					case DHCP_SERVER_SOCKET:
+						switch(i)
+						{
+							case DHCP_OFFER_MESSAGE:
+								Log("OFFER","");
+								RelayToClient(&BOOTPHeader, i);
+								break;
+							case DHCP_ACK_MESSAGE:
+								Log("ACK","");
+								RelayToClient(&BOOTPHeader, i);
+								break;
+						}
 						break;
 				}
-				break;
 			case DHCP_END_OPTION:
 				UDPDiscard();
 				return;

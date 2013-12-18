@@ -66,8 +66,8 @@ the packet forwarded.
 When forwarding a packet to the server, the content is copied and the relay's IP
 is set in the \texttt{GIADDR} field. This field is used by the server to
 determine the correct subnet and as destination address for the responding
-packet. An ARP request is made to determine the servers MAC-address.\\
-\\
+packet. An ARP request is made to determine the servers MAC-address.
+\\\\
 \textbf{Note:} Usually the first packet forwards fails due to an unfinished ARP
 request. By the time the packet is received again, the request has been
 fulfilled and the packet is forwarded as expected. We chose not to introduce a
@@ -76,6 +76,10 @@ delay since we are certain a duplicate of the packet will be received soon.
 \subsection{Forwarding to Client}
 Forwarding a DHCP packet from the server to the client is even more
 straightforward. The whole packet is simply broadcasted onto the local subnet.
+\\\\
+\textbf{Note:} We had some trouble finding the origin of a incorrectly forwarded
+packet. It turned out that the \texttt{BootP} broadcast flag was not set to
+broadcast.
 
 \section{Deployment}
 
@@ -109,7 +113,7 @@ switching between a static IP and one assigned by DHCP when testing.
 \subsubsection{Validation}
 We ran Wireshark on both the computer acting as DHCP server and the one acting
 as client. This allowed us to capture the packages received and sent by both
-devices.
+devices. We were able to validate the correct working of the relay.
 
 \section{Difficulties \& Particularities}
 The hardest part of the assignment was understanding the TCP/IP stack and its
